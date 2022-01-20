@@ -1,5 +1,5 @@
 import { useTranslation } from 'context/LanguageContext';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -14,7 +14,8 @@ import NextButton from './NextButton';
 import CustomText from 'components/CustomText';
 
 const Onboarding = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const slideRef = useRef(null as any);
 
   const {
     OnboardingTitle1,
@@ -53,9 +54,9 @@ const Onboarding = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   const scrollX = useRef(new Animated.Value(0)).current;
-  const slideRef = useRef(null as any);
 
   const scrollTo = () => {
+    console.log('currentIndex', currentIndex);
     if (currentIndex < slides.length - 1) {
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
@@ -83,6 +84,12 @@ const Onboarding = () => {
         onViewableItemsChanged={viewableItemsChanged}
         viewabilityConfig={viewConfig}
         ref={slideRef}
+        onScrollToIndexFailed={info => {
+          const wait = new Promise(resolve => setTimeout(resolve, 500));
+          wait.then(() => {
+            slideRef.current?.scrollToIndex({ index: 0 });
+          });
+        }}
       />
       <Paginator data={slides} scrollX={scrollX} />
       <View style={styles.bottomPanel}>

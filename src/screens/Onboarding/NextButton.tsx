@@ -37,19 +37,16 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
   }, [percentage]);
 
   useEffect(() => {
-    progressAnimation.addListener(
-      value => {
-        const strokeDashoffset =
-          circumference - (circumference * value.value) / 100;
-        if (progressRef?.current) {
-          progressRef.current.setNativeProps({
-            strokeDashoffset,
-          });
-        }
-      },
-      //@ts-ignore
-      [percentage],
-    );
+    progressAnimation.addListener(value => {
+      const strokeDashoffset =
+        circumference - (circumference * value.value) / 100;
+      if (progressRef?.current) {
+        progressRef.current.setNativeProps({
+          strokeDashoffset,
+        });
+      }
+    });
+
     return () => {
       progressAnimation.removeAllListeners();
     };
@@ -57,33 +54,33 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Svg width={size} height={size}>
-        <G rotation="-90" origin={center}>
-          <Circle
-            stroke="#E6E7E8"
-            cx={center}
-            cy={center}
-            r={radius}
-            strokeWidth={strokeWidth}
-          />
-          <Circle
-            ref={progressRef}
-            stroke="#455af7"
-            cx={center}
-            cy={center}
-            r={radius}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-          />
-        </G>
-      </Svg>
       <TouchableOpacity
         onPress={scrollTo}
         style={styles.button}
         activeOpacity={0.6}>
+        <Svg width={size} height={size}>
+          <G rotation="-90" origin={center}>
+            <Circle
+              stroke="#E6E7E8"
+              cx={center}
+              cy={center}
+              r={radius}
+              strokeWidth={strokeWidth}
+            />
+            <Circle
+              ref={progressRef}
+              stroke="#455af7"
+              cx={center}
+              cy={center}
+              r={radius}
+              strokeWidth={strokeWidth}
+              strokeDasharray={circumference}
+            />
+          </G>
+        </Svg>
         <Image
           source={require('../../assets/images/right_arrow.png')}
-          style={[styles.image]}
+          style={styles.image}
         />
       </TouchableOpacity>
     </View>
@@ -98,10 +95,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    position: 'absolute',
     justifyContent: 'center',
+    position: 'relative',
     alignItems: 'center',
-    padding: 20,
     backgroundColor: '#455af7',
     borderRadius: 50,
     width: 56,
@@ -110,5 +106,7 @@ const styles = StyleSheet.create({
   image: {
     width: 25,
     height: 25,
+    position: 'absolute',
+    alignSelf: 'center',
   },
 });
