@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="spatial" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash-screen" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Juw-ET-Sih">
-                                <rect key="frame" x="80" y="381" width="254" height="136"/>
+                                <rect key="frame" x="79" y="381" width="255" height="136"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.31764705879999999" green="0.35294117650000001" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
