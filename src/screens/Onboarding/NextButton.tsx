@@ -6,12 +6,13 @@ import {
   Animated,
   Image,
 } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Svg, { G, Circle } from 'react-native-svg';
 
 interface Props {
   percentage: number;
   scrollTo: () => void;
+  navigation: any;
 }
 
 const NextButton = ({ percentage, scrollTo }: Props) => {
@@ -24,6 +25,8 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const progressRef = useRef(null);
 
+  const [visibleStartButton, setVisibleStartButton] = useState<boolean>(false);
+
   const animation = (toValue: number) => {
     return Animated.timing(progressAnimation, {
       toValue,
@@ -34,6 +37,9 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
 
   useEffect(() => {
     animation(percentage);
+    percentage === 100
+      ? setVisibleStartButton(true)
+      : setVisibleStartButton(false);
   }, [percentage]);
 
   useEffect(() => {
@@ -56,7 +62,10 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={scrollTo}
-        style={styles.button}
+        style={[
+          styles.button,
+          // visibleStartButton && { transform: [{ scale: 0 }] },
+        ]}
         activeOpacity={0.6}>
         <Svg width={size} height={size}>
           <G rotation="-90" origin={center}>

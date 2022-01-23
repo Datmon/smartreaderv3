@@ -1,5 +1,5 @@
 import { useTranslation } from 'context/LanguageContext';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -11,9 +11,8 @@ import {
 import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
 import NextButton from './NextButton';
-import CustomText from 'components/CustomText';
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }: any) => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const slideRef = useRef(null as any);
 
@@ -61,6 +60,7 @@ const Onboarding = () => {
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       console.log('last item');
+      navigation.navigate('SignIn');
     }
   };
 
@@ -84,7 +84,7 @@ const Onboarding = () => {
         onViewableItemsChanged={viewableItemsChanged}
         viewabilityConfig={viewConfig}
         ref={slideRef}
-        onScrollToIndexFailed={info => {
+        onScrollToIndexFailed={() => {
           const wait = new Promise(resolve => setTimeout(resolve, 500));
           wait.then(() => {
             slideRef.current?.scrollToIndex({ index: 0 });
@@ -93,10 +93,15 @@ const Onboarding = () => {
       />
       <Paginator data={slides} scrollX={scrollX} />
       <View style={styles.bottomPanel}>
-        <Text>Skip</Text>
+        <Text
+          style={styles.skipButton}
+          onPress={() => navigation.navigate('SignIn')}>
+          Skip
+        </Text>
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
+          navigation={navigation}
         />
       </View>
     </SafeAreaView>
@@ -118,5 +123,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 20,
+  },
+  skipButton: {
+    color: '#455AF7',
+    fontSize: 16,
   },
 });

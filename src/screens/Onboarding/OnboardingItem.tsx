@@ -14,7 +14,6 @@ interface Item {
 
 const OnboardingItem = ({ item }: Item) => {
   const { width } = useWindowDimensions();
-  console.log(item.description);
   return (
     <View style={[styles.container, { width }]}>
       <Image source={item.image} style={styles.image} />
