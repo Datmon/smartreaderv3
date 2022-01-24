@@ -2,28 +2,46 @@ import React, { useState } from 'react';
 import { useTranslation } from 'context/LanguageContext';
 import {
   View,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Image,
   StyleSheet,
-  TextInput,
-  Button,
 } from 'react-native';
-import CustomText from 'components/CustomText';
-import CustomInput from 'components/CustomInput/CustomInput';
+import { Text } from 'components/Text';
+import Input from 'components/Input';
 import { auth } from 'api';
 import { actions } from 'store';
 import { useDispatch } from 'react-redux';
+import {
+  EmailIcon,
+  ShowPasswordIcon,
+  PasswordIcon,
+  NicknameIcon,
+} from 'assets/svg';
+import ClickableText from 'components/ClickableText';
+import Button from 'components/Button';
+import AppleButton from 'components/AppleButton';
+import GoogleButton from 'components/GoogleButton';
 
 const SignIn = ({ navigation }: any) => {
-  const { SignInMeeting, SignInLabel } = useTranslation();
+  const {
+    SignInMeeting,
+    SignInLabel,
+    SignInForgotPass,
+    SignUpMeeting,
+    SignInButton,
+    SignUpButton,
+    SignUpOrLogin,
+    SignUpQuestionIn,
+    SignUpQuestionUp,
+  } = useTranslation();
 
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [visibleSignIn, setVisibleSignIn] = useState<boolean>(true);
 
   const signIn = async () => {
     if (email && password) {
@@ -51,31 +69,82 @@ const SignIn = ({ navigation }: any) => {
             style={styles.image}
           />
         </TouchableOpacity>
-        <CustomText customStyles={styles.SignInMeeting} text={SignInMeeting} />
-        <CustomText customStyles={styles.SignInLabel} text={SignInLabel} />
-        <CustomInput
+        <Text
+          style={styles.SignInMeeting}
+          text={SignInMeeting}
+          visible={visibleSignIn}
+        />
+        <Text
+          style={styles.SignInLabel}
+          text={SignInLabel}
+          visible={visibleSignIn}
+        />
+        <Text
+          style={styles.SignInMeeting}
+          text={SignUpMeeting}
+          visible={!visibleSignIn}
+        />
+        <Input
           onChangeText={setUsername}
           value={username}
           style={styles.input}
           placeholder="Username"
+          leftIcon={<NicknameIcon />}
+          visible={!visibleSignIn}
         />
-        <CustomInput
+        <Input
           onChangeText={setEmail}
           value={email}
           style={styles.input}
           placeholder="Email"
           secureTextEntry={false}
+          leftIcon={<EmailIcon />}
         />
-        <CustomInput
+        <Input
           onChangeText={setPassword}
           value={password}
           style={styles.input}
           secureTextEntry={true}
           placeholder="Password"
+          leftIcon={<PasswordIcon />}
+          rightIcon={<ShowPasswordIcon />}
+        />
+        <ClickableText
+          style={styles.forgotPass}
+          text={SignInForgotPass}
+          onPress={() => {}}
         />
 
-        <Button title="Sign in" onPress={signIn} />
-        <Button title="Sign up" onPress={signUp} />
+        <Button
+          style={styles.button}
+          title={SignInButton}
+          onPress={signIn}
+          visible={visibleSignIn}
+        />
+        <Button
+          style={styles.button}
+          title={SignUpButton}
+          onPress={signUp}
+          visible={!visibleSignIn}
+        />
+
+        <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
+
+        <AppleButton />
+        <GoogleButton />
+
+        <View style={styles.buttomLabel}>
+          <Text
+            text={(visibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
+            style={styles.buttomLabelText}
+          />
+
+          <ClickableText
+            onPress={() => setVisibleSignIn(!visibleSignIn)}
+            text={visibleSignIn ? 'Sign Up' : 'Sign In'}
+            style={''}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -111,11 +180,31 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 56,
-    margin: 12,
+    marginVertical: 12,
     borderWidth: 1,
     borderColor: '#E2E8F0',
     padding: 10,
     borderRadius: 16,
     fontWeight: '500',
+  },
+  forgotPass: {
+    alignSelf: 'flex-end',
+  },
+  button: {
+    marginVertical: 24,
+  },
+  buttomLabel: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  buttomLabelText: {
+    color: '#4A5568',
+    fontSize: 14,
+    height: '100%',
+  },
+  buttomLabelTextLogin: {
+    color: '#4A5568',
+    fontSize: 14,
+    alignSelf: 'center',
   },
 });
