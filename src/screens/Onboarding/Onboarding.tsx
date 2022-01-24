@@ -60,7 +60,7 @@ const Onboarding = ({ navigation }: any) => {
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       console.log('last item');
-      navigation.navigate('SignIn');
+      navigation.navigate('Auth');
     }
   };
 

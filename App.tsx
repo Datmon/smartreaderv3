@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import Onboarding from 'screens/Onboarding';
-import SignIn from 'screens/SignIn';
+import Auth from 'screens/Auth';
 import { store } from 'store';
 
 const Stack = createNativeStackNavigator();
@@ -22,7 +22,7 @@ const App = () => {
           initialRouteName="Onboarding"
           screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Onboarding" component={Onboarding} />
-          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="Auth" component={Auth} />
         </Stack.Navigator>
       </NavigationContainer>
     </ReduxProvider>

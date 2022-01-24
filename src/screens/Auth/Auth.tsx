@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'context/LanguageContext';
 import {
   View,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Image,
   StyleSheet,
-  TextInput,
   Button,
+  Text,
 } from 'react-native';
 import CustomText from 'components/CustomText';
 import CustomInput from 'components/CustomInput/CustomInput';
@@ -16,14 +15,15 @@ import { auth } from 'api';
 import { actions } from 'store';
 import { useDispatch } from 'react-redux';
 
-const SignIn = ({ navigation }: any) => {
+const Auth = ({ navigation }: any) => {
   const { SignInMeeting, SignInLabel } = useTranslation();
 
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
+  const [isSignIn, setIsSignIn] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
 
   const signIn = async () => {
     if (email && password) {
@@ -37,6 +37,13 @@ const SignIn = ({ navigation }: any) => {
       const res = await auth.signUp(username, email, password);
       console.log(res);
     }
+  };
+
+  const changeSignInStatus = (nextStatus: boolean) => {
+    setIsSignIn(nextStatus);
+    setEmail('');
+    setPassword('');
+    setUsername('');
   };
 
   return (
@@ -53,35 +60,64 @@ const SignIn = ({ navigation }: any) => {
         </TouchableOpacity>
         <CustomText customStyles={styles.SignInMeeting} text={SignInMeeting} />
         <CustomText customStyles={styles.SignInLabel} text={SignInLabel} />
-        <CustomInput
-          onChangeText={setUsername}
-          value={username}
-          style={styles.input}
-          placeholder="Username"
-        />
-        <CustomInput
-          onChangeText={setEmail}
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          secureTextEntry={false}
-        />
-        <CustomInput
-          onChangeText={setPassword}
-          value={password}
-          style={styles.input}
-          secureTextEntry={true}
-          placeholder="Password"
-        />
+        {isSignIn ? (
+          <>
+            <CustomInput
+              onChangeText={setEmail}
+              value={email}
+              style={styles.input}
+              placeholder="Email"
+              secureTextEntry={false}
+            />
+            <CustomInput
+              onChangeText={setPassword}
+              value={password}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+            />
 
-        <Button title="Sign in" onPress={signIn} />
-        <Button title="Sign up" onPress={signUp} />
+            <Button title="Sign in" onPress={signIn} />
+          </>
+        ) : (
+          <>
+            <CustomInput
+              onChangeText={setUsername}
+              value={username}
+              style={styles.input}
+              placeholder="Username"
+            />
+            <CustomInput
+              onChangeText={setEmail}
+              value={email}
+              style={styles.input}
+              placeholder="Email"
+              secureTextEntry={false}
+            />
+            <CustomInput
+              onChangeText={setPassword}
+              value={password}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+            />
+
+            <Button title="Sign up" onPress={signUp} />
+          </>
+        )}
+
+        <Text>
+          Don't have an account?{' '}
+          <TouchableOpacity onPress={() => changeSignInStatus(!isSignIn)}>
+            <Text>{isSignIn ? 'Sign Up' : 'Sign In'}</Text>
+          </TouchableOpacity>
+        </Text>
       </View>
     </SafeAreaView>
   );
 };
 
-export default SignIn;
+export default Auth;
 
 const styles = StyleSheet.create({
   container: {
