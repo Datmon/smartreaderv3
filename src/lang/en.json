@@ -8,5 +8,14 @@
     "OnboardingTitle3": "OnboardingTitle3",
     "OnboardingDescription3": "OnboardingDescription3",
     "SignInMeeting": "Hey! Welcome back!",
-    "SignInLabel": "Sign in to your account"
+    "SignInLabel": "Sign in to your account",
+    "SignInForgotPass": "Forgot Password?",
+    "SignUpMeeting": "Sign Up",
+    "SignInButton": "Sign in",
+    "SignUpButton": "Sign up",
+    "SignUpOrLogin": "Or login with",
+    "SignUpQuestionIn": "Don't have an account?",
+    "SignUpQuestionUp": "Have an account?",
+    "AppleButtonLabel": "Continue with Apple",
+    "GoogleButtonLabel": "Continue with Google"
 }
