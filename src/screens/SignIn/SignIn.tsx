@@ -13,9 +13,13 @@ import {
 import CustomText from 'components/CustomText';
 import CustomInput from 'components/CustomInput/CustomInput';
 import { auth } from 'api';
+import { actions } from 'store';
+import { useDispatch } from 'react-redux';
 
 const SignIn = ({ navigation }: any) => {
   const { SignInMeeting, SignInLabel } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,7 +27,7 @@ const SignIn = ({ navigation }: any) => {
 
   const signIn = async () => {
     if (email && password) {
-      const res = await auth.signIn(email, password);
+      const res = await dispatch(actions.auth.signIn({ email, password }));
       console.log(res);
     }
   };
