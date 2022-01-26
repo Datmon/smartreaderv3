@@ -6,6 +6,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import Onboarding from 'screens/Onboarding';
 import Auth from 'screens/Auth';
+import ResetPassword from 'screens/ResetPassword';
 import { store } from 'store';
 
 const Stack = createNativeStackNavigator();
@@ -20,9 +21,15 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="SignIn"
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: '#FFFFFF',
+            },
+          }}>
           <Stack.Screen name="Onboarding" component={Onboarding} />
           <Stack.Screen name="Auth" component={Auth} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
         </Stack.Navigator>
       </NavigationContainer>
     </ReduxProvider>

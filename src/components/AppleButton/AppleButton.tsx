@@ -3,10 +3,10 @@ import React from 'react';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 
-const AppleButton = () => {
+const AppleButton = ({ style }: any) => {
   const { AppleButtonLabel } = useTranslation();
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={[styles.button, style]}>
       <Image
         source={require('../../assets/images/apple.png')}
         style={styles.image}

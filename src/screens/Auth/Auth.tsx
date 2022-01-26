@@ -57,6 +57,12 @@ const Auth = ({ navigation }: any) => {
     }
   };
 
+  const changeVisibleSignIn = () => {
+    setVisibleSignIn(!visibleSignIn);
+    setPassword('');
+    setUsername('');
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -112,7 +118,9 @@ const Auth = ({ navigation }: any) => {
         <ClickableText
           style={styles.forgotPass}
           text={SignInForgotPass}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('ResetPassword');
+          }}
         />
 
         <Button
@@ -130,7 +138,7 @@ const Auth = ({ navigation }: any) => {
 
         <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
-        <AppleButton />
+        <AppleButton style={styles.appleButton} />
         <GoogleButton />
 
         <View style={styles.buttomLabel}>
@@ -140,7 +148,7 @@ const Auth = ({ navigation }: any) => {
           />
 
           <ClickableText
-            onPress={() => setVisibleSignIn(!visibleSignIn)}
+            onPress={() => changeVisibleSignIn()}
             text={visibleSignIn ? 'Sign Up' : 'Sign In'}
             style={''}
           />
@@ -167,16 +175,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 20,
   },
   SignInMeeting: {
     fontSize: 28,
     fontWeight: '500',
     color: '#1A202C',
+    marginBottom: 8,
   },
   SignInLabel: {
     fontSize: 16,
     fontWeight: '400',
     color: '#718096',
+    marginBottom: 20,
   },
   input: {
     height: 56,
@@ -188,23 +199,29 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   forgotPass: {
+    marginTop: 8,
     alignSelf: 'flex-end',
   },
   button: {
-    marginVertical: 24,
+    marginTop: 24,
   },
   buttomLabel: {
     flexDirection: 'row',
     alignSelf: 'center',
+    height: 'auto',
+    maxHeight: '10%',
   },
   buttomLabelText: {
     color: '#4A5568',
     fontSize: 14,
-    height: '100%',
   },
   buttomLabelTextLogin: {
     color: '#4A5568',
     fontSize: 14,
     alignSelf: 'center',
+    marginVertical: 24,
+  },
+  appleButton: {
+    marginBottom: 12,
   },
 });
