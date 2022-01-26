@@ -6,24 +6,42 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  Button,
-  Text,
 } from 'react-native';
-import CustomText from 'components/CustomText';
-import CustomInput from 'components/CustomInput/CustomInput';
+import { Text } from 'components/Text';
+import Input from 'components/Input';
 import { auth } from 'api';
 import { actions } from 'store';
 import { useDispatch } from 'react-redux';
+import {
+  EmailIcon,
+  ShowPasswordIcon,
+  PasswordIcon,
+  NicknameIcon,
+} from 'assets/svg';
+import ClickableText from 'components/ClickableText';
+import Button from 'components/Button';
+import AppleButton from 'components/AppleButton';
+import GoogleButton from 'components/GoogleButton';
 
 const Auth = ({ navigation }: any) => {
-  const { SignInMeeting, SignInLabel } = useTranslation();
+  const {
+    SignInMeeting,
+    SignInLabel,
+    SignInForgotPass,
+    SignUpMeeting,
+    SignInButton,
+    SignUpButton,
+    SignUpOrLogin,
+    SignUpQuestionIn,
+    SignUpQuestionUp,
+  } = useTranslation();
 
   const dispatch = useDispatch();
 
-  const [isSignIn, setIsSignIn] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
 
   const signIn = async () => {
     if (email && password) {
@@ -39,9 +57,8 @@ const Auth = ({ navigation }: any) => {
     }
   };
 
-  const changeSignInStatus = (nextStatus: boolean) => {
-    setIsSignIn(nextStatus);
-    setEmail('');
+  const changeisVisibleSignIn = () => {
+    setisVisibleSignIn(!isVisibleSignIn);
     setPassword('');
     setUsername('');
   };
@@ -58,60 +75,73 @@ const Auth = ({ navigation }: any) => {
             style={styles.image}
           />
         </TouchableOpacity>
-        <CustomText customStyles={styles.SignInMeeting} text={SignInMeeting} />
-        <CustomText customStyles={styles.SignInLabel} text={SignInLabel} />
-        {isSignIn ? (
+        {isVisibleSignIn ? (
           <>
-            <CustomInput
-              onChangeText={setEmail}
-              value={email}
-              style={styles.input}
-              placeholder="Email"
-              secureTextEntry={false}
-            />
-            <CustomInput
-              onChangeText={setPassword}
-              value={password}
-              style={styles.input}
-              secureTextEntry={true}
-              placeholder="Password"
-            />
-
-            <Button title="Sign in" onPress={signIn} />
+            <Text style={styles.SignInMeeting} text={SignInMeeting} />
+            <Text style={styles.SignInLabel} text={SignInLabel} />
           </>
         ) : (
-          <>
-            <CustomInput
-              onChangeText={setUsername}
-              value={username}
-              style={styles.input}
-              placeholder="Username"
-            />
-            <CustomInput
-              onChangeText={setEmail}
-              value={email}
-              style={styles.input}
-              placeholder="Email"
-              secureTextEntry={false}
-            />
-            <CustomInput
-              onChangeText={setPassword}
-              value={password}
-              style={styles.input}
-              secureTextEntry={true}
-              placeholder="Password"
-            />
-
-            <Button title="Sign up" onPress={signUp} />
-          </>
+          <Text style={styles.SignInMeeting} text={SignUpMeeting} />
         )}
 
-        <Text>
-          Don't have an account?{' '}
-          <TouchableOpacity onPress={() => changeSignInStatus(!isSignIn)}>
-            <Text>{isSignIn ? 'Sign Up' : 'Sign In'}</Text>
-          </TouchableOpacity>
-        </Text>
+        {!isVisibleSignIn && (
+          <Input
+            onChangeText={setUsername}
+            value={username}
+            style={styles.input}
+            placeholder="Username"
+            leftIcon={<NicknameIcon />}
+          />
+        )}
+
+        <Input
+          onChangeText={setEmail}
+          value={email}
+          style={styles.input}
+          placeholder="Email"
+          secureTextEntry={false}
+          leftIcon={<EmailIcon />}
+        />
+        <Input
+          onChangeText={setPassword}
+          value={password}
+          style={styles.input}
+          secureTextEntry={true}
+          placeholder="Password"
+          leftIcon={<PasswordIcon />}
+          rightIcon={<ShowPasswordIcon />}
+        />
+        <ClickableText
+          style={styles.forgotPass}
+          text={SignInForgotPass}
+          onPress={() => {
+            navigation.navigate('ResetPassword');
+          }}
+        />
+
+        {isVisibleSignIn ? (
+          <Button style={styles.button} title={SignInButton} onPress={signIn} />
+        ) : (
+          <Button style={styles.button} title={SignUpButton} onPress={signUp} />
+        )}
+
+        <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
+
+        <AppleButton style={styles.appleButton} />
+        <GoogleButton />
+
+        <View style={styles.buttomLabel}>
+          <Text
+            text={(isVisibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
+            style={styles.buttomLabelText}
+          />
+
+          <ClickableText
+            onPress={() => changeisVisibleSignIn()}
+            text={isVisibleSignIn ? 'Sign Up' : 'Sign In'}
+            style={''}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -134,24 +164,53 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 20,
   },
   SignInMeeting: {
     fontSize: 28,
     fontWeight: '500',
     color: '#1A202C',
+    marginBottom: 8,
   },
   SignInLabel: {
     fontSize: 16,
     fontWeight: '400',
     color: '#718096',
+    marginBottom: 20,
   },
   input: {
     height: 56,
-    margin: 12,
+    marginVertical: 12,
     borderWidth: 1,
     borderColor: '#E2E8F0',
     padding: 10,
     borderRadius: 16,
     fontWeight: '500',
+  },
+  forgotPass: {
+    marginTop: 8,
+    alignSelf: 'flex-end',
+  },
+  button: {
+    marginTop: 24,
+  },
+  buttomLabel: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    height: 'auto',
+    maxHeight: '10%',
+  },
+  buttomLabelText: {
+    color: '#4A5568',
+    fontSize: 14,
+  },
+  buttomLabelTextLogin: {
+    color: '#4A5568',
+    fontSize: 14,
+    alignSelf: 'center',
+    marginVertical: 24,
+  },
+  appleButton: {
+    marginBottom: 12,
   },
 });

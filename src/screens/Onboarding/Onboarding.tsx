@@ -67,6 +67,7 @@ const Onboarding = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
+        style={styles.flatlist}
         data={slides}
         renderItem={({ item }) => <OnboardingItem item={item} />}
         horizontal
@@ -116,6 +117,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  flatlist: {
+    flexGrow: 0,
+    maxHeight: '100%',
+  },
   bottomPanel: {
     flex: 1,
     width: '100%',
@@ -127,5 +132,6 @@ const styles = StyleSheet.create({
   skipButton: {
     color: '#455AF7',
     fontSize: 16,
+    fontWeight: '500',
   },
 });

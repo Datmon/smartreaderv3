@@ -4,12 +4,18 @@ import React from 'react';
 //TODO: TS for customStyles
 const CustomText = ({
   text,
-  customStyles,
+  style,
+  clickbale,
 }: {
   text: string;
-  customStyles?: any;
+  style?: any;
+  clickbale?: boolean;
 }) => {
-  return <Text style={[styles.regular, customStyles]}>{text}</Text>;
+  return (
+    <Text style={[styles.regular, style, clickbale && styles.button]}>
+      {text}
+    </Text>
+  );
 };
 
 export default CustomText;
@@ -17,10 +23,10 @@ export default CustomText;
 const styles = StyleSheet.create({
   regular: {
     fontFamily: 'Euclid Circular A',
-    fontWeight: '400',
   },
-  medium: {
-    fontFamily: 'Euclid Circular A',
-    fontWeight: '500',
+  button: {
+    color: 'blue',
+    fontWeight: '600',
+    fontSize: 14,
   },
 });

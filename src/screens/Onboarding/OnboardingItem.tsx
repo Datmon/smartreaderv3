@@ -1,12 +1,6 @@
-import CustomText from 'components/CustomText';
+import { Text } from 'components/Text';
 import React from 'react';
-import {
-  View,
-  Image,
-  useWindowDimensions,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, Image, useWindowDimensions, StyleSheet } from 'react-native';
 
 interface Item {
   item: { id: string; title: string; description: string; image: any };
@@ -18,8 +12,8 @@ const OnboardingItem = ({ item }: Item) => {
     <View style={[styles.container, { width }]}>
       <Image source={item.image} style={styles.image} />
       <View style={styles.text}>
-        <CustomText customStyles={styles.title} text={item.title} />
-        <CustomText customStyles={styles.description} text={item.description} />
+        <Text style={styles.title} text={item.title} />
+        <Text style={styles.description} text={item.description} />
       </View>
     </View>
   );
@@ -47,7 +41,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '800',
     fontSize: 28,
-    textAlign: 'center',
+    marginBottom: 12,
   },
   description: {
     fontWeight: '300',

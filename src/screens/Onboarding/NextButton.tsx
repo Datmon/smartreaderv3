@@ -62,12 +62,12 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={scrollTo}
-        style={[
-          styles.button,
-          // visibleStartButton && { transform: [{ scale: 0 }] },
-        ]}
+        style={[styles.button]}
         activeOpacity={0.6}>
-        <Svg width={size} height={size}>
+        <Svg
+          width={size}
+          height={size}
+          style={visibleStartButton && { transform: [{ scale: 0 }]}}>
           <G rotation="-90" origin={center}>
             <Circle
               stroke="#E6E7E8"
