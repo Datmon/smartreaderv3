@@ -6,13 +6,24 @@ const CustomText = ({
   text,
   style,
   clickbale,
+  title,
+  label,
 }: {
   text: string;
   style?: any;
   clickbale?: boolean;
+  title?: boolean;
+  label?: boolean;
 }) => {
   return (
-    <Text style={[styles.regular, style, clickbale && styles.button]}>
+    <Text
+      style={[
+        styles.regular,
+        style,
+        clickbale && styles.button,
+        title && styles.title,
+        label && styles.label,
+      ]}>
       {text}
     </Text>
   );
@@ -28,5 +39,15 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontWeight: '600',
     fontSize: 14,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '500',
+    color: '#1A202C',
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#718096',
   },
 });

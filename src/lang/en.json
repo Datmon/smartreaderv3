@@ -17,5 +17,12 @@
     "SignUpQuestionIn": "Don't have an account?",
     "SignUpQuestionUp": "Have an account?",
     "AppleButtonLabel": "Continue with Apple",
-    "GoogleButtonLabel": "Continue with Google"
+    "GoogleButtonLabel": "Continue with Google",
+    "ResetTitle": "Reset Password",
+    "ResetLabel": "Enter your email, we will send a verification code to your email",
+    "ResetButton": "Send Link",
+    "VerificationTitle": "Verification code",
+    "VerificationLabel": "Enter the verification code that we have sent to your email",
+    "VerificationResend": "Resend Code",
+    "VerificationContinue": "Continue"
 }

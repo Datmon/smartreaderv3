@@ -96,7 +96,7 @@ const Onboarding = ({ navigation }: any) => {
       <View style={styles.bottomPanel}>
         <Text
           style={styles.skipButton}
-          onPress={() => navigation.navigate('SignIn')}>
+          onPress={() => navigation.navigate('Auth')}>
           Skip
         </Text>
         <NextButton

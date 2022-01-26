@@ -1,14 +1,14 @@
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 interface IInput {
   style: any;
   onChangeText: (value: string) => void;
   value?: string;
   placeholder: string;
-  leftIcon?: any;
+  leftIcon?: (color: string) => ReactElement;
   secureTextEntry?: boolean;
-  rightIcon?: any;
+  rightIcon?: (color: string) => ReactElement;
 }
 
 const Input = ({
@@ -20,28 +20,38 @@ const Input = ({
   leftIcon,
   rightIcon,
 }: IInput) => {
-  const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
+  const [isFocus, setIsFocus] = useState(false);
+  const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
   useEffect(() => {
-    setVisiblePassword(secureTextEntry);
+    setIsVisiblePassword(secureTextEntry);
   }, [secureTextEntry]);
 
   return (
-    <View>
-      <View style={styles.leftIcon}>{leftIcon}</View>
+    <View style={style}>
+      <View style={styles.leftIcon}>
+        {leftIcon && leftIcon(isFocus ? '#455AF7' : '#718096')}
+      </View>
       <TextInput
         autoCapitalize={'none'}
-        style={[style, styles.input]}
+        style={[
+          styles.input,
+          isFocus ? { borderColor: '#455AF7' } : { borderColor: '#E2E8F0' },
+        ]}
         onChangeText={onChangeText}
         value={value}
-        secureTextEntry={visiblePassword}
+        secureTextEntry={isVisiblePassword}
         placeholder={placeholder}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
       />
-      <TouchableOpacity
-        style={styles.rightIcon}
-        activeOpacity={0.6}
-        onPress={() => setVisiblePassword(!visiblePassword)}>
-        {rightIcon}
-      </TouchableOpacity>
+      {secureTextEntry && (
+        <TouchableOpacity
+          style={styles.rightIcon}
+          activeOpacity={0.6}
+          onPress={() => setIsVisiblePassword(!isVisiblePassword)}>
+          {rightIcon && rightIcon(isVisiblePassword ? '#718096' : '#455AF7')}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -51,15 +61,21 @@ export default Input;
 const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 45,
+    height: 56,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    padding: 10,
+    borderRadius: 16,
+    fontWeight: '500',
   },
   leftIcon: {
     position: 'absolute',
-    top: 32,
+    top: 20,
     left: 18,
   },
   rightIcon: {
     position: 'absolute',
-    top: 32,
+    top: 20,
     right: 18,
   },
 });

@@ -7,9 +7,12 @@ interface IButton {
   onPress?: () => void;
 }
 
-const Button = ({ title, style }: IButton) => {
+const Button = ({ title, style, onPress }: IButton) => {
   return (
-    <TouchableOpacity style={[styles.button, style]} activeOpacity={0.6}>
+    <TouchableOpacity
+      style={[styles.button, style]}
+      activeOpacity={0.6}
+      onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
