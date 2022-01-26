@@ -41,7 +41,7 @@ const Auth = ({ navigation }: any) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
-  const [visibleSignIn, setVisibleSignIn] = useState<boolean>(true);
+  const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
 
   const signIn = async () => {
     if (email && password) {
@@ -57,8 +57,8 @@ const Auth = ({ navigation }: any) => {
     }
   };
 
-  const changeVisibleSignIn = () => {
-    setVisibleSignIn(!visibleSignIn);
+  const changeisVisibleSignIn = () => {
+    setisVisibleSignIn(!isVisibleSignIn);
     setPassword('');
     setUsername('');
   };
@@ -75,29 +75,25 @@ const Auth = ({ navigation }: any) => {
             style={styles.image}
           />
         </TouchableOpacity>
-        <Text
-          style={styles.SignInMeeting}
-          text={SignInMeeting}
-          visible={visibleSignIn}
-        />
-        <Text
-          style={styles.SignInLabel}
-          text={SignInLabel}
-          visible={visibleSignIn}
-        />
-        <Text
-          style={styles.SignInMeeting}
-          text={SignUpMeeting}
-          visible={!visibleSignIn}
-        />
-        <Input
-          onChangeText={setUsername}
-          value={username}
-          style={styles.input}
-          placeholder="Username"
-          leftIcon={<NicknameIcon />}
-          visible={!visibleSignIn}
-        />
+        {isVisibleSignIn ? (
+          <>
+            <Text style={styles.SignInMeeting} text={SignInMeeting} />
+            <Text style={styles.SignInLabel} text={SignInLabel} />
+          </>
+        ) : (
+          <Text style={styles.SignInMeeting} text={SignUpMeeting} />
+        )}
+
+        {!isVisibleSignIn && (
+          <Input
+            onChangeText={setUsername}
+            value={username}
+            style={styles.input}
+            placeholder="Username"
+            leftIcon={<NicknameIcon />}
+          />
+        )}
+
         <Input
           onChangeText={setEmail}
           value={email}
@@ -123,18 +119,11 @@ const Auth = ({ navigation }: any) => {
           }}
         />
 
-        <Button
-          style={styles.button}
-          title={SignInButton}
-          onPress={signIn}
-          visible={visibleSignIn}
-        />
-        <Button
-          style={styles.button}
-          title={SignUpButton}
-          onPress={signUp}
-          visible={!visibleSignIn}
-        />
+        {isVisibleSignIn ? (
+          <Button style={styles.button} title={SignInButton} onPress={signIn} />
+        ) : (
+          <Button style={styles.button} title={SignUpButton} onPress={signUp} />
+        )}
 
         <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
@@ -143,13 +132,13 @@ const Auth = ({ navigation }: any) => {
 
         <View style={styles.buttomLabel}>
           <Text
-            text={(visibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
+            text={(isVisibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
             style={styles.buttomLabelText}
           />
 
           <ClickableText
-            onPress={() => changeVisibleSignIn()}
-            text={visibleSignIn ? 'Sign Up' : 'Sign In'}
+            onPress={() => changeisVisibleSignIn()}
+            text={isVisibleSignIn ? 'Sign Up' : 'Sign In'}
             style={''}
           />
         </View>

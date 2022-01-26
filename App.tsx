@@ -20,7 +20,7 @@ const App = () => {
     <ReduxProvider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="SignIn"
+          initialRouteName="Auth"
           screenOptions={{
             headerShown: false,
             contentStyle: {

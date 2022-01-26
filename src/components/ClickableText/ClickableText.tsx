@@ -2,13 +2,13 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Text } from 'components/Text';
 
-interface ClickableTextInterface {
+interface IClickableText {
   text: string;
-  style: any;
   onPress: () => void;
+  style?: any;
 }
 
-const ClickableText = ({ text, style, onPress }: ClickableTextInterface) => {
+const ClickableText = ({ text, style, onPress }: IClickableText) => {
   return (
     <TouchableOpacity
       style={[styles.button, style]}

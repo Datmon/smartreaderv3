@@ -1,15 +1,14 @@
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
-interface InputInterface {
+interface IInput {
   style: any;
   onChangeText: (value: string) => void;
-  value: string | undefined;
+  value?: string;
   placeholder: string;
   leftIcon?: any;
   secureTextEntry?: boolean;
   rightIcon?: any;
-  visible?: boolean;
 }
 
 const Input = ({
@@ -20,15 +19,14 @@ const Input = ({
   placeholder,
   leftIcon,
   rightIcon,
-  visible = true,
-}: InputInterface) => {
+}: IInput) => {
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
   useEffect(() => {
     setVisiblePassword(secureTextEntry);
   }, [secureTextEntry]);
 
   return (
-    <View style={{ display: visible ? 'flex' : 'none' }}>
+    <View>
       <View style={styles.leftIcon}>{leftIcon}</View>
       <TextInput
         autoCapitalize={'none'}

@@ -6,21 +6,13 @@ const CustomText = ({
   text,
   style,
   clickbale,
-  visible = true,
 }: {
   text: string;
   style?: any;
   clickbale?: boolean;
-  visible?: boolean;
 }) => {
   return (
-    <Text
-      style={[
-        styles.regular,
-        style,
-        clickbale && styles.button,
-        { display: visible ? 'flex' : 'none' },
-      ]}>
+    <Text style={[styles.regular, style, clickbale && styles.button]}>
       {text}
     </Text>
   );

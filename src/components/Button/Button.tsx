@@ -1,18 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-interface ButtonInteface {
+interface IButton {
   title: string;
-  style: any;
-  visible: boolean;
-  onPress: () => void;
+  style?: any;
+  onPress?: () => void;
 }
 
-const Button = ({ title, style, visible }: ButtonInteface) => {
+const Button = ({ title, style }: IButton) => {
   return (
-    <TouchableOpacity
-      style={[styles.button, style, { display: visible ? 'flex' : 'none' }]}
-      activeOpacity={0.6}>
+    <TouchableOpacity style={[styles.button, style]} activeOpacity={0.6}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
