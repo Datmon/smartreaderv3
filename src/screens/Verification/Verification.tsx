@@ -5,8 +5,15 @@ import { useTranslation } from 'context/LanguageContext';
 import { Text } from 'components/Text';
 import ClickableText from 'components/ClickableText';
 import Button from 'components/Button';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const Verification = ({ navigation }: any) => {
+type RootStackParamList = {
+  Verification: undefined;
+};
+
+const Verification = ({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, 'Verification'>) => {
   const {
     VerificationTitle,
     VerificationLabel,
@@ -16,12 +23,12 @@ const Verification = ({ navigation }: any) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <BackButton onPress={() => navigation.navigate('Auth')} />
+        <BackButton onPress={() => navigation.goBack()} />
         <Text title text={VerificationTitle} style={styles.title} />
         <Text label text={VerificationLabel} style={styles.label} />
         <ClickableText
           text={VerificationResend}
-          onPress={''}
+          onPress={() => {}}
           style={styles.resendButton}
         />
         <Button title={VerificationContinue} />

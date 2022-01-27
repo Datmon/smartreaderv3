@@ -1,29 +1,46 @@
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BackButton from 'components/BackButton/BackButton';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import Input from 'components/Input';
 import { EmailIcon } from 'assets/svg';
 import Button from 'components/Button';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const ResetPassword = ({ navigation }: any) => {
+type RootStackParamList = {
+  ResetPassword: { email: string } | undefined;
+  Verification: undefined;
+};
+
+const ResetPassword = ({
+  navigation,
+  route,
+}: NativeStackScreenProps<RootStackParamList, 'ResetPassword'>) => {
   const { ResetTitle, ResetLabel, ResetButton } = useTranslation();
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const userEmail = route.params?.email || '';
+    setEmail(userEmail);
+  }, [route.params?.email]);
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <BackButton onPress={() => navigation.navigate('Auth')} />
-        <Text title text={ResetTitle} style={styles.title} />
-        <Text label text={ResetLabel} style={styles.label} />
-        <Input
-          onChangeText={setEmail}
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          secureTextEntry={false}
-          leftIcon={(color: string) => <EmailIcon color={color} />}
-        />
+        <View>
+          <BackButton onPress={() => navigation.goBack()} />
+          <Text title text={ResetTitle} style={styles.title} />
+          <Text label text={ResetLabel} style={styles.label} />
+          <Input
+            onChangeText={setEmail}
+            value={email}
+            style={styles.input}
+            placeholder="Email"
+            secureTextEntry={false}
+            leftIcon={(color: string) => <EmailIcon color={color} />}
+          />
+        </View>
         <Button
           style={styles.button}
           title={ResetButton}

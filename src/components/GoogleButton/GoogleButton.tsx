@@ -3,10 +3,10 @@ import React from 'react';
 import { useTranslation } from 'context/LanguageContext';
 import { Text } from 'components/Text';
 
-const GoogleButton = () => {
+const GoogleButton = ({ onPress }: { onPress: () => void }) => {
   const { GoogleButtonLabel } = useTranslation();
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={() => onPress()}>
       <Image
         source={require('../../assets/images/google.png')}
         style={styles.image}

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 import { Text } from 'components/Text';
 import Input from 'components/Input';
 import { auth } from 'api';
@@ -18,7 +21,30 @@ import AppleButton from 'components/AppleButton';
 import GoogleButton from 'components/GoogleButton';
 import BackButton from 'components/BackButton/BackButton';
 
-const Auth = ({ navigation }: any) => {
+type RootStackParamList = {
+  Auth: undefined;
+  Onboarding: undefined;
+  ResetPassword: { email: string } | undefined;
+};
+
+GoogleSignin.configure({
+  scopes: ['https://www.googleapis.com/auth/drive.readonly'], // [Android] what API you want to access on behalf of the user, default is email and profile
+  webClientId:
+    '835684202283-odefn9hn26qhmvj2jk0cb6p357epnm6m.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  //hostedDomain: '', // specifies a hosted domain restriction
+  forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+  accountName: '', // [Android] specifies an account name on the device that should be used
+  iosClientId:
+    '835684202283-klfmeg9ebibfv2js15ljdc9sclf8efvn.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+  openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+  profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+});
+
+const Auth = ({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, 'Auth'>) => {
   const {
     SignInMeeting,
     SignInLabel,
@@ -48,6 +74,7 @@ const Auth = ({ navigation }: any) => {
     if (email && password && username) {
       const res = await auth.signUp(username, email, password);
       console.log(res);
+      signIn();
     }
   };
 
@@ -55,6 +82,17 @@ const Auth = ({ navigation }: any) => {
     setisVisibleSignIn(!isVisibleSignIn);
     setPassword('');
     setUsername('');
+  };
+
+  const signInGoogle = async () => {
+    //TODO: setup android: https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('userInfo: ', userInfo);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -101,7 +139,7 @@ const Auth = ({ navigation }: any) => {
           style={styles.forgotPass}
           text={SignInForgotPass}
           onPress={() => {
-            navigation.navigate('ResetPassword');
+            navigation.navigate('ResetPassword', { email });
           }}
         />
 
@@ -114,7 +152,7 @@ const Auth = ({ navigation }: any) => {
         <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
         <AppleButton style={styles.appleButton} />
-        <GoogleButton />
+        <GoogleButton onPress={signInGoogle} />
 
         <View style={styles.buttomLabel}>
           <Text
