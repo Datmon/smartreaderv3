@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>835684202283-klfmeg9ebibfv2js15ljdc9sclf8efvn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.835684202283-klfmeg9ebibfv2js15ljdc9sclf8efvn</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDycNmWzAUSMixliGECLoSTjof-dWicBMw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>835684202283</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.smartreader</string>
+	<key>PROJECT_ID</key>
+	<string>smartreader-339508</string>
+	<key>STORAGE_BUCKET</key>
+	<string>smartreader-339508.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:835684202283:ios:7fc4ca2704f6a827a6776e</string>
+</dict>
+</plist>
