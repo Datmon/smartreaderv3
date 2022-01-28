@@ -1,12 +1,86 @@
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
+
+async function onAppleButtonPress() {
+  // performs login request
+  const appleAuthRequestResponse = await appleAuth.performRequest({
+    requestedOperation: appleAuth.Operation.LOGIN,
+    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+  });
+
+  // get current authentication state for user
+  // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+  const credentialState = await appleAuth.getCredentialStateForUser(
+    appleAuthRequestResponse.user,
+  );
+
+  // use credentialState response to ensure the user is authenticated
+  if (credentialState === appleAuth.State.AUTHORIZED) {
+    // user is authenticated
+  }
+}
+
+// async function onAppleButtonPress() {
+//   console.warn('Beginning Apple Authentication');
+
+//   // start a login request
+//   try {
+//     const appleAuthRequestResponse = await appleAuth.performRequest({
+//       requestedOperation: appleAuth.Operation.LOGIN,
+//       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+//     });
+
+//     console.log('appleAuthRequestResponse', appleAuthRequestResponse);
+
+//     const {
+//       user: newUser,
+//       email,
+//       nonce,
+//       identityToken,
+//       realUserStatus /* etc */,
+//     } = appleAuthRequestResponse;
+
+//     let user = newUser;
+
+//     if (identityToken) {
+//       // e.g. sign in with Firebase Auth using `nonce` & `identityToken`
+//       console.log(nonce, identityToken);
+//     } else {
+//       // no token - failed sign-in?
+//     }
+
+//     if (realUserStatus === appleAuth.UserStatus.LIKELY_REAL) {
+//       console.log("I'm a real person!");
+//     }
+
+//     console.warn(`Apple Authentication Completed, ${user}, ${email}`);
+//   } catch (error: any) {
+//     if (error.code === appleAuth.Error.CANCELED) {
+//       console.warn('User canceled Apple Sign in.');
+//     } else {
+//       console.error(error);
+//     }
+//   }
+// }
 
 const AppleButton = ({ style }: any) => {
+  useEffect(() => {
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn(
+        'If this function executes, User Credentials have been Revoked',
+      );
+    });
+  }, []);
+
   const { AppleButtonLabel } = useTranslation();
   return (
-    <TouchableOpacity style={[styles.button, style]}>
+    <TouchableOpacity
+      style={[styles.button, style]}
+      onPress={() => onAppleButtonPress()}>
       <Image
         source={require('../../assets/images/apple.png')}
         style={styles.image}
