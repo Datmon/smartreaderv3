@@ -19,3 +19,11 @@ export const signUp = async (
   });
   return res;
 };
+
+export const serviceSignUp = async (email: string, username: string) => {
+  const res = await axios.post(BASE_URL + 'auth/service', {
+    email,
+    username,
+  });
+  return res;
+};

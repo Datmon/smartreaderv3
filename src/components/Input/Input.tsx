@@ -4,8 +4,15 @@ import React, { ReactElement, useEffect, useState } from 'react';
 interface IInput {
   style: any;
   onChangeText: (value: string) => void;
-  value?: string;
+  autoComplete?: 'email' | 'password' | 'password-new' | 'username' | undefined;
+  textContentType?:
+    | 'emailAddress'
+    | 'password'
+    | 'newPassword'
+    | 'username'
+    | undefined;
   placeholder: string;
+  value?: string;
   leftIcon?: (color: string) => ReactElement;
   secureTextEntry?: boolean;
   rightIcon?: (color: string) => ReactElement;
@@ -17,6 +24,8 @@ const Input = ({
   value,
   secureTextEntry = false,
   placeholder,
+  autoComplete,
+  textContentType,
   leftIcon,
   rightIcon,
 }: IInput) => {
@@ -43,6 +52,8 @@ const Input = ({
         placeholder={placeholder}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
+        autoComplete={autoComplete}
+        textContentType={textContentType}
       />
       {secureTextEntry && (
         <TouchableOpacity

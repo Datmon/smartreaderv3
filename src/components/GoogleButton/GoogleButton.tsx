@@ -4,8 +4,12 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import { useTranslation } from 'context/LanguageContext';
 import { Text } from 'components/Text';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
 const GoogleButton = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     GoogleSignin.signOut();
   }, []);
@@ -27,6 +31,14 @@ const GoogleButton = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfo: ', userInfo);
+      if (userInfo.user.familyName) {
+        const res = await dispatch(
+          actions.auth.serviceSignUp({
+            email: userInfo.user.email,
+            username: userInfo.user.familyName,
+          }),
+        );
+      }
     } catch (error) {
       console.log(error);
     }

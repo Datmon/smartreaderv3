@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectors } from 'store';
 import Onboarding from 'screens/Onboarding';
 import Auth from 'screens/Auth';
-import ResetPassword from 'screens/ResetPassword';
-import Verification from 'screens/Verification';
+import ResetPassword from 'screens/ChangePasswordFlow/ResetPassword';
+import Verification from 'screens/ChangePasswordFlow/Verification';
 import { StorageService } from 'services';
 import Bookshelf from 'screens/Bookshelf';
 import { actions } from 'store';
+import CreateNewPassword from './ChangePasswordFlow/CreateNewPassword';
+import SuccessChanged from './ChangePasswordFlow/SuccessChanged';
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
@@ -49,6 +51,11 @@ const Navigation = () => {
           <AuthStack.Screen name="Auth" component={Auth} />
           <AuthStack.Screen name="ResetPassword" component={ResetPassword} />
           <AuthStack.Screen name="Verification" component={Verification} />
+          <AuthStack.Screen
+            name="CreateNewPassword"
+            component={CreateNewPassword}
+          />
+          <AuthStack.Screen name="SuccessChanged" component={SuccessChanged} />
         </AuthStack.Navigator>
       ) : (
         <MainStack.Navigator

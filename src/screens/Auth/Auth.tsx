@@ -71,62 +71,79 @@ const Auth = ({
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <BackButton onPress={() => navigation.navigate('Onboarding')} />
-        {isVisibleSignIn ? (
-          <>
-            <Text title style={styles.SignInMeeting} text={SignInMeeting} />
-            <Text label style={styles.SignInLabel} text={SignInLabel} />
-          </>
-        ) : (
-          <Text title style={styles.SignInMeeting} text={SignUpMeeting} />
-        )}
+        <View>
+          <BackButton onPress={() => navigation.navigate('Onboarding')} />
+          <View>
+            {isVisibleSignIn ? (
+              <>
+                <Text title style={styles.SignInMeeting} text={SignInMeeting} />
+                <Text label style={styles.SignInLabel} text={SignInLabel} />
+              </>
+            ) : (
+              <Text title style={styles.SignInMeeting} text={SignUpMeeting} />
+            )}
 
-        {!isVisibleSignIn && (
-          <Input
-            onChangeText={setUsername}
-            value={username}
-            style={styles.input}
-            placeholder="Username"
-            leftIcon={(color: string) => <NicknameIcon color={color} />}
-          />
-        )}
+            {!isVisibleSignIn && (
+              <Input
+                onChangeText={setUsername}
+                value={username}
+                style={styles.input}
+                placeholder="Username"
+                autoComplete="username"
+                textContentType="username"
+                leftIcon={(color: string) => <NicknameIcon color={color} />}
+              />
+            )}
 
-        <Input
-          onChangeText={setEmail}
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          secureTextEntry={false}
-          leftIcon={(color: string) => <EmailIcon color={color} />}
-        />
-        <Input
-          onChangeText={setPassword}
-          value={password}
-          style={styles.input}
-          secureTextEntry={true}
-          placeholder="Password"
-          leftIcon={(color: string) => <PasswordIcon color={color} />}
-          rightIcon={(color: string) => <ShowPasswordIcon color={color} />}
-        />
-        <ClickableText
-          style={styles.forgotPass}
-          text={SignInForgotPass}
-          onPress={() => {
-            navigation.navigate('ResetPassword', { email });
-          }}
-        />
+            <Input
+              onChangeText={setEmail}
+              value={email}
+              style={styles.input}
+              placeholder="Email"
+              autoComplete="email"
+              textContentType="emailAddress"
+              secureTextEntry={false}
+              leftIcon={(color: string) => <EmailIcon color={color} />}
+            />
+            <Input
+              onChangeText={setPassword}
+              value={password}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder="Password"
+              autoComplete="password"
+              textContentType="password"
+              leftIcon={(color: string) => <PasswordIcon color={color} />}
+              rightIcon={(color: string) => <ShowPasswordIcon color={color} />}
+            />
+            <ClickableText
+              style={styles.forgotPass}
+              text={SignInForgotPass}
+              onPress={() => {
+                navigation.navigate('ResetPassword', { email });
+              }}
+            />
 
-        {isVisibleSignIn ? (
-          <Button style={styles.button} title={SignInButton} onPress={signIn} />
-        ) : (
-          <Button style={styles.button} title={SignUpButton} onPress={signUp} />
-        )}
+            {isVisibleSignIn ? (
+              <Button
+                style={styles.button}
+                title={SignInButton}
+                onPress={signIn}
+              />
+            ) : (
+              <Button
+                style={styles.button}
+                title={SignUpButton}
+                onPress={signUp}
+              />
+            )}
 
-        <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
+            <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
-        <AppleButton style={styles.appleButton} />
-        <GoogleButton />
-
+            <AppleButton style={styles.appleButton} />
+            <GoogleButton />
+          </View>
+        </View>
         <View style={styles.buttomLabel}>
           <Text
             text={(isVisibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
@@ -149,6 +166,8 @@ export default Auth;
 const styles = StyleSheet.create({
   container: {
     padding: 24,
+    height: '100%',
+    justifyContent: 'space-between',
   },
   SignInMeeting: {
     marginBottom: 8,

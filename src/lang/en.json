@@ -24,5 +24,13 @@
     "VerificationTitle": "Verification code",
     "VerificationLabel": "Enter the verification code that we have sent to your email",
     "VerificationResend": "Resend Code",
-    "VerificationContinue": "Continue"
+    "VerificationContinue": "Continue",
+    "CreateNewPasswordTitle": "Create New Password",
+    "CreateNewPasswordLabel": "Your password must be different from previous used password",
+    "CreateNewPasswordEnter": "Enter new password",
+    "CreateNewPasswordConfirm": "Confrim password",
+    "CreateNewPasswordResetPassword": "Reset password",
+    "SuccessChangedTitle": "Password Changed",
+    "SuccessChangedLabel": "Password changed succesfully, you can login again with new password",
+    "SuccessChangedLogin": "Login"
 }

@@ -25,6 +25,22 @@ const signIn = createAsyncThunk(
   },
 );
 
+const serviceSignUp = createAsyncThunk(
+  'auth/service',
+  async ({ email, username }: { email: string; username: string }) => {
+    try {
+      const response = await auth.serviceSignUp(email, username);
+      console.log('response.data', response.data);
+      await StorageService.setAccessToken(response.data.access_token);
+      const token = await StorageService.getAssessToken();
+      console.log('token', token);
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  },
+);
+
 const signOut = createAsyncThunk('auth/signOut', async () => {
   return StorageService.removeAssessToken();
 });
@@ -40,6 +56,7 @@ export const reducer = createReducer(
   {
     user: {} as User,
     signingInStatus: 'idle',
+    serviceSignUpStatus: 'idle',
   },
   builder => {
     builder.addCase(setAccessToken, (state, action) => {
@@ -57,6 +74,18 @@ export const reducer = createReducer(
       .addCase(signIn.rejected, state => {
         state.signingInStatus = 'rejected';
       });
+
+    builder
+      .addCase(serviceSignUp.pending, state => {
+        state.serviceSignUpStatus = 'pending';
+      })
+      .addCase(serviceSignUp.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.serviceSignUpStatus = 'fulfilled';
+      })
+      .addCase(serviceSignUp.rejected, state => {
+        state.serviceSignUpStatus = 'rejected';
+      });
   },
 );
 
@@ -64,6 +93,7 @@ export const actions = {
   signIn,
   signOut,
   setAccessToken,
+  serviceSignUp,
 };
 
 export const selectors = {
