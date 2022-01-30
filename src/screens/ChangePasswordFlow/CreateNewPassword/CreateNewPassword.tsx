@@ -13,6 +13,13 @@ import Input from 'components/Input';
 import { PasswordIcon, ShowPasswordIcon } from 'assets/svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Button from 'components/Button';
+import {
+  composeValidators,
+  isSame,
+  minLength,
+  required,
+} from 'utils/validation';
+import { Field, Form } from 'react-final-form';
 
 type RootStackParamList = {
   CreateNewPassword: undefined;
@@ -32,43 +39,88 @@ const CreateNewPassword = ({
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const onSubmit = () => {
+    navigation.navigate('SuccessChanged');
+  };
+
   return (
     <SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.container}>
-          <View>
-            <BackButton onPress={() => navigation.goBack()} />
-            <Text title text={CreateNewPasswordTitle} style={styles.title} />
-            <Text label text={CreateNewPasswordLabel} style={styles.label} />
-            <Input
-              onChangeText={setNewPassword}
-              value={newPassword}
-              style={[styles.input, styles.firstInput]}
-              placeholder={CreateNewPasswordEnter}
-              autoComplete="password"
-              textContentType="password"
-              secureTextEntry={true}
-              leftIcon={(color: string) => <PasswordIcon color={color} />}
-              rightIcon={(color: string) => <ShowPasswordIcon color={color} />}
-            />
-            <Input
-              onChangeText={setConfirmPassword}
-              value={confirmPassword}
-              style={styles.input}
-              placeholder={CreateNewPasswordConfirm}
-              autoComplete="password-new"
-              textContentType="newPassword"
-              secureTextEntry={true}
-              leftIcon={(color: string) => <PasswordIcon color={color} />}
-              rightIcon={(color: string) => <ShowPasswordIcon color={color} />}
-            />
-          </View>
-          <Button
-            title={CreateNewPasswordResetPassword}
-            onPress={() => navigation.navigate('SuccessChanged')}
-          />
-        </View>
+        <Form
+          onSubmit={onSubmit}
+          render={({ handleSubmit }) => (
+            <View style={styles.container}>
+              <View>
+                <BackButton onPress={() => navigation.goBack()} />
+                <Text
+                  title
+                  text={CreateNewPasswordTitle}
+                  style={styles.title}
+                />
+                <Text
+                  label
+                  text={CreateNewPasswordLabel}
+                  style={styles.label}
+                />
+                <Field
+                  name="New password"
+                  validate={composeValidators(required, minLength(6))}>
+                  {({ input, meta }) => (
+                    <Input
+                      meta={meta}
+                      input={input}
+                      onChangeText={setNewPassword}
+                      value={newPassword}
+                      style={[styles.input, styles.firstInput]}
+                      placeholder={CreateNewPasswordEnter}
+                      autoComplete="password"
+                      textContentType="password"
+                      secureTextEntry={true}
+                      leftIcon={(color: string) => (
+                        <PasswordIcon color={color} />
+                      )}
+                      rightIcon={(color: string) => (
+                        <ShowPasswordIcon color={color} />
+                      )}
+                    />
+                  )}
+                </Field>
+                <Field
+                  name="Confirm password"
+                  validate={composeValidators(
+                    required,
+                    minLength(6),
+                    isSame(newPassword),
+                  )}>
+                  {({ input, meta }) => (
+                    <Input
+                      meta={meta}
+                      input={input}
+                      onChangeText={setConfirmPassword}
+                      value={confirmPassword}
+                      style={styles.input}
+                      placeholder={CreateNewPasswordConfirm}
+                      autoComplete="password-new"
+                      textContentType="newPassword"
+                      secureTextEntry={true}
+                      leftIcon={(color: string) => (
+                        <PasswordIcon color={color} />
+                      )}
+                      rightIcon={(color: string) => (
+                        <ShowPasswordIcon color={color} />
+                      )}
+                    />
+                  )}
+                </Field>
+              </View>
+              <Button
+                title={CreateNewPasswordResetPassword}
+                onPress={handleSubmit}
+              />
+            </View>
+          )}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

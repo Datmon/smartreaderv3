@@ -12,11 +12,13 @@ export const signUp = async (
   email: string,
   password: string,
 ) => {
-  const res = await axios.post(BASE_URL + 'auth/register', {
-    username,
-    email,
-    password,
-  });
+  const res = await axios
+    .post(BASE_URL + 'auth/register', {
+      username,
+      email,
+      password,
+    })
+    .catch(error => error);
   return res;
 };
 

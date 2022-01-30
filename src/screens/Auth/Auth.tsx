@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
 
 import { Text } from 'components/Text';
 import Input from 'components/Input';
@@ -19,6 +19,13 @@ import Button from 'components/Button';
 import AppleButton from 'components/AppleButton';
 import GoogleButton from 'components/GoogleButton';
 import BackButton from 'components/BackButton/BackButton';
+import { Field, Form } from 'react-final-form';
+import {
+  composeValidators,
+  isEmail,
+  minLength,
+  required,
+} from 'utils/validation';
 
 type RootStackParamList = {
   Auth: undefined;
@@ -50,15 +57,24 @@ const Auth = ({
 
   const signIn = async () => {
     if (email && password) {
-      const res = await dispatch(actions.auth.signIn({ email, password }));
+      const res: any = await dispatch(actions.auth.signIn({ email, password }));
+      if (res.payload.message) {
+        Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
+      }
+
+      // console.log(); //clo
     }
   };
 
   const signUp = async () => {
     if (email && password && username) {
-      const res = await auth.signUp(username, email, password);
-      console.log(res);
-      signIn();
+      const res: any = await auth.signUp(username, email, password);
+      //console.log('res: ', res.response);
+      if (res.response) {
+        Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
+      } else {
+        signIn();
+      }
     }
   };
 
@@ -83,58 +99,153 @@ const Auth = ({
               <Text title style={styles.SignInMeeting} text={SignUpMeeting} />
             )}
 
-            {!isVisibleSignIn && (
-              <Input
-                onChangeText={setUsername}
-                value={username}
-                style={styles.input}
-                placeholder="Username"
-                autoComplete="username"
-                textContentType="username"
-                leftIcon={(color: string) => <NicknameIcon color={color} />}
-              />
-            )}
-
-            <Input
-              onChangeText={setEmail}
-              value={email}
-              style={styles.input}
-              placeholder="Email"
-              autoComplete="email"
-              textContentType="emailAddress"
-              secureTextEntry={false}
-              leftIcon={(color: string) => <EmailIcon color={color} />}
-            />
-            <Input
-              onChangeText={setPassword}
-              value={password}
-              style={styles.input}
-              secureTextEntry={true}
-              placeholder="Password"
-              autoComplete="password"
-              textContentType="password"
-              leftIcon={(color: string) => <PasswordIcon color={color} />}
-              rightIcon={(color: string) => <ShowPasswordIcon color={color} />}
-            />
-            <ClickableText
-              style={styles.forgotPass}
-              text={SignInForgotPass}
-              onPress={() => {
-                navigation.navigate('ResetPassword', { email });
-              }}
-            />
-
             {isVisibleSignIn ? (
-              <Button
-                style={styles.button}
-                title={SignInButton}
-                onPress={signIn}
+              <Form
+                onSubmit={signIn}
+                initialValues={{ email: email }}
+                render={({ handleSubmit }) => (
+                  <>
+                    <Field
+                      name="email"
+                      validate={composeValidators(required, isEmail)}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          onChangeText={setEmail}
+                          value={email}
+                          style={styles.input}
+                          placeholder="Email"
+                          autoComplete="email"
+                          textContentType="emailAddress"
+                          secureTextEntry={false}
+                          leftIcon={(color: string) => (
+                            <EmailIcon color={color} />
+                          )}
+                        />
+                      )}
+                    </Field>
+                    <Field
+                      name="password"
+                      validate={composeValidators(required, minLength(6))}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          onChangeText={setPassword}
+                          value={password}
+                          style={styles.input}
+                          secureTextEntry={true}
+                          placeholder="Password"
+                          autoComplete="password"
+                          textContentType="password"
+                          leftIcon={(color: string) => (
+                            <PasswordIcon color={color} />
+                          )}
+                          rightIcon={(color: string) => (
+                            <ShowPasswordIcon color={color} />
+                          )}
+                        />
+                      )}
+                    </Field>
+                    <ClickableText
+                      style={styles.forgotPass}
+                      text={SignInForgotPass}
+                      onPress={() => {
+                        navigation.navigate('ResetPassword', { email });
+                      }}
+                    />
+
+                    <Button
+                      style={styles.button}
+                      title={SignInButton}
+                      onPress={handleSubmit}
+                    />
+                  </>
+                )}
               />
             ) : (
-              <Button
-                style={styles.button}
-                title={SignUpButton}
-                onPress={signUp}
+              <Form
+                onSubmit={signUp}
+                initialValues={{ email: email }}
+                render={({ handleSubmit }) => (
+                  <>
+                    <Field
+                      name="username"
+                      validate={composeValidators(required, minLength(6))}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          onChangeText={setUsername}
+                          value={username}
+                          style={styles.input}
+                          placeholder="Username"
+                          autoComplete="username"
+                          textContentType="username"
+                          leftIcon={(color: string) => (
+                            <NicknameIcon color={color} />
+                          )}
+                        />
+                      )}
+                    </Field>
+                    <Field
+                      name="email"
+                      validate={composeValidators(required, isEmail)}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          onChangeText={setEmail}
+                          value={email}
+                          style={styles.input}
+                          placeholder="Email"
+                          autoComplete="email"
+                          textContentType="emailAddress"
+                          secureTextEntry={false}
+                          leftIcon={(color: string) => (
+                            <EmailIcon color={color} />
+                          )}
+                        />
+                      )}
+                    </Field>
+                    <Field
+                      name="password"
+                      validate={composeValidators(required, minLength(6))}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          onChangeText={setPassword}
+                          value={password}
+                          style={styles.input}
+                          secureTextEntry={true}
+                          placeholder="Password"
+                          autoComplete="password"
+                          textContentType="password"
+                          leftIcon={(color: string) => (
+                            <PasswordIcon color={color} />
+                          )}
+                          rightIcon={(color: string) => (
+                            <ShowPasswordIcon color={color} />
+                          )}
+                        />
+                      )}
+                    </Field>
+                    <ClickableText
+                      style={styles.forgotPass}
+                      text={SignInForgotPass}
+                      onPress={() => {
+                        navigation.navigate('ResetPassword', { email });
+                      }}
+                    />
+                    <Button
+                      style={styles.button}
+                      title={SignUpButton}
+                      onPress={handleSubmit}
+                    />
+                  </>
+                )}
               />
             )}
 

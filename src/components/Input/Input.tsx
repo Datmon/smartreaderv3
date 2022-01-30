@@ -1,5 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { ReactElement, useEffect, useState } from 'react';
+import { FieldRenderProps } from 'react-final-form';
+import { Text } from 'components/Text';
 
 interface IInput {
   style: any;
@@ -28,7 +31,9 @@ const Input = ({
   textContentType,
   leftIcon,
   rightIcon,
-}: IInput) => {
+  meta,
+  input,
+}: FieldRenderProps<string, any> & IInput) => {
   const [isFocus, setIsFocus] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
   useEffect(() => {
@@ -40,11 +45,20 @@ const Input = ({
       <View style={styles.leftIcon}>
         {leftIcon && leftIcon(isFocus ? '#455AF7' : '#718096')}
       </View>
+      {/* @ts-ignore */}
       <TextInput
+        {...input}
         autoCapitalize={'none'}
         style={[
           styles.input,
-          isFocus ? { borderColor: '#455AF7' } : { borderColor: '#E2E8F0' },
+          {
+            borderColor:
+              meta && meta.touched && meta.error
+                ? 'red'
+                : isFocus
+                ? '#455AF7'
+                : '#E2E8F0',
+          },
         ]}
         onChangeText={onChangeText}
         value={value}
@@ -54,6 +68,7 @@ const Input = ({
         onBlur={() => setIsFocus(false)}
         autoComplete={autoComplete}
         textContentType={textContentType}
+        autoCorrect={false}
       />
       {secureTextEntry && (
         <TouchableOpacity
@@ -62,6 +77,9 @@ const Input = ({
           onPress={() => setIsVisiblePassword(!isVisiblePassword)}>
           {rightIcon && rightIcon(isVisiblePassword ? '#718096' : '#455AF7')}
         </TouchableOpacity>
+      )}
+      {meta && meta.touched && meta.error && (
+        <Text text={meta.error} style={styles.errorMessage} />
       )}
     </View>
   );
@@ -88,5 +106,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 18,
+  },
+  errorMessage: {
+    marginLeft: 14,
+    color: 'red',
+    fontSize: 14,
+    marginBottom: -4,
+    marginTop: 1,
   },
 });

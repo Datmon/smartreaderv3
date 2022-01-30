@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BackButton from 'components/BackButton/BackButton';
 import { useTranslation } from 'context/LanguageContext';
 import { Text } from 'components/Text';
@@ -36,11 +36,16 @@ const Verification = ({
   } = useTranslation();
 
   const [value, setValue] = useState('');
+  const [isDisabled, setIsDisabled] = useState(true);
   const ref = useBlurOnFulfill({ value, cellCount: 4 });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
+
+  useEffect(() => {
+    value.length === 4 ? setIsDisabled(false) : setIsDisabled(true);
+  }, [value]);
 
   return (
     <SafeAreaView>
@@ -79,6 +84,7 @@ const Verification = ({
           <Button
             title={VerificationContinue}
             onPress={() => navigation.navigate('CreateNewPassword')}
+            disabled={isDisabled}
           />
         </View>
       </KeyboardAvoidingView>

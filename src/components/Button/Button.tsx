@@ -3,16 +3,18 @@ import React from 'react';
 
 interface IButton {
   title: string;
+  disabled?: boolean;
   style?: any;
   onPress?: () => void;
 }
 
-const Button = ({ title, style, onPress }: IButton) => {
+const Button = ({ title, style, disabled, onPress }: IButton) => {
   return (
     <TouchableOpacity
-      style={[styles.button, style]}
+      style={[styles.button, style, disabled && styles.disabled]}
       activeOpacity={0.6}
-      onPress={onPress}>
+      onPress={onPress}
+      disabled={disabled}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -32,5 +34,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     fontSize: 14,
+  },
+  disabled: {
+    backgroundColor: 'grey',
   },
 });

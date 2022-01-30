@@ -14,6 +14,9 @@ const signIn = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }) => {
     try {
       const response = await auth.signIn(email, password);
+      if (response.data.error) {
+        throw new Error(response.data.message);
+      }
       console.log('response.data', response.data);
       await StorageService.setAccessToken(response.data.access_token);
       const token = await StorageService.getAssessToken();
