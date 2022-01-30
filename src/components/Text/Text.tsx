@@ -19,10 +19,10 @@ const CustomText = ({
     <Text
       style={[
         styles.regular,
-        style,
         clickbale && styles.button,
         title && styles.title,
         label && styles.label,
+        style,
       ]}>
       {text}
     </Text>
