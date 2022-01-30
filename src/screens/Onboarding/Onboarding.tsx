@@ -1,5 +1,5 @@
 import { useTranslation } from 'context/LanguageContext';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -11,6 +11,7 @@ import {
 import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
 import NextButton from './NextButton';
+import { StorageService } from 'services';
 
 const Onboarding = ({ navigation }: any) => {
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -54,12 +55,13 @@ const Onboarding = ({ navigation }: any) => {
 
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const scrollTo = () => {
+  const scrollTo = async () => {
     console.log('currentIndex', currentIndex);
     if (currentIndex < slides.length - 1) {
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       console.log('last item');
+      await StorageService.setOnboarding('false');
       navigation.navigate('Auth');
     }
   };
@@ -96,7 +98,7 @@ const Onboarding = ({ navigation }: any) => {
       <View style={styles.bottomPanel}>
         <Text
           style={styles.skipButton}
-          onPress={() => navigation.navigate('SignIn')}>
+          onPress={() => navigation.navigate('Auth')}>
           Skip
         </Text>
         <NextButton

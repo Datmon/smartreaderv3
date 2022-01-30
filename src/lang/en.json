@@ -17,5 +17,20 @@
     "SignUpQuestionIn": "Don't have an account?",
     "SignUpQuestionUp": "Have an account?",
     "AppleButtonLabel": "Continue with Apple",
-    "GoogleButtonLabel": "Continue with Google"
+    "GoogleButtonLabel": "Continue with Google",
+    "ResetTitle": "Reset Password",
+    "ResetLabel": "Enter your email, we will send a verification code to your email",
+    "ResetButton": "Send Link",
+    "VerificationTitle": "Verification code",
+    "VerificationLabel": "Enter the verification code that we have sent to your email",
+    "VerificationResend": "Resend Code",
+    "VerificationContinue": "Continue",
+    "CreateNewPasswordTitle": "Create New Password",
+    "CreateNewPasswordLabel": "Your password must be different from previous used password",
+    "CreateNewPasswordEnter": "Enter new password",
+    "CreateNewPasswordConfirm": "Confrim password",
+    "CreateNewPasswordResetPassword": "Reset password",
+    "SuccessChangedTitle": "Password Changed",
+    "SuccessChangedLabel": "Password changed succesfully, you can login again with new password",
+    "SuccessChangedLogin": "Login"
 }

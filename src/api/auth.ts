@@ -12,10 +12,20 @@ export const signUp = async (
   email: string,
   password: string,
 ) => {
-  const res = await axios.post(BASE_URL + 'auth/register', {
-    username,
+  const res = await axios
+    .post(BASE_URL + 'auth/register', {
+      username,
+      email,
+      password,
+    })
+    .catch(error => error);
+  return res;
+};
+
+export const serviceSignUp = async (email: string, username: string) => {
+  const res = await axios.post(BASE_URL + 'auth/service', {
     email,
-    password,
+    username,
   });
   return res;
 };

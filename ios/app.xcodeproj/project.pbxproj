@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		6172F2D35A4C3AA820D92908 /* libPods-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-app.a */; };
+		630C0E1C27A3F3F500FC2A9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630C0E1B27A3F3F500FC2A9E /* GoogleService-Info.plist */; };
 		7EF68E3733C33B6898317E18 /* libPods-app-appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-app-appTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8446B837BA604C3588CD0C14 /* EuclidCircular-400.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB5E9A11A7BE4505BDAE7C40 /* EuclidCircular-400.ttf */; };
@@ -40,6 +41,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = app/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-app-appTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-appTests.release.xcconfig"; path = "Target Support Files/Pods-app-appTests/Pods-app-appTests.release.xcconfig"; sourceTree = "<group>"; };
 		490E6C020885445BAC529BAF /* EuclidCircular-500.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "EuclidCircular-500.ttf"; path = "../src/assets/fonts/EuclidCircular-500.ttf"; sourceTree = "<group>"; };
+		630C0E1B27A3F3F500FC2A9E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "app/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		630C0E1D27A3FFBA00FC2A9E /* app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = app.entitlements; path = app/app.entitlements; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-app-appTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-appTests.debug.xcconfig"; path = "Target Support Files/Pods-app-appTests/Pods-app-appTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = app/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -90,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* app */ = {
 			isa = PBXGroup;
 			children = (
+				630C0E1D27A3FFBA00FC2A9E /* app.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -120,6 +124,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				630C0E1B27A3F3F500FC2A9E /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* app */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* appTests */,
@@ -256,6 +261,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				630C0E1C27A3F3F500FC2A9E /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				8446B837BA604C3588CD0C14 /* EuclidCircular-400.ttf in Resources */,
@@ -499,7 +505,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = app/app.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5Y3GYP3YLC;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -525,7 +533,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = app/app.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5Y3GYP3YLC;
 				INFOPLIST_FILE = app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
