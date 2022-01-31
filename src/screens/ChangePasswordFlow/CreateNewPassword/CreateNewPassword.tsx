@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import BackButton from 'components/BackButton/BackButton';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
@@ -36,8 +36,6 @@ const CreateNewPassword = ({
     CreateNewPasswordConfirm,
     CreateNewPasswordResetPassword,
   } = useTranslation();
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   const onSubmit = () => {
     navigation.navigate('SuccessChanged');
@@ -49,7 +47,7 @@ const CreateNewPassword = ({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Form
           onSubmit={onSubmit}
-          render={({ handleSubmit }) => (
+          render={({ handleSubmit, values }) => (
             <View style={styles.container}>
               <View>
                 <BackButton onPress={() => navigation.goBack()} />
@@ -64,14 +62,12 @@ const CreateNewPassword = ({
                   style={styles.label}
                 />
                 <Field
-                  name="New password"
+                  name="newPassword"
                   validate={composeValidators(required, minLength(6))}>
                   {({ input, meta }) => (
                     <Input
                       meta={meta}
                       input={input}
-                      onChangeText={setNewPassword}
-                      value={newPassword}
                       style={[styles.input, styles.firstInput]}
                       placeholder={CreateNewPasswordEnter}
                       autoComplete="password"
@@ -87,18 +83,16 @@ const CreateNewPassword = ({
                   )}
                 </Field>
                 <Field
-                  name="Confirm password"
+                  name="confirmPassword"
                   validate={composeValidators(
                     required,
                     minLength(6),
-                    isSame(newPassword),
+                    isSame(values.newPassword),
                   )}>
                   {({ input, meta }) => (
                     <Input
                       meta={meta}
                       input={input}
-                      onChangeText={setConfirmPassword}
-                      value={confirmPassword}
                       style={styles.input}
                       placeholder={CreateNewPasswordConfirm}
                       autoComplete="password-new"
