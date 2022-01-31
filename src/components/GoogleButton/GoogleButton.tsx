@@ -15,8 +15,11 @@ const GoogleButton = () => {
   }, []);
 
   if (Platform.OS === 'android') {
-    //TODO make google sign in button
-    console.log('android');
+    GoogleSignin.configure({
+      scopes: ['profile'],
+      webClientId:
+        '835684202283-jp3078rli0lrrk81ip19oeotcl5lqcso.apps.googleusercontent.com',
+    });
   } else {
     GoogleSignin.configure({
       scopes: ['profile'],
@@ -40,7 +43,7 @@ const GoogleButton = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log('catch: ', error);
     }
   };
 

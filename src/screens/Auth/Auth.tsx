@@ -246,7 +246,7 @@ const Auth = ({
 
             <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
-            <AppleButton style={styles.appleButton} />
+            {/* <AppleButton style={styles.appleButton} /> */}
             <GoogleButton />
           </View>
         </View>
