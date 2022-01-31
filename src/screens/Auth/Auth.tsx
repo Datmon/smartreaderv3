@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
-import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert, Platform } from 'react-native';
 
 import { Text } from 'components/Text';
 import Input from 'components/Input';
@@ -246,7 +246,9 @@ const Auth = ({
 
             <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
-            {/* <AppleButton style={styles.appleButton} /> */}
+            {Platform.OS === 'ios' && (
+              <AppleButton style={styles.appleButton} />
+            )}
             <GoogleButton />
           </View>
         </View>
