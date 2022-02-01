@@ -7,7 +7,11 @@ import { Text } from 'components/Text';
 import { useDispatch } from 'react-redux';
 import { actions } from 'store';
 
-const GoogleButton = () => {
+const GoogleButton = ({
+  setIsLoading,
+}: {
+  setIsLoading: (isLoading: boolean) => void;
+}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -15,8 +19,11 @@ const GoogleButton = () => {
   }, []);
 
   if (Platform.OS === 'android') {
-    //TODO make google sign in button
-    console.log('android');
+    GoogleSignin.configure({
+      scopes: ['profile'],
+      webClientId:
+        '835684202283-jp3078rli0lrrk81ip19oeotcl5lqcso.apps.googleusercontent.com',
+    });
   } else {
     GoogleSignin.configure({
       scopes: ['profile'],
@@ -26,6 +33,7 @@ const GoogleButton = () => {
   }
 
   const signInGoogle = async () => {
+    setIsLoading(true);
     //TODO: setup android: https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md
     try {
       await GoogleSignin.hasPlayServices();
@@ -40,8 +48,9 @@ const GoogleButton = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log('catch: ', error);
     }
+    setIsLoading(false);
   };
 
   const { GoogleButtonLabel } = useTranslation();

@@ -34,6 +34,7 @@ export default CustomText;
 const styles = StyleSheet.create({
   regular: {
     fontFamily: 'Euclid Circular A',
+    color: 'black',
   },
   button: {
     color: 'blue',

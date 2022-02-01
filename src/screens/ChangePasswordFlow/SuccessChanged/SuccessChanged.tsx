@@ -5,11 +5,7 @@ import { Text } from 'components/Text';
 import Button from 'components/Button';
 import BackButton from 'components/BackButton/BackButton';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-type RootStackParamList = {
-  SuccessChanged: undefined;
-  Auth: undefined;
-};
+import { RootStackParamList } from 'types';
 
 const SuccessChanged = ({
   navigation,

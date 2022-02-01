@@ -19,14 +19,15 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-
-type RootStackParamList = {
-  Verification: undefined;
-  CreateNewPassword: undefined;
-};
+import { actions } from 'store/ducks/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootStackParamList } from 'types';
+import { selectors } from 'store';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Verification = ({
   navigation,
+  route,
 }: NativeStackScreenProps<RootStackParamList, 'Verification'>) => {
   const {
     VerificationTitle,
@@ -36,7 +37,9 @@ const Verification = ({
   } = useTranslation();
 
   const [value, setValue] = useState('');
+  const [isError, setIsError] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const ref = useBlurOnFulfill({ value, cellCount: 4 });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -44,8 +47,33 @@ const Verification = ({
   });
 
   useEffect(() => {
+    getVerificationCode();
+  }, []);
+
+  useEffect(() => {
     value.length === 4 ? setIsDisabled(false) : setIsDisabled(true);
   }, [value]);
+
+  const dispatch = useDispatch();
+  const verificationCode = useSelector(selectors.auth.selectVerificationCode);
+
+  const getVerificationCode = async () => {
+    setIsLoading(true);
+    const res: any = await dispatch(
+      actions.verificate({ email: route.params.email }),
+    );
+    setIsLoading(false);
+    console.log('verification: ', res);
+  };
+
+  const checkVerificationCode = () => {
+    console.log('verificationCode: ', verificationCode, ' value: ', value);
+    if (verificationCode && +verificationCode === +value) {
+      route.params?.onVerification();
+    } else {
+      setIsError(true);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -57,11 +85,13 @@ const Verification = ({
             <Text title text={VerificationTitle} style={styles.title} />
             <Text label text={VerificationLabel} style={styles.label} />
             <CodeField
-              // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
               ref={ref}
               {...props}
               value={value}
-              onChangeText={setValue}
+              onChangeText={e => {
+                setValue(e);
+                setIsError(false);
+              }}
               cellCount={4}
               rootStyle={styles.codeFieldRoot}
               keyboardType="number-pad"
@@ -69,7 +99,11 @@ const Verification = ({
               renderCell={({ index, symbol, isFocused }) => (
                 <RNText
                   key={index}
-                  style={[styles.cell, isFocused && styles.focusCell]}
+                  style={[
+                    styles.cell,
+                    isFocused && styles.focusCell,
+                    isError && { borderColor: 'red' },
+                  ]}
                   onLayout={getCellOnLayoutHandler(index)}>
                   {symbol || (isFocused ? <Cursor /> : null)}
                 </RNText>
@@ -83,10 +117,11 @@ const Verification = ({
           </View>
           <Button
             title={VerificationContinue}
-            onPress={() => navigation.navigate('CreateNewPassword')}
+            onPress={checkVerificationCode}
             disabled={isDisabled}
           />
         </View>
+        <LoadingIndicator isLoading={isLoading} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -114,11 +149,12 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     fontSize: 28,
-    paddingTop: 10,
+    paddingTop: 8,
     borderWidth: 1,
     borderColor: '#E2E8F0',
     borderRadius: 16,
     textAlign: 'center',
+    color: 'black',
   },
   focusCell: {
     borderColor: '#455AF7',

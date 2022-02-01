@@ -6,7 +6,7 @@ import { Text } from 'components/Text';
 
 interface IInput {
   style: any;
-  onChangeText: (value: string) => void;
+  onChangeText?: (value: string) => void;
   autoComplete?: 'email' | 'password' | 'password-new' | 'username' | undefined;
   textContentType?:
     | 'emailAddress'
@@ -23,8 +23,6 @@ interface IInput {
 
 const Input = ({
   style,
-  onChangeText,
-  value,
   secureTextEntry = false,
   placeholder,
   autoComplete,
@@ -45,9 +43,7 @@ const Input = ({
       <View style={styles.leftIcon}>
         {leftIcon && leftIcon(isFocus ? '#455AF7' : '#718096')}
       </View>
-      {/* @ts-ignore */}
       <TextInput
-        {...input}
         autoCapitalize={'none'}
         style={[
           styles.input,
@@ -60,8 +56,7 @@ const Input = ({
                 : '#E2E8F0',
           },
         ]}
-        onChangeText={onChangeText}
-        value={value}
+        {...input}
         secureTextEntry={isVisiblePassword}
         placeholder={placeholder}
         onFocus={() => setIsFocus(true)}

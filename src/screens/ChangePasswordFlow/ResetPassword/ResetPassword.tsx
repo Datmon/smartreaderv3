@@ -1,11 +1,12 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BackButton from 'components/BackButton/BackButton';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
@@ -15,26 +16,28 @@ import Button from 'components/Button';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Form, Field } from 'react-final-form';
 import { composeValidators, isEmail, required } from 'utils/validation';
-
-type RootStackParamList = {
-  ResetPassword: { email: string } | undefined;
-  Verification: undefined;
-};
+import { RootStackParamList } from 'types';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
 const ResetPassword = ({
   navigation,
-  route,
 }: NativeStackScreenProps<RootStackParamList, 'ResetPassword'>) => {
   const { ResetTitle, ResetLabel, ResetButton } = useTranslation();
-  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const userEmail = route.params?.email || '';
-    setEmail(userEmail);
-  }, [route.params?.email]);
-
-  const onSubmit = () => {
-    navigation.navigate('Verification');
+  const onSubmit = async (values: { email: string }) => {
+    const res: any = await dispatch(
+      actions.auth.userExists({ email: values.email }),
+    );
+    if (res.payload.message) {
+      Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
+    } else {
+      navigation.navigate('Verification', {
+        onVerification: () => navigation.navigate('CreateNewPassword'),
+        email: values.email,
+      });
+    }
   };
 
   return (
@@ -43,7 +46,6 @@ const ResetPassword = ({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Form
           onSubmit={onSubmit}
-          initialValues={{ email: email }}
           render={({ handleSubmit }) => (
             <View style={styles.container}>
               <View>
@@ -58,8 +60,6 @@ const ResetPassword = ({
                     <Input
                       meta={meta}
                       input={input}
-                      onChangeText={setEmail}
-                      value={email}
                       style={styles.input}
                       placeholder="Email"
                       autoComplete="email"

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
-import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
-
+import { View, SafeAreaView, StyleSheet, Alert, Platform } from 'react-native';
 import { Text } from 'components/Text';
 import Input from 'components/Input';
 import { auth } from 'api';
@@ -26,12 +25,8 @@ import {
   minLength,
   required,
 } from 'utils/validation';
-
-type RootStackParamList = {
-  Auth: undefined;
-  Onboarding: undefined;
-  ResetPassword: { email: string } | undefined;
-};
+import { RootStackParamList } from 'types';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Auth = ({
   navigation,
@@ -50,38 +45,51 @@ const Auth = ({
 
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
   const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const signIn = async () => {
-    if (email && password) {
-      const res: any = await dispatch(actions.auth.signIn({ email, password }));
+  const signIn = async (data: { email: string; password: string }) => {
+    console.log('data: ', data);
+    setIsLoading(true);
+    if (data.email && data.password) {
+      const res: any = await dispatch(
+        actions.auth.signIn({ email: data.email, password: data.password }),
+      );
       if (res.payload.message) {
         Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
       }
-
-      // console.log(); //clo
     }
+    setIsLoading(false);
   };
 
-  const signUp = async () => {
-    if (email && password && username) {
-      const res: any = await auth.signUp(username, email, password);
+  const signUp = async (data: {
+    email: string;
+    password: string;
+    username: string;
+  }) => {
+    console.log('data: ', data);
+    setIsLoading(true);
+    if (data.email && data.password && data.username) {
+      const res: any = await auth.signUp(
+        data.username,
+        data.email,
+        data.password,
+      );
       //console.log('res: ', res.response);
       if (res.response) {
         Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
       } else {
-        signIn();
+        navigation.navigate('Verification', {
+          onVerification: () => signIn(data),
+          email: data.email,
+        });
       }
     }
+    setIsLoading(false);
   };
 
   const changeisVisibleSignIn = () => {
     setisVisibleSignIn(!isVisibleSignIn);
-    setPassword('');
-    setUsername('');
   };
 
   return (
@@ -102,7 +110,6 @@ const Auth = ({
             {isVisibleSignIn ? (
               <Form
                 onSubmit={signIn}
-                initialValues={{ email: email }}
                 render={({ handleSubmit }) => (
                   <>
                     <Field
@@ -112,8 +119,6 @@ const Auth = ({
                         <Input
                           meta={meta}
                           input={input}
-                          onChangeText={setEmail}
-                          value={email}
                           style={styles.input}
                           placeholder="Email"
                           autoComplete="email"
@@ -132,8 +137,6 @@ const Auth = ({
                         <Input
                           meta={meta}
                           input={input}
-                          onChangeText={setPassword}
-                          value={password}
                           style={styles.input}
                           secureTextEntry={true}
                           placeholder="Password"
@@ -152,7 +155,7 @@ const Auth = ({
                       style={styles.forgotPass}
                       text={SignInForgotPass}
                       onPress={() => {
-                        navigation.navigate('ResetPassword', { email });
+                        navigation.navigate('ResetPassword');
                       }}
                     />
 
@@ -167,7 +170,6 @@ const Auth = ({
             ) : (
               <Form
                 onSubmit={signUp}
-                initialValues={{ email: email }}
                 render={({ handleSubmit }) => (
                   <>
                     <Field
@@ -177,8 +179,6 @@ const Auth = ({
                         <Input
                           meta={meta}
                           input={input}
-                          onChangeText={setUsername}
-                          value={username}
                           style={styles.input}
                           placeholder="Username"
                           autoComplete="username"
@@ -196,8 +196,6 @@ const Auth = ({
                         <Input
                           meta={meta}
                           input={input}
-                          onChangeText={setEmail}
-                          value={email}
                           style={styles.input}
                           placeholder="Email"
                           autoComplete="email"
@@ -216,8 +214,6 @@ const Auth = ({
                         <Input
                           meta={meta}
                           input={input}
-                          onChangeText={setPassword}
-                          value={password}
                           style={styles.input}
                           secureTextEntry={true}
                           placeholder="Password"
@@ -236,7 +232,7 @@ const Auth = ({
                       style={styles.forgotPass}
                       text={SignInForgotPass}
                       onPress={() => {
-                        navigation.navigate('ResetPassword', { email });
+                        navigation.navigate('ResetPassword');
                       }}
                     />
                     <Button
@@ -251,8 +247,13 @@ const Auth = ({
 
             <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
-            <AppleButton style={styles.appleButton} />
-            <GoogleButton />
+            {Platform.OS === 'ios' && (
+              <AppleButton
+                style={styles.appleButton}
+                setIsLoading={setIsLoading}
+              />
+            )}
+            <GoogleButton setIsLoading={setIsLoading} />
           </View>
         </View>
         <View style={styles.buttomLabel}>
@@ -268,6 +269,7 @@ const Auth = ({
           />
         </View>
       </View>
+      <LoadingIndicator isLoading={isLoading} />
     </SafeAreaView>
   );
 };
