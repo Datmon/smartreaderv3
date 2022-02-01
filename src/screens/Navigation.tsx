@@ -15,6 +15,7 @@ import { actions } from 'store';
 import CreateNewPassword from './ChangePasswordFlow/CreateNewPassword';
 import SuccessChanged from './ChangePasswordFlow/SuccessChanged';
 import { Text } from 'components/Text';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
@@ -47,14 +48,14 @@ const Navigation = () => {
   }, []);
 
   if (isLoading) {
-    return <Text text="Loading" />;
+    return <LoadingIndicator isLoading={isLoading} />;
   }
 
   return (
     <NavigationContainer>
       {!accessToken ? (
         <AuthStack.Navigator
-          initialRouteName={showOnboarding ? 'Onboarding' : 'Auth'}
+          initialRouteName={showOnboarding ? 'Onboarding' : 'Onboarding'} // : 'Onboarding' => 'Auth'
           screenOptions={{
             headerShown: false,
             contentStyle: {

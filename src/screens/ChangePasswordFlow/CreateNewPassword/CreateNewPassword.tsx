@@ -65,82 +65,84 @@ const CreateNewPassword = ({
   };
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, values }) => (
-            <View style={styles.container}>
-              <View>
-                <BackButton onPress={() => navigation.goBack()} />
-                <Text
-                  title
-                  text={CreateNewPasswordTitle}
-                  style={styles.title}
+    <>
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Form
+            onSubmit={onSubmit}
+            render={({ handleSubmit, values }) => (
+              <View style={styles.container}>
+                <View>
+                  <BackButton onPress={() => navigation.goBack()} />
+                  <Text
+                    title
+                    text={CreateNewPasswordTitle}
+                    style={styles.title}
+                  />
+                  <Text
+                    label
+                    text={CreateNewPasswordLabel}
+                    style={styles.label}
+                  />
+                  <Field
+                    name="newPassword"
+                    validate={composeValidators(required, minLength(6))}>
+                    {({ input, meta }) => (
+                      <Input
+                        meta={meta}
+                        input={input}
+                        style={[styles.input, styles.firstInput]}
+                        placeholder={CreateNewPasswordEnter}
+                        autoComplete="password"
+                        textContentType="password"
+                        secureTextEntry={true}
+                        leftIcon={(color: string) => (
+                          <PasswordIcon color={color} />
+                        )}
+                        rightIcon={(color: string) => (
+                          <ShowPasswordIcon color={color} />
+                        )}
+                      />
+                    )}
+                  </Field>
+                  <Field
+                    name="confirmPassword"
+                    validate={composeValidators(
+                      required,
+                      minLength(6),
+                      isSame(values.newPassword),
+                    )}>
+                    {({ input, meta }) => (
+                      <Input
+                        meta={meta}
+                        input={input}
+                        style={styles.input}
+                        placeholder={CreateNewPasswordConfirm}
+                        autoComplete="password-new"
+                        textContentType="newPassword"
+                        secureTextEntry={true}
+                        leftIcon={(color: string) => (
+                          <PasswordIcon color={color} />
+                        )}
+                        rightIcon={(color: string) => (
+                          <ShowPasswordIcon color={color} />
+                        )}
+                      />
+                    )}
+                  </Field>
+                </View>
+                <Button
+                  title={CreateNewPasswordResetPassword}
+                  onPress={handleSubmit}
                 />
-                <Text
-                  label
-                  text={CreateNewPasswordLabel}
-                  style={styles.label}
-                />
-                <Field
-                  name="newPassword"
-                  validate={composeValidators(required, minLength(6))}>
-                  {({ input, meta }) => (
-                    <Input
-                      meta={meta}
-                      input={input}
-                      style={[styles.input, styles.firstInput]}
-                      placeholder={CreateNewPasswordEnter}
-                      autoComplete="password"
-                      textContentType="password"
-                      secureTextEntry={true}
-                      leftIcon={(color: string) => (
-                        <PasswordIcon color={color} />
-                      )}
-                      rightIcon={(color: string) => (
-                        <ShowPasswordIcon color={color} />
-                      )}
-                    />
-                  )}
-                </Field>
-                <Field
-                  name="confirmPassword"
-                  validate={composeValidators(
-                    required,
-                    minLength(6),
-                    isSame(values.newPassword),
-                  )}>
-                  {({ input, meta }) => (
-                    <Input
-                      meta={meta}
-                      input={input}
-                      style={styles.input}
-                      placeholder={CreateNewPasswordConfirm}
-                      autoComplete="password-new"
-                      textContentType="newPassword"
-                      secureTextEntry={true}
-                      leftIcon={(color: string) => (
-                        <PasswordIcon color={color} />
-                      )}
-                      rightIcon={(color: string) => (
-                        <ShowPasswordIcon color={color} />
-                      )}
-                    />
-                  )}
-                </Field>
               </View>
-              <Button
-                title={CreateNewPasswordResetPassword}
-                onPress={handleSubmit}
-              />
-            </View>
-          )}
-        />
-        <LoadingIndicator isLoading={isLoading} />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            )}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+      <LoadingIndicator isLoading={isLoading} />
+    </>
   );
 };
 

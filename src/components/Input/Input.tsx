@@ -73,9 +73,7 @@ const Input = ({
           {rightIcon && rightIcon(isVisiblePassword ? '#718096' : '#455AF7')}
         </TouchableOpacity>
       )}
-      {meta && meta.touched && meta.error && (
-        <Text text={meta.error} style={styles.errorMessage} />
-      )}
+      {meta && meta.touched && meta.error && <Text text={meta.error} error />}
     </View>
   );
 };
@@ -101,12 +99,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 18,
-  },
-  errorMessage: {
-    marginLeft: 14,
-    color: 'red',
-    fontSize: 14,
-    marginBottom: -4,
-    marginTop: 1,
   },
 });

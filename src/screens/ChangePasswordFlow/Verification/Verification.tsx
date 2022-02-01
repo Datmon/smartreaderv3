@@ -76,54 +76,56 @@ const Verification = ({
   };
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.container}>
-          <View>
-            <BackButton onPress={() => navigation.goBack()} />
-            <Text title text={VerificationTitle} style={styles.title} />
-            <Text label text={VerificationLabel} style={styles.label} />
-            <CodeField
-              ref={ref}
-              {...props}
-              value={value}
-              onChangeText={e => {
-                setValue(e);
-                setIsError(false);
-              }}
-              cellCount={4}
-              rootStyle={styles.codeFieldRoot}
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-              renderCell={({ index, symbol, isFocused }) => (
-                <RNText
-                  key={index}
-                  style={[
-                    styles.cell,
-                    isFocused && styles.focusCell,
-                    isError && { borderColor: 'red' },
-                  ]}
-                  onLayout={getCellOnLayoutHandler(index)}>
-                  {symbol || (isFocused ? <Cursor /> : null)}
-                </RNText>
-              )}
-            />
-            <ClickableText
-              text={VerificationResend}
-              onPress={() => {}}
-              style={styles.resendButton}
+    <>
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={styles.container}>
+            <View>
+              <BackButton onPress={() => navigation.goBack()} />
+              <Text title text={VerificationTitle} style={styles.title} />
+              <Text label text={VerificationLabel} style={styles.label} />
+              <CodeField
+                ref={ref}
+                {...props}
+                value={value}
+                onChangeText={e => {
+                  setValue(e);
+                  setIsError(false);
+                }}
+                cellCount={4}
+                rootStyle={styles.codeFieldRoot}
+                keyboardType="number-pad"
+                textContentType="oneTimeCode"
+                renderCell={({ index, symbol, isFocused }) => (
+                  <RNText
+                    key={index}
+                    style={[
+                      styles.cell,
+                      isFocused && styles.focusCell,
+                      isError && { borderColor: 'red' },
+                    ]}
+                    onLayout={getCellOnLayoutHandler(index)}>
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </RNText>
+                )}
+              />
+              <ClickableText
+                text={VerificationResend}
+                onPress={() => {}}
+                style={styles.resendButton}
+              />
+            </View>
+            <Button
+              title={VerificationContinue}
+              onPress={checkVerificationCode}
+              disabled={isDisabled}
             />
           </View>
-          <Button
-            title={VerificationContinue}
-            onPress={checkVerificationCode}
-            disabled={isDisabled}
-          />
-        </View>
-        <LoadingIndicator isLoading={isLoading} />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+      <LoadingIndicator isLoading={isLoading} />
+    </>
   );
 };
 
