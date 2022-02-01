@@ -1,4 +1,5 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -15,19 +16,28 @@ import Button from 'components/Button';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Form, Field } from 'react-final-form';
 import { composeValidators, isEmail, required } from 'utils/validation';
-
-type RootStackParamList = {
-  ResetPassword: undefined;
-  Verification: undefined;
-};
+import { RootStackParamList } from 'types';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
 const ResetPassword = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'ResetPassword'>) => {
   const { ResetTitle, ResetLabel, ResetButton } = useTranslation();
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {
-    navigation.navigate('Verification');
+  const onSubmit = async (values: { email: string }) => {
+    const res: any = await dispatch(
+      actions.auth.userExists({ email: values.email }),
+    );
+    if (res.payload.message) {
+      Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
+    } else {
+      navigation.navigate('Verification', {
+        onVerification: () => navigation.navigate('CreateNewPassword'),
+        email: values.email,
+      });
+    }
   };
 
   return (

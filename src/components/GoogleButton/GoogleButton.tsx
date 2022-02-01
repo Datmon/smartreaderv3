@@ -7,7 +7,11 @@ import { Text } from 'components/Text';
 import { useDispatch } from 'react-redux';
 import { actions } from 'store';
 
-const GoogleButton = () => {
+const GoogleButton = ({
+  setIsLoading,
+}: {
+  setIsLoading: (isLoading: boolean) => void;
+}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,6 +33,7 @@ const GoogleButton = () => {
   }
 
   const signInGoogle = async () => {
+    setIsLoading(true);
     //TODO: setup android: https://github.com/react-native-google-signin/google-signin/blob/master/docs/android-guide.md
     try {
       await GoogleSignin.hasPlayServices();
@@ -45,6 +50,7 @@ const GoogleButton = () => {
     } catch (error) {
       console.log('catch: ', error);
     }
+    setIsLoading(false);
   };
 
   const { GoogleButtonLabel } = useTranslation();

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
 import { View, SafeAreaView, StyleSheet, Alert, Platform } from 'react-native';
-
 import { Text } from 'components/Text';
 import Input from 'components/Input';
 import { auth } from 'api';
@@ -26,12 +25,8 @@ import {
   minLength,
   required,
 } from 'utils/validation';
-
-type RootStackParamList = {
-  Auth: undefined;
-  Onboarding: undefined;
-  ResetPassword: { email: string } | undefined;
-};
+import { RootStackParamList } from 'types';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Auth = ({
   navigation,
@@ -51,9 +46,11 @@ const Auth = ({
   const dispatch = useDispatch();
 
   const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const signIn = async (data: { email: string; password: string }) => {
     console.log('data: ', data);
+    setIsLoading(true);
     if (data.email && data.password) {
       const res: any = await dispatch(
         actions.auth.signIn({ email: data.email, password: data.password }),
@@ -61,9 +58,8 @@ const Auth = ({
       if (res.payload.message) {
         Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
       }
-
-      // console.log(); //clo
     }
+    setIsLoading(false);
   };
 
   const signUp = async (data: {
@@ -72,6 +68,7 @@ const Auth = ({
     username: string;
   }) => {
     console.log('data: ', data);
+    setIsLoading(true);
     if (data.email && data.password && data.username) {
       const res: any = await auth.signUp(
         data.username,
@@ -82,9 +79,13 @@ const Auth = ({
       if (res.response) {
         Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
       } else {
-        signIn(data);
+        navigation.navigate('Verification', {
+          onVerification: () => signIn(data),
+          email: data.email,
+        });
       }
     }
+    setIsLoading(false);
   };
 
   const changeisVisibleSignIn = () => {
@@ -247,9 +248,12 @@ const Auth = ({
             <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
 
             {Platform.OS === 'ios' && (
-              <AppleButton style={styles.appleButton} />
+              <AppleButton
+                style={styles.appleButton}
+                setIsLoading={setIsLoading}
+              />
             )}
-            <GoogleButton />
+            <GoogleButton setIsLoading={setIsLoading} />
           </View>
         </View>
         <View style={styles.buttomLabel}>
@@ -265,6 +269,7 @@ const Auth = ({
           />
         </View>
       </View>
+      <LoadingIndicator isLoading={isLoading} />
     </SafeAreaView>
   );
 };
