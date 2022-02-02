@@ -21,7 +21,7 @@
     "ResetTitle": "Reset Password",
     "ResetLabel": "Enter your email, we will send a verification code to your email",
     "ResetButton": "Send Link",
-    "VerificationTitle": "Verification code",
+    "VerificationTitle": "Verification Code",
     "VerificationLabel": "Enter the verification code that we have sent to your email",
     "VerificationResend": "Resend Code",
     "VerificationContinue": "Continue",

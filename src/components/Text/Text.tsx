@@ -52,7 +52,7 @@ const stylesAndroid = StyleSheet.create({
     color: 'black',
   },
   button: {
-    color: 'blue',
+    color: '#455AF7',
     fontFamily: 'EuclidCircular-600',
     fontSize: 14,
   },
@@ -82,7 +82,7 @@ const stylesIos = StyleSheet.create({
     color: 'black',
   },
   button: {
-    color: 'blue',
+    color: '#455AF7',
     fontWeight: '600',
     fontSize: 14,
   },
