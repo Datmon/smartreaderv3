@@ -5,6 +5,7 @@ import {
   Text as RNText,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BackButton from 'components/BackButton/BackButton';
@@ -72,6 +73,7 @@ const Verification = ({
       route.params?.onVerification();
     } else {
       setIsError(true);
+      Alert.alert('Incorrect code', 'Input code again');
     }
   };
 
@@ -112,7 +114,9 @@ const Verification = ({
               />
               <ClickableText
                 text={VerificationResend}
-                onPress={() => {}}
+                onPress={() => {
+                  getVerificationCode();
+                }}
                 style={styles.resendButton}
               />
             </View>

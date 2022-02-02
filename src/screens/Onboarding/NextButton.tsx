@@ -5,6 +5,7 @@ import {
   View,
   Animated,
   Image,
+  Platform,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import Svg, { G, Circle } from 'react-native-svg';
@@ -13,7 +14,6 @@ import { Text } from 'components/Text';
 interface Props {
   percentage: number;
   scrollTo: () => void;
-  navigation: any;
 }
 
 const NextButton = ({ percentage, scrollTo }: Props) => {
@@ -32,7 +32,7 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
     return Animated.timing(progressAnimation, {
       toValue,
       duration: 250,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS === 'ios' ? true : false,
     }).start();
   };
 
@@ -45,6 +45,7 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
 
   useEffect(() => {
     progressAnimation.addListener(value => {
+      console.log('first');
       const strokeDashoffset =
         circumference - (circumference * value.value) / 100;
       if (progressRef?.current) {

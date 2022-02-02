@@ -100,9 +100,6 @@ const CreateNewPassword = ({
                         leftIcon={(color: string) => (
                           <PasswordIcon color={color} />
                         )}
-                        rightIcon={(color: string) => (
-                          <ShowPasswordIcon color={color} />
-                        )}
                       />
                     )}
                   </Field>
@@ -124,9 +121,6 @@ const CreateNewPassword = ({
                         secureTextEntry={true}
                         leftIcon={(color: string) => (
                           <PasswordIcon color={color} />
-                        )}
-                        rightIcon={(color: string) => (
-                          <ShowPasswordIcon color={color} />
                         )}
                       />
                     )}

@@ -47,6 +47,7 @@ const Auth = ({
 
   const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [key, setKey] = useState(0);
 
   const signIn = async (data: { email: string; password: string }) => {
     console.log('data: ', data);
@@ -90,6 +91,7 @@ const Auth = ({
 
   const changeisVisibleSignIn = () => {
     setisVisibleSignIn(!isVisibleSignIn);
+    setKey(key + 2);
   };
 
   return (
@@ -115,6 +117,7 @@ const Auth = ({
               {isVisibleSignIn ? (
                 <Form
                   onSubmit={signIn}
+                  key={key}
                   render={({ handleSubmit }) => (
                     <>
                       <Field
@@ -150,9 +153,6 @@ const Auth = ({
                             leftIcon={(color: string) => (
                               <PasswordIcon color={color} />
                             )}
-                            rightIcon={(color: string) => (
-                              <ShowPasswordIcon color={color} />
-                            )}
                           />
                         )}
                       </Field>
@@ -175,7 +175,8 @@ const Auth = ({
               ) : (
                 <Form
                   onSubmit={signUp}
-                  render={({ handleSubmit }) => (
+                  key={key + 1}
+                  render={({ handleSubmit, form }) => (
                     <>
                       <Field
                         name="username"
@@ -226,9 +227,6 @@ const Auth = ({
                             textContentType="password"
                             leftIcon={(color: string) => (
                               <PasswordIcon color={color} />
-                            )}
-                            rightIcon={(color: string) => (
-                              <ShowPasswordIcon color={color} />
                             )}
                           />
                         )}

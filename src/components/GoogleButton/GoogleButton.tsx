@@ -39,14 +39,15 @@ const GoogleButton = ({
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfo: ', userInfo);
-      if (userInfo.user.familyName) {
+      if (userInfo.user.name) {
         const res = await dispatch(
           actions.auth.serviceSignUp({
             email: userInfo.user.email,
-            username: userInfo.user.familyName,
+            username: userInfo.user.email.split('@')[0],
           }),
         );
       }
+      console.log('nickname: ', userInfo.user.email.split('@')[0]);
     } catch (error) {
       console.log('catch: ', error);
     }
