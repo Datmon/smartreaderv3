@@ -29,3 +29,28 @@ export const serviceSignUp = async (email: string, username: string) => {
   });
   return res;
 };
+
+export const verificate = async (email: string) => {
+  const res = await axios.post(BASE_URL + 'auth/verification', {
+    email,
+  });
+  return res;
+};
+
+export const userExists = async (email: string) => {
+  const res = await axios.post(BASE_URL + 'auth/userExists', {
+    email,
+  });
+  return res;
+};
+
+export const resetPassword = async (
+  userId: string,
+  userData: { email: string; password: string },
+) => {
+  const res = await axios.post(BASE_URL + 'auth/forgotPassword', {
+    userId,
+    userData,
+  });
+  return res;
+};

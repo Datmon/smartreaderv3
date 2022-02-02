@@ -39,9 +39,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   title: {
+    color: 'black',
     fontWeight: '800',
     fontSize: 28,
     marginBottom: 12,
+    height: 38,
   },
   description: {
     fontWeight: '300',

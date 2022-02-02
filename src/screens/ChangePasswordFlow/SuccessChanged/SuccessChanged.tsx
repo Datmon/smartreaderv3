@@ -5,17 +5,17 @@ import { Text } from 'components/Text';
 import Button from 'components/Button';
 import BackButton from 'components/BackButton/BackButton';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-type RootStackParamList = {
-  SuccessChanged: undefined;
-  Auth: undefined;
-};
+import { RootStackParamList } from 'types';
 
 const SuccessChanged = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'SuccessChanged'>) => {
-  const { SuccessChangedTitle, SuccessChangedLabel, SuccessChangedLogin } =
-    useTranslation();
+  const {
+    SuccessChangedTitle,
+    SuccessChangedLabelP1,
+    SuccessChangedLabelP2,
+    SuccessChangedLogin,
+  } = useTranslation();
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -27,7 +27,8 @@ const SuccessChanged = ({
               style={styles.image}
             />
             <Text title text={SuccessChangedTitle} style={styles.title} />
-            <Text label text={SuccessChangedLabel} style={styles.label} />
+            <Text label text={SuccessChangedLabelP1} style={styles.label} />
+            <Text label text={SuccessChangedLabelP2} style={styles.label} />
           </View>
         </View>
         <Button
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   content: {
-    paddingHorizontal: '10%',
     alignItems: 'center',
   },
   title: {

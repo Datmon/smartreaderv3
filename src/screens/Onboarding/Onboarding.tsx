@@ -1,5 +1,5 @@
 import { useTranslation } from 'context/LanguageContext';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -12,8 +12,12 @@ import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
 import NextButton from './NextButton';
 import { StorageService } from 'services';
+import { RootStackParamList } from 'types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const Onboarding = ({ navigation }: any) => {
+const Onboarding = ({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, 'Onboarding'>) => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const slideRef = useRef(null as any);
 
@@ -104,7 +108,6 @@ const Onboarding = ({ navigation }: any) => {
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
-          navigation={navigation}
         />
       </View>
     </SafeAreaView>
@@ -135,5 +138,7 @@ const styles = StyleSheet.create({
     color: '#455AF7',
     fontSize: 16,
     fontWeight: '500',
+    padding: 20,
+    borderRadius: 5,
   },
 });

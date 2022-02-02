@@ -1,12 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import { Text } from 'components/Text';
+import { ShowPasswordIcon } from 'assets/svg';
+import HidePasswordIcon from 'assets/svg/HidePasswordIcon';
 
 interface IInput {
   style: any;
-  onChangeText: (value: string) => void;
+  onChangeText?: (value: string) => void;
   autoComplete?: 'email' | 'password' | 'password-new' | 'username' | undefined;
   textContentType?:
     | 'emailAddress'
@@ -18,19 +26,15 @@ interface IInput {
   value?: string;
   leftIcon?: (color: string) => ReactElement;
   secureTextEntry?: boolean;
-  rightIcon?: (color: string) => ReactElement;
 }
 
 const Input = ({
   style,
-  onChangeText,
-  value,
   secureTextEntry = false,
   placeholder,
   autoComplete,
   textContentType,
   leftIcon,
-  rightIcon,
   meta,
   input,
 }: FieldRenderProps<string, any> & IInput) => {
@@ -45,25 +49,40 @@ const Input = ({
       <View style={styles.leftIcon}>
         {leftIcon && leftIcon(isFocus ? '#455AF7' : '#718096')}
       </View>
-      {/* @ts-ignore */}
       <TextInput
-        {...input}
         autoCapitalize={'none'}
-        style={[
-          styles.input,
-          {
-            borderColor:
-              meta && meta.touched && meta.error
-                ? 'red'
-                : isFocus
-                ? '#455AF7'
-                : '#E2E8F0',
-          },
-        ]}
-        onChangeText={onChangeText}
-        value={value}
+        style={
+          Platform.OS === 'ios'
+            ? [
+                styles.input,
+                styles.fontIos,
+                {
+                  borderColor:
+                    meta && meta.touched && meta.error
+                      ? 'red'
+                      : isFocus
+                      ? '#455AF7'
+                      : '#E2E8F0',
+                },
+                ,
+              ]
+            : [
+                styles.input,
+                styles.fontAndroid,
+                {
+                  borderColor:
+                    meta && meta.touched && meta.error
+                      ? 'red'
+                      : isFocus
+                      ? '#455AF7'
+                      : '#E2E8F0',
+                },
+              ]
+        }
+        {...input}
         secureTextEntry={isVisiblePassword}
         placeholder={placeholder}
+        placeholderTextColor={'#718096'}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         autoComplete={autoComplete}
@@ -75,12 +94,10 @@ const Input = ({
           style={styles.rightIcon}
           activeOpacity={0.6}
           onPress={() => setIsVisiblePassword(!isVisiblePassword)}>
-          {rightIcon && rightIcon(isVisiblePassword ? '#718096' : '#455AF7')}
+          {isVisiblePassword ? <ShowPasswordIcon /> : <HidePasswordIcon />}
         </TouchableOpacity>
       )}
-      {meta && meta.touched && meta.error && (
-        <Text text={meta.error} style={styles.errorMessage} />
-      )}
+      {meta && meta.touched && meta.error && <Text text={meta.error} error />}
     </View>
   );
 };
@@ -88,6 +105,8 @@ const Input = ({
 export default Input;
 
 const styles = StyleSheet.create({
+  fontIos: { fontFamily: 'Euclid Circular A' },
+  fontAndroid: { fontFamily: 'EuclidCircular-400' },
   input: {
     paddingHorizontal: 45,
     height: 56,
@@ -106,12 +125,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 18,
-  },
-  errorMessage: {
-    marginLeft: 14,
-    color: 'red',
-    fontSize: 14,
-    marginBottom: -4,
-    marginTop: 1,
   },
 });

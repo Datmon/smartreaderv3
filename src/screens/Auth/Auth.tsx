@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useTranslation } from 'context/LanguageContext';
-import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
-
+import { View, SafeAreaView, StyleSheet, Alert, Platform } from 'react-native';
 import { Text } from 'components/Text';
 import Input from 'components/Input';
 import { auth } from 'api';
@@ -26,12 +25,8 @@ import {
   minLength,
   required,
 } from 'utils/validation';
-
-type RootStackParamList = {
-  Auth: undefined;
-  Onboarding: undefined;
-  ResetPassword: { email: string } | undefined;
-};
+import { RootStackParamList } from 'types';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Auth = ({
   navigation,
@@ -50,225 +45,247 @@ const Auth = ({
 
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
   const [isVisibleSignIn, setisVisibleSignIn] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [key, setKey] = useState(0);
 
-  const signIn = async () => {
-    if (email && password) {
-      const res: any = await dispatch(actions.auth.signIn({ email, password }));
+  const signIn = async (data: { email: string; password: string }) => {
+    console.log('data: ', data);
+    setIsLoading(true);
+    if (data.email && data.password) {
+      const res: any = await dispatch(
+        actions.auth.signIn({ email: data.email, password: data.password }),
+      );
       if (res.payload.message) {
         Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
       }
-
-      // console.log(); //clo
     }
+    setIsLoading(false);
   };
 
-  const signUp = async () => {
-    if (email && password && username) {
-      const res: any = await auth.signUp(username, email, password);
+  const signUp = async (data: {
+    email: string;
+    password: string;
+    username: string;
+  }) => {
+    console.log('data: ', data);
+    setIsLoading(true);
+    if (data.email && data.password && data.username) {
+      const res: any = await auth.signUp(
+        data.username,
+        data.email,
+        data.password,
+      );
       //console.log('res: ', res.response);
       if (res.response) {
         Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
       } else {
-        signIn();
+        navigation.navigate('Verification', {
+          onVerification: () => signIn(data),
+          email: data.email,
+        });
       }
     }
+    setIsLoading(false);
   };
 
   const changeisVisibleSignIn = () => {
     setisVisibleSignIn(!isVisibleSignIn);
-    setPassword('');
-    setUsername('');
+    setKey(key + 2);
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View>
-          <BackButton onPress={() => navigation.navigate('Onboarding')} />
+    <>
+      <SafeAreaView>
+        <View style={styles.container}>
           <View>
-            {isVisibleSignIn ? (
-              <>
-                <Text title style={styles.SignInMeeting} text={SignInMeeting} />
-                <Text label style={styles.SignInLabel} text={SignInLabel} />
-              </>
-            ) : (
-              <Text title style={styles.SignInMeeting} text={SignUpMeeting} />
-            )}
+            <BackButton onPress={() => navigation.navigate('Onboarding')} />
+            <View>
+              {isVisibleSignIn ? (
+                <>
+                  <Text
+                    title
+                    style={styles.SignInMeeting}
+                    text={SignInMeeting}
+                  />
+                  <Text label style={styles.SignInLabel} text={SignInLabel} />
+                </>
+              ) : (
+                <Text title style={styles.SignInMeeting} text={SignUpMeeting} />
+              )}
 
-            {isVisibleSignIn ? (
-              <Form
-                onSubmit={signIn}
-                initialValues={{ email: email }}
-                render={({ handleSubmit }) => (
-                  <>
-                    <Field
-                      name="email"
-                      validate={composeValidators(required, isEmail)}>
-                      {({ input, meta }) => (
-                        <Input
-                          meta={meta}
-                          input={input}
-                          onChangeText={setEmail}
-                          value={email}
-                          style={styles.input}
-                          placeholder="Email"
-                          autoComplete="email"
-                          textContentType="emailAddress"
-                          secureTextEntry={false}
-                          leftIcon={(color: string) => (
-                            <EmailIcon color={color} />
-                          )}
-                        />
-                      )}
-                    </Field>
-                    <Field
-                      name="password"
-                      validate={composeValidators(required, minLength(6))}>
-                      {({ input, meta }) => (
-                        <Input
-                          meta={meta}
-                          input={input}
-                          onChangeText={setPassword}
-                          value={password}
-                          style={styles.input}
-                          secureTextEntry={true}
-                          placeholder="Password"
-                          autoComplete="password"
-                          textContentType="password"
-                          leftIcon={(color: string) => (
-                            <PasswordIcon color={color} />
-                          )}
-                          rightIcon={(color: string) => (
-                            <ShowPasswordIcon color={color} />
-                          )}
-                        />
-                      )}
-                    </Field>
-                    <ClickableText
-                      style={styles.forgotPass}
-                      text={SignInForgotPass}
-                      onPress={() => {
-                        navigation.navigate('ResetPassword', { email });
-                      }}
-                    />
+              {isVisibleSignIn ? (
+                <Form
+                  onSubmit={signIn}
+                  key={key}
+                  render={({ handleSubmit }) => (
+                    <>
+                      <Field
+                        name="email"
+                        validate={composeValidators(required, isEmail)}>
+                        {({ input, meta }) => (
+                          <Input
+                            meta={meta}
+                            input={input}
+                            style={styles.input}
+                            placeholder="Email"
+                            autoComplete="email"
+                            textContentType="emailAddress"
+                            secureTextEntry={false}
+                            leftIcon={(color: string) => (
+                              <EmailIcon color={color} />
+                            )}
+                          />
+                        )}
+                      </Field>
+                      <Field
+                        name="password"
+                        validate={composeValidators(required, minLength(6))}>
+                        {({ input, meta }) => (
+                          <Input
+                            meta={meta}
+                            input={input}
+                            style={styles.input}
+                            secureTextEntry={true}
+                            placeholder="Password"
+                            autoComplete="password"
+                            textContentType="password"
+                            leftIcon={(color: string) => (
+                              <PasswordIcon color={color} />
+                            )}
+                          />
+                        )}
+                      </Field>
+                      <ClickableText
+                        style={styles.forgotPass}
+                        text={SignInForgotPass}
+                        onPress={() => {
+                          navigation.navigate('ResetPassword');
+                        }}
+                      />
 
-                    <Button
-                      style={styles.button}
-                      title={SignInButton}
-                      onPress={handleSubmit}
-                    />
-                  </>
-                )}
-              />
-            ) : (
-              <Form
-                onSubmit={signUp}
-                initialValues={{ email: email }}
-                render={({ handleSubmit }) => (
-                  <>
-                    <Field
-                      name="username"
-                      validate={composeValidators(required, minLength(6))}>
-                      {({ input, meta }) => (
-                        <Input
-                          meta={meta}
-                          input={input}
-                          onChangeText={setUsername}
-                          value={username}
-                          style={styles.input}
-                          placeholder="Username"
-                          autoComplete="username"
-                          textContentType="username"
-                          leftIcon={(color: string) => (
-                            <NicknameIcon color={color} />
-                          )}
-                        />
-                      )}
-                    </Field>
-                    <Field
-                      name="email"
-                      validate={composeValidators(required, isEmail)}>
-                      {({ input, meta }) => (
-                        <Input
-                          meta={meta}
-                          input={input}
-                          onChangeText={setEmail}
-                          value={email}
-                          style={styles.input}
-                          placeholder="Email"
-                          autoComplete="email"
-                          textContentType="emailAddress"
-                          secureTextEntry={false}
-                          leftIcon={(color: string) => (
-                            <EmailIcon color={color} />
-                          )}
-                        />
-                      )}
-                    </Field>
-                    <Field
-                      name="password"
-                      validate={composeValidators(required, minLength(6))}>
-                      {({ input, meta }) => (
-                        <Input
-                          meta={meta}
-                          input={input}
-                          onChangeText={setPassword}
-                          value={password}
-                          style={styles.input}
-                          secureTextEntry={true}
-                          placeholder="Password"
-                          autoComplete="password"
-                          textContentType="password"
-                          leftIcon={(color: string) => (
-                            <PasswordIcon color={color} />
-                          )}
-                          rightIcon={(color: string) => (
-                            <ShowPasswordIcon color={color} />
-                          )}
-                        />
-                      )}
-                    </Field>
-                    <ClickableText
-                      style={styles.forgotPass}
-                      text={SignInForgotPass}
-                      onPress={() => {
-                        navigation.navigate('ResetPassword', { email });
-                      }}
-                    />
-                    <Button
-                      style={styles.button}
-                      title={SignUpButton}
-                      onPress={handleSubmit}
-                    />
-                  </>
-                )}
-              />
-            )}
+                      <Button
+                        style={styles.button}
+                        title={SignInButton}
+                        onPress={handleSubmit}
+                      />
+                    </>
+                  )}
+                />
+              ) : (
+                <Form
+                  onSubmit={signUp}
+                  key={key + 1}
+                  render={({ handleSubmit, form }) => (
+                    <>
+                      <Field
+                        name="username"
+                        validate={composeValidators(required, minLength(6))}>
+                        {({ input, meta }) => (
+                          <Input
+                            meta={meta}
+                            input={input}
+                            style={styles.input}
+                            placeholder="Username"
+                            autoComplete="username"
+                            textContentType="username"
+                            leftIcon={(color: string) => (
+                              <NicknameIcon color={color} />
+                            )}
+                          />
+                        )}
+                      </Field>
+                      <Field
+                        name="email"
+                        validate={composeValidators(required, isEmail)}>
+                        {({ input, meta }) => (
+                          <Input
+                            meta={meta}
+                            input={input}
+                            style={styles.input}
+                            placeholder="Email"
+                            autoComplete="email"
+                            textContentType="emailAddress"
+                            secureTextEntry={false}
+                            leftIcon={(color: string) => (
+                              <EmailIcon color={color} />
+                            )}
+                          />
+                        )}
+                      </Field>
+                      <Field
+                        name="password"
+                        validate={composeValidators(required, minLength(6))}>
+                        {({ input, meta }) => (
+                          <Input
+                            meta={meta}
+                            input={input}
+                            style={styles.input}
+                            secureTextEntry={true}
+                            placeholder="Password"
+                            autoComplete="password"
+                            textContentType="password"
+                            leftIcon={(color: string) => (
+                              <PasswordIcon color={color} />
+                            )}
+                          />
+                        )}
+                      </Field>
+                      <ClickableText
+                        style={styles.forgotPass}
+                        text={SignInForgotPass}
+                        onPress={() => {
+                          navigation.navigate('ResetPassword');
+                        }}
+                      />
+                      <Button
+                        style={styles.button}
+                        title={SignUpButton}
+                        onPress={handleSubmit}
+                      />
+                    </>
+                  )}
+                />
+              )}
 
-            <Text text={SignUpOrLogin} style={styles.buttomLabelTextLogin} />
+              <View style={styles.labelButtons}>
+                <View style={styles.line} />
+                <View>
+                  <Text
+                    text={SignUpOrLogin}
+                    style={styles.buttomLabelTextLogin}
+                  />
+                </View>
+                <View style={styles.line} />
+              </View>
 
-            <AppleButton style={styles.appleButton} />
-            <GoogleButton />
+              {Platform.OS === 'ios' && (
+                <AppleButton
+                  style={styles.appleButton}
+                  setIsLoading={setIsLoading}
+                />
+              )}
+              <GoogleButton setIsLoading={setIsLoading} />
+            </View>
+          </View>
+          <View style={styles.buttomLabel}>
+            <Text
+              text={
+                (isVisibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '
+              }
+              style={styles.buttomLabelText}
+            />
+
+            <ClickableText
+              onPress={() => changeisVisibleSignIn()}
+              text={isVisibleSignIn ? 'Sign Up' : 'Sign In'}
+              style={''}
+            />
           </View>
         </View>
-        <View style={styles.buttomLabel}>
-          <Text
-            text={(isVisibleSignIn ? SignUpQuestionIn : SignUpQuestionUp) + ' '}
-            style={styles.buttomLabelText}
-          />
-
-          <ClickableText
-            onPress={() => changeisVisibleSignIn()}
-            text={isVisibleSignIn ? 'Sign Up' : 'Sign In'}
-            style={''}
-          />
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+      <LoadingIndicator isLoading={isLoading} />
+    </>
   );
 };
 
@@ -277,6 +294,7 @@ export default Auth;
 const styles = StyleSheet.create({
   container: {
     padding: 24,
+    paddingTop: 10,
     height: '100%',
     justifyContent: 'space-between',
   },
@@ -296,6 +314,10 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 24,
   },
+  labelButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   buttomLabel: {
     flexDirection: 'row',
     alignSelf: 'center',
@@ -311,8 +333,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     alignSelf: 'center',
     marginVertical: 24,
+    marginHorizontal: 20,
   },
   appleButton: {
     marginBottom: 12,
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E2E8F0',
   },
 });

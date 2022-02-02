@@ -3,25 +3,8 @@ import React, { useEffect } from 'react';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
-
-async function onAppleButtonPress() {
-  // performs login request
-  const appleAuthRequestResponse = await appleAuth.performRequest({
-    requestedOperation: appleAuth.Operation.LOGIN,
-    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-  });
-
-  // get current authentication state for user
-  // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
-  const credentialState = await appleAuth.getCredentialStateForUser(
-    appleAuthRequestResponse.user,
-  );
-
-  // use credentialState response to ensure the user is authenticated
-  if (credentialState === appleAuth.State.AUTHORIZED) {
-    // user is authenticated
-  }
-}
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
 // async function onAppleButtonPress() {
 //   console.warn('Beginning Apple Authentication');
@@ -66,7 +49,8 @@ async function onAppleButtonPress() {
 //   }
 // }
 
-const AppleButton = ({ style }: any) => {
+const AppleButton = ({ style, setIsLoading }: any) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
     return appleAuth.onCredentialRevoked(async () => {
@@ -75,6 +59,38 @@ const AppleButton = ({ style }: any) => {
       );
     });
   }, []);
+
+  async function onAppleButtonPress() {
+    setIsLoading(true);
+    // performs login request
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+      // get current authentication state for user
+      // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+      const credentialState = await appleAuth.getCredentialStateForUser(
+        appleAuthRequestResponse.user,
+      );
+
+      // use credentialState response to ensure the user is authenticated
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        // user is authenticated
+        console.log('appleAuthRequestResponse: ', appleAuthRequestResponse);
+        if (appleAuthRequestResponse.email) {
+          const res = await dispatch(
+            actions.auth.serviceSignUp({
+              email: appleAuthRequestResponse.email,
+              username: appleAuthRequestResponse.email.split('@')[0],
+            }),
+          );
+        }
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const { AppleButtonLabel } = useTranslation();
   return (
