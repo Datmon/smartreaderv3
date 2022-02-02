@@ -29,7 +29,7 @@
     "CreateNewPasswordLabel": "Your password must be different from previous used password",
     "CreateNewPasswordEnter": "Enter new password",
     "CreateNewPasswordConfirm": "Confrim password",
-    "CreateNewPasswordResetPassword": "Reset password",
+    "CreateNewPasswordResetPassword": "Reset Password",
     "SuccessChangedTitle": "Password Changed",
     "SuccessChangedLabelP1": "Password changed succesfully, you",
     "SuccessChangedLabelP2": "can login again with new password",
