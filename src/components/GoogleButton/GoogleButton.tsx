@@ -47,7 +47,6 @@ const GoogleButton = ({
           }),
         );
       }
-      console.log('nickname: ', userInfo.user.email.split('@')[0]);
     } catch (error) {
       console.log('catch: ', error);
     }
