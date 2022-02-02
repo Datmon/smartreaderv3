@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Animated,
   View,
-  Text,
+  TouchableOpacity,
 } from 'react-native';
 import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
@@ -14,6 +14,7 @@ import NextButton from './NextButton';
 import { StorageService } from 'services';
 import { RootStackParamList } from 'types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Text } from 'components/Text';
 
 const Onboarding = ({
   navigation,
@@ -100,11 +101,12 @@ const Onboarding = ({
       />
       <Paginator data={slides} scrollX={scrollX} />
       <View style={styles.bottomPanel}>
-        <Text
-          style={styles.skipButton}
-          onPress={() => navigation.navigate('Auth')}>
-          Skip
-        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Auth')}
+          style={styles.skipButtonView}>
+          <Text text="Skip" clickbale style={styles.skipButton} />
+        </TouchableOpacity>
+
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
@@ -119,7 +121,7 @@ export default Onboarding;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   flatlist: {
@@ -132,13 +134,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   skipButton: {
-    color: '#455AF7',
     fontSize: 16,
-    fontWeight: '500',
-    padding: 20,
-    borderRadius: 5,
+  },
+  skipButtonView: {
+    paddingTop: 20,
+    marginBottom: 20,
   },
 });
