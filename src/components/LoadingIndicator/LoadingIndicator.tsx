@@ -18,6 +18,7 @@ export default LoadingIndicator;
 
 const styles = StyleSheet.create({
   indicatorBackGround: {
+    flex: 1,
     position: 'absolute',
     justifyContent: 'center',
     height: '100%',

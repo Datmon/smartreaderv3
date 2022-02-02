@@ -108,7 +108,6 @@ const Onboarding = ({
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
-          navigation={navigation}
         />
       </View>
     </SafeAreaView>
@@ -139,5 +138,7 @@ const styles = StyleSheet.create({
     color: '#455AF7',
     fontSize: 16,
     fontWeight: '500',
+    padding: 20,
+    borderRadius: 5,
   },
 });

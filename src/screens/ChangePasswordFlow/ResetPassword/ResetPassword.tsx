@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import BackButton from 'components/BackButton/BackButton';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
@@ -19,6 +19,7 @@ import { composeValidators, isEmail, required } from 'utils/validation';
 import { RootStackParamList } from 'types';
 import { useDispatch } from 'react-redux';
 import { actions } from 'store';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const ResetPassword = ({
   navigation,
@@ -26,7 +27,10 @@ const ResetPassword = ({
   const { ResetTitle, ResetLabel, ResetButton } = useTranslation();
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = async (values: { email: string }) => {
+    setIsLoading(true);
     const res: any = await dispatch(
       actions.auth.userExists({ email: values.email }),
     );
@@ -38,49 +42,55 @@ const ResetPassword = ({
         email: values.email,
       });
     }
+    setIsLoading(false);
   };
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit }) => (
-            <View style={styles.container}>
-              <View>
-                <BackButton onPress={() => navigation.goBack()} />
-                <Text title text={ResetTitle} style={styles.title} />
-                <Text label text={ResetLabel} style={styles.label} />
+    <>
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Form
+            onSubmit={onSubmit}
+            render={({ handleSubmit }) => (
+              <View style={styles.container}>
+                <View>
+                  <BackButton onPress={() => navigation.goBack()} />
+                  <Text title text={ResetTitle} style={styles.title} />
+                  <Text label text={ResetLabel} style={styles.label} />
 
-                <Field
-                  name="email"
-                  validate={composeValidators(required, isEmail)}>
-                  {({ input, meta }) => (
-                    <Input
-                      meta={meta}
-                      input={input}
-                      style={styles.input}
-                      placeholder="Email"
-                      autoComplete="email"
-                      textContentType="emailAddress"
-                      secureTextEntry={false}
-                      leftIcon={(color: string) => <EmailIcon color={color} />}
-                    />
-                  )}
-                </Field>
+                  <Field
+                    name="email"
+                    validate={composeValidators(required, isEmail)}>
+                    {({ input, meta }) => (
+                      <Input
+                        meta={meta}
+                        input={input}
+                        style={styles.input}
+                        placeholder="Email"
+                        autoComplete="email"
+                        textContentType="emailAddress"
+                        secureTextEntry={false}
+                        leftIcon={(color: string) => (
+                          <EmailIcon color={color} />
+                        )}
+                      />
+                    )}
+                  </Field>
+                </View>
+
+                <Button
+                  style={styles.button}
+                  title={ResetButton}
+                  onPress={handleSubmit}
+                />
               </View>
-
-              <Button
-                style={styles.button}
-                title={ResetButton}
-                onPress={handleSubmit}
-              />
-            </View>
-          )}
-        />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            )}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+      <LoadingIndicator isLoading={isLoading} />
+    </>
   );
 };
 
