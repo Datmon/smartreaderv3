@@ -23,7 +23,7 @@ const MainStack = createNativeStackNavigator();
 const Navigation = () => {
   const dispatch = useDispatch();
   const accessToken = useSelector(selectors.auth.selectAccessToken);
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [beenAuthorized, setBeenAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const getToken = async () => {
@@ -33,29 +33,38 @@ const Navigation = () => {
     }
     console.log('getToken: ', token);
   };
-  console.log('accessToken: ', accessToken);
 
   const getOnboarding = async () => {
-    const OnboardingState = await StorageService.getOnboarding();
-    setShowOnboarding(OnboardingState === 'false' ? false : true);
+    const beenAuthorizedState = await StorageService.getBeenAuthorized();
+    setBeenAuthorized(beenAuthorizedState === 'true' ? true : false);
     setIsLoading(false);
   };
 
+  const deleteStateOnboarding = async () => {
+    await StorageService.removeBeenAuthorized();
+  };
+
   useEffect(() => {
+    setIsLoading(true);
+    getOnboarding();
+  }, [accessToken]);
+
+  useEffect(() => {
+    deleteStateOnboarding();
     SplashScreen.hide();
     getToken();
-    getOnboarding();
   }, []);
 
   if (isLoading) {
     return <LoadingIndicator isLoading={isLoading} />;
   }
 
+  console.log('beenAuthorized: ', beenAuthorized);
   return (
     <NavigationContainer>
       {!accessToken ? (
         <AuthStack.Navigator
-          initialRouteName={showOnboarding ? 'Onboarding' : 'Onboarding'} // : 'Onboarding' => 'Auth'
+          initialRouteName={beenAuthorized ? 'Auth' : 'Onboarding'}
           screenOptions={{
             headerShown: false,
             contentStyle: {

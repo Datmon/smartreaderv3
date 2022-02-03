@@ -1,10 +1,11 @@
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
 import { useDispatch } from 'react-redux';
 import { actions } from 'store';
+import jwt_decode from 'jwt-decode';
 
 // async function onAppleButtonPress() {
 //   console.warn('Beginning Apple Authentication');
@@ -72,11 +73,16 @@ const AppleButton = ({ style, setIsLoading }: any) => {
       console.log('appleAuthRequestResponse', appleAuthRequestResponse.email);
 
       console.warn('Apple Authentication Completed');
-      if (appleAuthRequestResponse.email) {
+
+      if (appleAuthRequestResponse.identityToken) {
+        const { email }: { email: string } = jwt_decode(
+          appleAuthRequestResponse.identityToken,
+        );
+
         const res = await dispatch(
           actions.auth.serviceSignUp({
-            email: appleAuthRequestResponse.email,
-            username: appleAuthRequestResponse.email.split('@')[0],
+            email: email,
+            username: email.split('@')[0],
           }),
         );
       }

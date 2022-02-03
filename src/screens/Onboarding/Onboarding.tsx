@@ -66,7 +66,6 @@ const Onboarding = ({
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       console.log('last item');
-      await StorageService.setOnboarding('false');
       navigation.navigate('Auth');
     }
   };

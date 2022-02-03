@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 enum Key {
   ACCESS_TOKEN = 'ACCESS_TOKEN',
-  ONBOARDING_STATE = 'ONBOARDING_STATE',
+  AUTHORIZED_STATE = 'AUTHORIZED_STATE',
 }
 
 export const StorageService = {
@@ -16,14 +16,13 @@ export const StorageService = {
   getAssessToken: () => {
     return AsyncStorage.getItem(Key.ACCESS_TOKEN);
   },
-  setOnboarding: (onboardingState: string) => {
-    console.log('onboardingState', onboardingState);
-    return AsyncStorage.setItem(Key.ONBOARDING_STATE, onboardingState);
+  setBeenAuthorized: (beenAuthorized: string) => {
+    return AsyncStorage.setItem(Key.AUTHORIZED_STATE, beenAuthorized);
   },
-  removeOnboarding: () => {
-    return AsyncStorage.removeItem(Key.ONBOARDING_STATE);
+  removeBeenAuthorized: () => {
+    return AsyncStorage.removeItem(Key.AUTHORIZED_STATE);
   },
-  getOnboarding: () => {
-    return AsyncStorage.getItem(Key.ONBOARDING_STATE);
+  getBeenAuthorized: () => {
+    return AsyncStorage.getItem(Key.AUTHORIZED_STATE);
   },
 };

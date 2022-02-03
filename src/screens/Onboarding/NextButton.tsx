@@ -45,7 +45,6 @@ const NextButton = ({ percentage, scrollTo }: Props) => {
 
   useEffect(() => {
     progressAnimation.addListener(value => {
-      console.log('first');
       const strokeDashoffset =
         circumference - (circumference * value.value) / 100;
       if (progressRef?.current) {

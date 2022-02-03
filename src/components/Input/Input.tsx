@@ -1,4 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-sparse-arrays */
 import {
   Platform,
   StyleSheet,
@@ -123,7 +123,9 @@ const styles = StyleSheet.create({
   },
   rightIcon: {
     position: 'absolute',
-    top: 20,
-    right: 18,
+    top: 0,
+    right: 0,
+    paddingHorizontal: 18,
+    paddingVertical: 20,
   },
 });
