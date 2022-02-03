@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "835684202283-e8hml7mui8a2n79t3tecv508no4o8796.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartReader",
+            "certificate_hash": "102cb2ae46b06e5bd7cf5603224d2bb8d92c6782"
+          }
+        },
+        {
           "client_id": "835684202283-klgrvelp2563d6r416bnui0dj5an7lb3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
