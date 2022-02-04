@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flexGrow: 0,
-    maxHeight: '100%',
+    height: '80%',
   },
   bottomPanel: {
     flex: 1,
@@ -134,12 +134,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    marginBottom: 20,
   },
   skipButton: {
     fontSize: 16,
+    height: 'auto',
   },
-  skipButtonView: {
-    paddingTop: 20,
-    marginBottom: 20,
-  },
+  skipButtonView: {},
 });

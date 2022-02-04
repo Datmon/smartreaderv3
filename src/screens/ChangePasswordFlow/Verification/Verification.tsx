@@ -61,7 +61,7 @@ const Verification = ({
   const getVerificationCode = async () => {
     setIsLoading(true);
     const res: any = await dispatch(
-      actions.verificate({ email: route.params.email }),
+      actions.verificate({ email: route.params.data.email }),
     );
     setIsLoading(false);
     console.log('verification: ', res);

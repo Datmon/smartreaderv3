@@ -7,12 +7,7 @@ import Input from 'components/Input';
 import { auth } from 'api';
 import { actions } from 'store';
 import { useDispatch } from 'react-redux';
-import {
-  EmailIcon,
-  ShowPasswordIcon,
-  PasswordIcon,
-  NicknameIcon,
-} from 'assets/svg';
+import { EmailIcon, PasswordIcon, NicknameIcon } from 'assets/svg';
 import ClickableText from 'components/ClickableText';
 import Button from 'components/Button';
 import AppleButton from 'components/AppleButton';
@@ -76,13 +71,13 @@ const Auth = ({
         data.email,
         data.password,
       );
-      //console.log('res: ', res.response);
+      console.log('res: ', res);
       if (res.response) {
         Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
       } else {
         navigation.navigate('Verification', {
           onVerification: () => signIn(data),
-          email: data.email,
+          data: data,
         });
       }
     }

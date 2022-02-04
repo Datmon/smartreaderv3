@@ -21,22 +21,20 @@ const OnboardingItem = ({ item }: Item) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    justifyContent: 'flex-start',
+    flex: 1,
+    paddingTop: 30,
     alignItems: 'flex-start',
   },
   image: {
-    justifyContent: 'center',
     resizeMode: 'contain',
-    width: '100%',
+    alignSelf: 'center',
+    width: '90%',
     height: '65%',
-    marginBottom: 48,
+    marginBottom: 30,
   },
   text: {
-    flex: 0.4,
     width: '100%',
     paddingHorizontal: 25,
-    height: '100%',
   },
   title: {
     color: 'black',

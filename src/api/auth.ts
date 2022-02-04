@@ -30,6 +30,14 @@ export const serviceSignUp = async (email: string, username: string) => {
   return res;
 };
 
+export const verifyUser = async (email: string, id: string) => {
+  const res = await axios.post(BASE_URL + 'auth/verifyUser', {
+    email,
+    id,
+  });
+  return res;
+};
+
 export const verificate = async (email: string) => {
   const res = await axios.post(BASE_URL + 'auth/verification', {
     email,
