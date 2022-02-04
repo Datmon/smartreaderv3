@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flexGrow: 0,
-    height: '80%',
+    height: '84%',
   },
   bottomPanel: {
     flex: 1,

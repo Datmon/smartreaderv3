@@ -1,11 +1,5 @@
 export type RootStackParamList = {
-  Verification: {
-    onVerification: () => void;
-    data: {
-      email: string;
-      id: string;
-    };
-  };
+  Verification: { onVerification: () => void; email: string };
   Auth: undefined;
   Onboarding: undefined;
   ResetPassword: { email: string } | undefined;

@@ -21,7 +21,7 @@ const Bookshelf = ({
   return (
     <SafeAreaView>
       <Text>Bookshelf</Text>
-      <Button title="logout" onPress={logOut} />
+      <Button title="Logout" onPress={logOut} />
     </SafeAreaView>
   );
 };

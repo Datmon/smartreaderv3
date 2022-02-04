@@ -22,6 +22,7 @@ import {
 } from 'utils/validation';
 import { RootStackParamList } from 'types';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { verifyUser } from 'api/auth';
 
 const Auth = ({
   navigation,
@@ -44,6 +45,10 @@ const Auth = ({
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0);
 
+  const handleVerifyUser = async (email, id) => {
+    const res: any = await auth.verifyUser(email, id);
+  };
+
   const signIn = async (data: { email: string; password: string }) => {
     console.log('data: ', data);
     setIsLoading(true);
@@ -52,7 +57,24 @@ const Auth = ({
         actions.auth.signIn({ email: data.email, password: data.password }),
       );
       if (res.payload.message) {
-        Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
+        if (res.payload.message === 'Email is not verified') {
+          Alert.alert('Error', res.payload.message, [
+            {
+              text: 'Ok',
+              onPress: () =>
+                navigation.navigate('Verification', {
+                  onVerification: async () => {
+                    const user = await auth.userExists(data.email);
+                    await handleVerifyUser(data.email, user.data.id);
+                    await signIn(data);
+                  },
+                  email: data.email,
+                }),
+            },
+          ]);
+        } else {
+          Alert.alert('Error', res.payload.message, [{ text: 'Ok' }]);
+        }
       }
     }
     setIsLoading(false);
@@ -71,13 +93,16 @@ const Auth = ({
         data.email,
         data.password,
       );
-      console.log('res: ', res);
+      //console.log('res: ', res.response);
       if (res.response) {
         Alert.alert('Error', res.response.data.message, [{ text: 'Ok' }]);
       } else {
         navigation.navigate('Verification', {
-          onVerification: () => signIn(data),
-          data: data,
+          onVerification: async () => {
+            await handleVerifyUser(res.data.email, res.data.id);
+            await signIn(data);
+          },
+          email: data.email,
         });
       }
     }
