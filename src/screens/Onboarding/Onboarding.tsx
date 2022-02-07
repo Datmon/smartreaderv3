@@ -29,6 +29,7 @@ const Onboarding = ({
     OnboardingDescription2,
     OnboardingTitle3,
     OnboardingDescription3,
+    OnboardingSkip,
   } = useTranslation();
 
   const slides = [
@@ -103,7 +104,7 @@ const Onboarding = ({
         <TouchableOpacity
           onPress={() => navigation.navigate('Auth')}
           style={styles.skipButtonView}>
-          <Text text="Skip" clickbale style={styles.skipButton} />
+          <Text text={OnboardingSkip} clickbale style={styles.skipButton} />
         </TouchableOpacity>
 
         <NextButton

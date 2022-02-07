@@ -7,6 +7,8 @@ import OrganaizerIcon from './OrganaizerIcon';
 import BookshelfIcon from './BookshelfIcon';
 import ProfileIcon from './ProfileIcon';
 import MeetingIcon from './MeetingIcon';
+import SearchIcon from './SearchIcon';
+import FilterIcon from './FilterIcon';
 
 export {
   EmailIcon,
@@ -18,4 +20,6 @@ export {
   BookshelfIcon,
   ProfileIcon,
   MeetingIcon,
+  SearchIcon,
+  FilterIcon,
 };

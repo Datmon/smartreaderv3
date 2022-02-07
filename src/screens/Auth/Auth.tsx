@@ -22,7 +22,6 @@ import {
 } from 'utils/validation';
 import { RootStackParamList } from 'types';
 import LoadingIndicator from 'components/LoadingIndicator';
-import { verifyUser } from 'api/auth';
 
 const Auth = ({
   navigation,
@@ -45,8 +44,8 @@ const Auth = ({
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0);
 
-  const handleVerifyUser = async (email, id) => {
-    const res: any = await auth.verifyUser(email, id);
+  const handleVerifyUser = async (email: string, id: string) => {
+    await auth.verifyUser(email, id);
   };
 
   const signIn = async (data: { email: string; password: string }) => {
@@ -196,7 +195,7 @@ const Auth = ({
                 <Form
                   onSubmit={signUp}
                   key={key + 1}
-                  render={({ handleSubmit, form }) => (
+                  render={({ handleSubmit }) => (
                     <>
                       <Field
                         name="username"

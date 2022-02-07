@@ -12,7 +12,7 @@ import BackButton from 'components/BackButton/BackButton';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import Input from 'components/Input';
-import { PasswordIcon, ShowPasswordIcon } from 'assets/svg';
+import { PasswordIcon } from 'assets/svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Button from 'components/Button';
 import {

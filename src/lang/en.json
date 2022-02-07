@@ -7,6 +7,7 @@
     "OnboardingDescription2": "Using Smart Reader you will realize what quantum physics is capable of. With the help of Smart Reader you will be able to work in a team, while at the same time communicate with friends and family!",
     "OnboardingTitle3": "Assistant",
     "OnboardingDescription3": "Smart Reader is your guide and assistant on your journey towards success and prosperity!",
+    "OnboardingSkip": "skip",
     "SignInMeeting": "Hey! Welcome back",
     "SignInLabel": "Sign in to your account",
     "SignInForgotPass": "Forgot Password?",
@@ -33,5 +34,7 @@
     "SuccessChangedTitle": "Password Changed",
     "SuccessChangedLabelP1": "Password changed succesfully, you",
     "SuccessChangedLabelP2": "can login again with new password",
-    "SuccessChangedLogin": "Login"
+    "SuccessChangedLogin": "Login",
+    "BookshelfTitle": "Bookshelf",
+    "BookshelfSearchPlaceholder": "Search in my books..."
 }
