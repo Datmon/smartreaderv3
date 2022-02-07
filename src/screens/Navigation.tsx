@@ -16,9 +16,19 @@ import CreateNewPassword from './ChangePasswordFlow/CreateNewPassword';
 import SuccessChanged from './ChangePasswordFlow/SuccessChanged';
 import { Text } from 'components/Text';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Organaizer from './Organaizer';
+import Meeting from './Meeting';
+import Profile from './Profile';
+import {
+  BookshelfIcon,
+  MeetingIcon,
+  OrganaizerIcon,
+  ProfileIcon,
+} from 'assets/svg';
 
 const AuthStack = createNativeStackNavigator();
-const MainStack = createNativeStackNavigator();
+const MainTabs = createBottomTabNavigator();
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -62,7 +72,7 @@ const Navigation = () => {
   console.log('beenAuthorized: ', beenAuthorized);
   return (
     <NavigationContainer>
-      {!accessToken ? (
+      {accessToken ? (
         <AuthStack.Navigator
           initialRouteName={beenAuthorized ? 'Auth' : 'Onboarding'}
           screenOptions={{
@@ -82,16 +92,43 @@ const Navigation = () => {
           <AuthStack.Screen name="SuccessChanged" component={SuccessChanged} />
         </AuthStack.Navigator>
       ) : (
-        <MainStack.Navigator
+        <MainTabs.Navigator
           initialRouteName="Bookshelf"
           screenOptions={{
             headerShown: false,
-            contentStyle: {
-              backgroundColor: '#FFFFFF',
-            },
+            // contentStyle: {
+            //   backgroundColor: '#FFFFFF',
+            // },
           }}>
-          <MainStack.Screen name="Bookshelf" component={Bookshelf} />
-        </MainStack.Navigator>
+          <MainTabs.Screen
+            name="Bookshelf"
+            component={Bookshelf}
+            options={{
+              tabBarIcon: ({ focused }) => <BookshelfIcon focused={focused} />,
+            }}
+          />
+          <MainTabs.Screen
+            name="Organaizer"
+            component={Organaizer}
+            options={{
+              tabBarIcon: ({ focused }) => <OrganaizerIcon focused={focused} />,
+            }}
+          />
+          <MainTabs.Screen
+            name="Meeting"
+            component={Meeting}
+            options={{
+              tabBarIcon: ({ focused }) => <MeetingIcon focused={focused} />,
+            }}
+          />
+          <MainTabs.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              tabBarIcon: ({ focused }) => <ProfileIcon focused={focused} />,
+            }}
+          />
+        </MainTabs.Navigator>
       )}
     </NavigationContainer>
   );

@@ -6,4 +6,7 @@ export type RootStackParamList = {
   CreateNewPassword: undefined;
   SuccessChanged: undefined;
   Bookshelf: undefined;
+  Organaizer: undefined;
+  Meeting: undefined;
+  Profile: undefined;
 };
