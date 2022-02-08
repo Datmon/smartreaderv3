@@ -1,4 +1,4 @@
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text } from 'react-native';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { StorageService } from 'services';

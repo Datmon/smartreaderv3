@@ -9,6 +9,7 @@ import ProfileIcon from './ProfileIcon';
 import MeetingIcon from './MeetingIcon';
 import SearchIcon from './SearchIcon';
 import FilterIcon from './FilterIcon';
+import PlusSign from './PlusSign';
 
 export {
   EmailIcon,
@@ -22,4 +23,5 @@ export {
   MeetingIcon,
   SearchIcon,
   FilterIcon,
+  PlusSign,
 };

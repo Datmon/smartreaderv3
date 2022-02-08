@@ -14,7 +14,7 @@ import Bookshelf from 'screens/Bookshelf';
 import { actions } from 'store';
 import CreateNewPassword from './ChangePasswordFlow/CreateNewPassword';
 import SuccessChanged from './ChangePasswordFlow/SuccessChanged';
-import { Text } from 'components/Text';
+
 import LoadingIndicator from 'components/LoadingIndicator';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Organaizer from './Organaizer';

@@ -9,7 +9,7 @@ import { StorageService } from 'services';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import SearchInput from './components/SearchInput';
-import { FilterIcon } from 'assets/svg';
+import { FilterIcon, PlusSign } from 'assets/svg';
 
 const Bookshelf = ({
   navigation,
@@ -33,6 +33,9 @@ const Bookshelf = ({
           </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity style={styles.addButton}>
+        <PlusSign />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -43,6 +46,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     paddingTop: 10,
+    height: '100%',
   },
   searchTab: {
     flexDirection: 'row',
@@ -58,5 +62,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E2E8F0',
     marginLeft: 8,
+  },
+  addButton: {
+    position: 'absolute',
+    width: 56,
+    height: 56,
+    margin: 24,
+    borderRadius: 50,
+    backgroundColor: '#455AF7',
+    bottom: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
