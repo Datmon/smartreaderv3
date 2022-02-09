@@ -1,5 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { Text } from 'components/Text';
 
 interface IButton {
   title: string;
@@ -15,7 +16,7 @@ const Button = ({ title, style, disabled, onPress }: IButton) => {
       activeOpacity={0.6}
       onPress={onPress}
       disabled={disabled}>
-      <Text style={styles.text}>{title}</Text>
+      <Text text={title} style={styles.text} clickbale />
     </TouchableOpacity>
   );
 };
@@ -32,8 +33,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontWeight: '600',
-    fontSize: 14,
   },
   disabled: {},
 });

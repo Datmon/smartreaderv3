@@ -12,12 +12,12 @@ const SearchInput = ({
   onChangeText: (value: string) => void;
   style?: any;
 }) => {
-  const { BookshelfSearchPlaceholder } = useTranslation();
+  const { BookshelfContext } = useTranslation();
   return (
     <View style={styles.container}>
       <SearchIcon />
       <TextInput
-        placeholder={BookshelfSearchPlaceholder}
+        placeholder={BookshelfContext.searchPlaceholder}
         value={value}
         onChangeText={onChangeText}
         style={[

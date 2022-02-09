@@ -9,6 +9,8 @@ const CustomText = ({
   title,
   label,
   error,
+  header1,
+  header2,
 }: {
   text: string;
   style?: any;
@@ -16,6 +18,8 @@ const CustomText = ({
   title?: boolean;
   label?: boolean;
   error?: boolean;
+  header1?: boolean;
+  header2?: boolean;
 }) => {
   const iosPlatform = Platform.OS === 'ios' ? 'ios' : 'android';
   return (
@@ -28,6 +32,8 @@ const CustomText = ({
               title && stylesIos.title,
               label && stylesIos.label,
               error && stylesIos.error,
+              header1 && stylesIos.header1,
+              header2 && stylesIos.header2,
               style,
             ]
           : [
@@ -36,6 +42,8 @@ const CustomText = ({
               title && stylesAndroid.title,
               label && stylesAndroid.label,
               error && stylesAndroid.error,
+              header1 && stylesAndroid.header1,
+              header2 && stylesAndroid.header2,
               style,
             ]
       }>
@@ -73,6 +81,14 @@ const stylesAndroid = StyleSheet.create({
     marginBottom: -4,
     marginTop: 1,
   },
+  header1: {
+    fontSize: 20,
+    fontFamily: 'EuclidCircular-500',
+  },
+  header2: {
+    fontSize: 18,
+    fontFamily: 'EuclidCircular-500',
+  },
 });
 
 const stylesIos = StyleSheet.create({
@@ -102,5 +118,13 @@ const stylesIos = StyleSheet.create({
     fontSize: 14,
     marginBottom: -4,
     marginTop: 1,
+  },
+  header1: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  header2: {
+    fontSize: 18,
+    fontWeight: '500',
   },
 });

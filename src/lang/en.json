@@ -35,6 +35,21 @@
     "SuccessChangedLabelP1": "Password changed succesfully, you",
     "SuccessChangedLabelP2": "can login again with new password",
     "SuccessChangedLogin": "Login",
-    "BookshelfTitle": "Bookshelf",
-    "BookshelfSearchPlaceholder": "Search in my books..."
+    "BookshelfContext": {
+        "title": "Bookshelf",
+        "searchPlaceholder": "Search in my books...",
+        "filter": {
+            "title": "Filter Events",
+            "files": "Files",
+            "sortBy": "Sort by",
+            "byInteraction": "By date of the last interaction",
+            "byAddnig": "By date of adding",
+            "loaded": "Loaded",
+            "unloaded": "Unloaded",
+            "buttonShow": "Show",
+            "buttonAll": "all",
+            "buttonResults": "results",
+            "reset": "Reset"
+        }
+    }
 }
