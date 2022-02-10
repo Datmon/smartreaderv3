@@ -11,7 +11,7 @@ export const reducer = createReducer(
   {
     typeFilters: ['All'] as Array<string>,
     sortFilter: 'interaction',
-    customFilters: ['Loaded'] as Array<string>,
+    customFilters: [] as Array<string>,
   },
 
   builder => {
@@ -40,7 +40,7 @@ export const reducer = createReducer(
           value => value !== action.payload,
         );
       } else {
-        state.customFilters.push(action.payload);
+        state.customFilters = [...state.customFilters, action.payload];
       }
     });
   },
@@ -58,4 +58,5 @@ export const selectors = {
   selectTypeFilter: (state: RootState) => state.filters.typeFilters,
   selectSortFilter: (state: RootState) => state.filters.sortFilter,
   selectCustomFilters: (state: RootState) => state.filters.customFilters,
+  selectAllFilters: (state: RootState) => state.filters,
 };

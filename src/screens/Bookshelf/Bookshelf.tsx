@@ -1,21 +1,21 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import Button from 'components/Button';
-import { useDispatch } from 'react-redux';
-import { actions } from 'store';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions, selectors } from 'store';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'types';
-import { StorageService } from 'services';
 import { Text } from 'components/Text';
 import { useTranslation } from 'context/LanguageContext';
 import SearchInput from './SearchInput';
-import { FilterIcon, PlusSign } from 'assets/svg';
+import { CrossIcon, FilterIcon, PlusSign } from 'assets/svg';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import BookCard from './BookCard';
 import FormatTabs from './FormatTabs';
 import SortCheckbox from './SortCheckbox';
 import CustomFilters from './CustomFilters';
+import PDFExample from './PDFExample/PDFExample';
 
 const Bookshelf = ({
   navigation,
@@ -24,6 +24,9 @@ const Bookshelf = ({
 
   const { BookshelfContext } = useTranslation();
   const { filter, title } = BookshelfContext;
+
+  const filtedBooks = useSelector(selectors.books.selectBooksWithFilters);
+  const allBooks = useSelector(selectors.books.selectAllBooks);
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -46,6 +49,7 @@ const Bookshelf = ({
           </TouchableOpacity>
         </View>
         <BookCard />
+        <PDFExample />
       </View>
       <TouchableOpacity style={styles.addButton}>
         <PlusSign />
@@ -59,10 +63,26 @@ const Bookshelf = ({
             <Text text={filter.sortBy} header2 style={styles.sortBy} />
             <SortCheckbox />
             <CustomFilters style={styles.customFilters} />
-            <Button
-              title={`${filter.buttonShow} ${filter.buttonAll}`}
-              style={styles.buttonShow}
-            />
+            <View style={styles.modalButtons}>
+              {filtedBooks.length !== allBooks.length && (
+                <TouchableOpacity style={styles.resetButton}>
+                  <CrossIcon />
+                  <Text text={filter.reset} style={styles.resetText} />
+                </TouchableOpacity>
+              )}
+
+              <Button
+                title={
+                  filtedBooks.length === allBooks.length
+                    ? `${filter.buttonShow} ${filter.buttonAll}`
+                    : `${filter.buttonShow} ${filtedBooks.length} ${filter.buttonResults}`
+                }
+                style={styles.buttonShow}
+                onPress={() =>
+                  console.log('selectBooksWithFilters: ', filtedBooks)
+                }
+              />
+            </View>
           </View>
         </Modalize>
       </Portal>
@@ -119,9 +139,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   buttonShow: {
-    marginTop: 40,
-    marginBottom: 50,
+    flex: 1,
     height: 44,
+    width: 'auto',
   },
   sortBy: {
     marginTop: 24,
@@ -130,4 +150,24 @@ const styles = StyleSheet.create({
   customFilters: {
     marginTop: 24,
   },
+  resetButton: {
+    height: 30,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    marginLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalButtons: {
+    flex: 1,
+    marginTop: 40,
+    marginBottom: 50,
+    alignItems: 'center',
+    alignContent: 'center',
+    flexDirection: 'row-reverse',
+  },
+  resetText: { width: 'auto', color: '#718096', marginLeft: 10 },
 });

@@ -73,7 +73,7 @@ const Navigation = () => {
   console.log('beenAuthorized: ', beenAuthorized);
   return (
     <NavigationContainer>
-      {accessToken ? (
+      {!accessToken ? (
         <AuthStack.Navigator
           initialRouteName={beenAuthorized ? 'Auth' : 'Onboarding'}
           screenOptions={{

@@ -7,7 +7,7 @@
     "OnboardingDescription2": "Using Smart Reader you will realize what quantum physics is capable of. With the help of Smart Reader you will be able to work in a team, while at the same time communicate with friends and family!",
     "OnboardingTitle3": "Assistant",
     "OnboardingDescription3": "Smart Reader is your guide and assistant on your journey towards success and prosperity!",
-    "OnboardingSkip": "skip",
+    "OnboardingSkip": "Skip",
     "SignInMeeting": "Hey! Welcome back",
     "SignInLabel": "Sign in to your account",
     "SignInForgotPass": "Forgot Password?",
@@ -51,5 +51,10 @@
             "buttonResults": "results",
             "reset": "Reset"
         }
+    },
+    "UnfilledScreens": {
+        "title": "We are still working on this page.",
+        "label": "we make every effort to create the best application for you",
+        "button": "<     Back to bookshelfs"
     }
 }
