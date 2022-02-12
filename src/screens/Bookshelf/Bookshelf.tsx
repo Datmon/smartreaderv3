@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from 'store';
@@ -15,7 +15,14 @@ import BookCard from './BookCard';
 import FormatTabs from './FormatTabs';
 import SortCheckbox from './SortCheckbox';
 import CustomFilters from './CustomFilters';
+import { IBook } from 'types/interfaces';
 import PDFExample from './PDFExample/PDFExample';
+import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
+
+const PDFWorker = import('pdfjs-dist');
+
+GlobalWorkerOptions.workerSrc =
+  '//mozilla.github.io/pdf.js/build/pdf.worker.js';
 
 const Bookshelf = ({
   navigation,
@@ -29,12 +36,34 @@ const Bookshelf = ({
   const allBooks = useSelector(selectors.books.selectAllBooks);
 
   const [searchValue, setSearchValue] = useState('');
+  const [settedFiltredBooks, setFiltredBooks] = useState<IBook[]>();
 
   const modalizeRef = useRef<Modalize>(null);
 
   const onOpen = () => {
     modalizeRef.current?.open();
   };
+
+  const setNewFiltedBooks = () => {
+    setFiltredBooks(filtedBooks);
+    modalizeRef.current?.close();
+  };
+
+  useEffect(() => {
+    console.log(
+      'document: ',
+      getDocument(
+        'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf',
+      ).promise.then(PDFdoc => {
+        console.log('PDFdoc: ', PDFdoc);
+        PDFdoc;
+      }),
+    );
+  }, []);
+
+  useEffect(() => {
+    setFiltredBooks(filtedBooks);
+  }, []);
 
   return (
     <SafeAreaView>
@@ -48,8 +77,9 @@ const Bookshelf = ({
             </View>
           </TouchableOpacity>
         </View>
-        <BookCard />
-        <PDFExample />
+        {/* <PDFExample /> */}
+        {settedFiltredBooks &&
+          settedFiltredBooks.map(book => <BookCard data={book} />)}
       </View>
       <TouchableOpacity style={styles.addButton}>
         <PlusSign />
@@ -78,9 +108,7 @@ const Bookshelf = ({
                     : `${filter.buttonShow} ${filtedBooks.length} ${filter.buttonResults}`
                 }
                 style={styles.buttonShow}
-                onPress={() =>
-                  console.log('selectBooksWithFilters: ', filtedBooks)
-                }
+                onPress={setNewFiltedBooks}
               />
             </View>
           </View>
