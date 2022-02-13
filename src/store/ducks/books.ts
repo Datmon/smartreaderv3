@@ -1,9 +1,30 @@
-import { createReducer, createAction } from '@reduxjs/toolkit';
+import {
+  createReducer,
+  createAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
+import { books } from 'api';
 import moment from 'moment';
 import { RootState } from 'store';
 import { IBook } from 'types/interfaces';
 
 const addTypeFilter = createAction<string>('filters/addTypeFilter');
+
+// const postBook = createAsyncThunk('books/postBook', async () => {
+//   try {
+//     const response = await books.postBook();
+//     if (response.data.error) {
+//       throw new Error(response.data.message);
+//     }
+//     console.log('response.data', response.data);
+//     await StorageService.setAccessToken(response.data.access_token);
+//     const token = await StorageService.getAssessToken();
+//     console.log('token', token);
+//     return response.data;
+//   } catch (err) {
+//     return err;
+//   }
+// });
 
 export const reducer = createReducer(
   {

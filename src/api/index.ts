@@ -1,2 +1,4 @@
 import * as auth from './auth';
-export { auth };
+import * as books from './books';
+
+export { auth, books };

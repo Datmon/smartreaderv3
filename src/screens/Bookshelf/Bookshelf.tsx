@@ -17,17 +17,42 @@ import SortCheckbox from './SortCheckbox';
 import CustomFilters from './CustomFilters';
 import { IBook } from 'types/interfaces';
 import PDFExample from './PDFExample/PDFExample';
-import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
+import { PDFDocument } from 'pdf-lib';
+import axios, { Axios } from 'axios';
+import { PolyfillBlob, ReactNativeBlobUtilFile } from 'react-native-blob-util';
+import DocumentPicker, {
+  DirectoryPickerResponse,
+  DocumentPickerResponse,
+  isInProgress,
+  types,
+} from 'react-native-document-picker';
+import {
+  check,
+  PERMISSIONS,
+  RESULTS,
+  request,
+  PermissionStatus,
+} from 'react-native-permissions';
+import { books } from 'api';
 
-const PDFWorker = import('pdfjs-dist');
-
-GlobalWorkerOptions.workerSrc =
-  '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+type Rationale = {
+  title: string;
+  message: string;
+  buttonPositive?: string;
+  buttonNegative?: string;
+  buttonNeutral?: string;
+};
 
 const Bookshelf = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'Bookshelf'>) => {
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   request(PERMISSIONS.IOS.MEDIA_LIBRARY).then(result => {
+  //     // …
+  //   });
+  // }, []);
 
   const { BookshelfContext } = useTranslation();
   const { filter, title } = BookshelfContext;
@@ -37,6 +62,9 @@ const Bookshelf = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [settedFiltredBooks, setFiltredBooks] = useState<IBook[]>();
+  const [result, setResult] = React.useState<
+    Array<DocumentPickerResponse> | DirectoryPickerResponse | undefined | null
+  >();
 
   const modalizeRef = useRef<Modalize>(null);
 
@@ -49,19 +77,66 @@ const Bookshelf = ({
     modalizeRef.current?.close();
   };
 
-  useEffect(() => {
-    console.log(
-      'document: ',
-      getDocument(
-        'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf',
-      ).promise.then(PDFdoc => {
-        console.log('PDFdoc: ', PDFdoc);
-        PDFdoc;
-      }),
-    );
-  }, []);
+  async function readPdfMetadata() {
+    // Fetch PDF
+    const pdfUrl = 'https://pdf-lib.js.org/assets/with_cropbox.pdf';
+    const pdfBytes = await axios
+      .get(pdfUrl, {
+        responseType: 'arraybuffer',
+        headers: {
+          Accept: 'application/pdf',
+        },
+      })
+      .then(res => {
+        console.log('resPDF', res);
+        return res.data;
+      });
+
+    // Load the PDF document without updating its existing metadata
+    const pdfDoc = await PDFDocument.load(pdfBytes, {
+      updateMetadata: false,
+    });
+
+    console.log('pdfDoc', pdfDoc);
+
+    // Read all available metadata fields
+    const pdftitle = pdfDoc.getTitle();
+    const author = pdfDoc.getAuthor();
+    const subject = pdfDoc.getSubject();
+    const creator = pdfDoc.getCreator();
+    const keywords = pdfDoc.getKeywords();
+    const producer = pdfDoc.getProducer();
+    const creationDate = pdfDoc.getCreationDate();
+    const modificationDate = pdfDoc.getModificationDate();
+
+    console.log('author', author);
+
+    const file = require('../../assets/books/9019827.a4.pdf');
+
+    // const blob = new PolyfillBlob(
+    //   file,
+    //   {
+    //     type: 'application/pdf',
+    //   },
+    //   true,
+    // );
+  }
+
+  const handleError = (err: unknown) => {
+    if (DocumentPicker.isCancel(err)) {
+      console.warn('cancelled');
+      // User cancelled the picker, exit any dialogs or menus and move on
+    } else if (isInProgress(err)) {
+      console.warn(
+        'multiple pickers were opened, only the last will be considered',
+      );
+    } else {
+      throw err;
+    }
+  };
 
   useEffect(() => {
+    readPdfMetadata();
     setFiltredBooks(filtedBooks);
   }, []);
 
@@ -79,9 +154,26 @@ const Bookshelf = ({
         </View>
         {/* <PDFExample /> */}
         {settedFiltredBooks &&
-          settedFiltredBooks.map(book => <BookCard data={book} />)}
+          settedFiltredBooks.map(book => (
+            <BookCard key={book.id} data={book} />
+          ))}
       </View>
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={async () => {
+          try {
+            const pickerResult = await DocumentPicker.pickSingle({
+              presentationStyle: 'formSheet',
+              copyTo: 'cachesDirectory',
+              type: [types.allFiles],
+            });
+            setResult([pickerResult]);
+            console.log('pickerResult', pickerResult);
+            books.postBook(pickerResult);
+          } catch (e) {
+            handleError(e);
+          }
+        }}>
         <PlusSign />
       </TouchableOpacity>
       <Portal>

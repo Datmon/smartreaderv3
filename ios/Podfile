@@ -16,6 +16,12 @@ target 'app' do
 
   pod 'GoogleSignIn', '~> 6.0.2'
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'appTests' do
     inherit! :complete
     # Pods for testing

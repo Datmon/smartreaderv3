@@ -27,6 +27,7 @@ import {
   ProfileIcon,
 } from 'assets/svg';
 import { Host } from 'react-native-portalize';
+import axios from 'axios';
 
 const AuthStack = createNativeStackNavigator();
 const MainTabs = createBottomTabNavigator();
@@ -39,6 +40,14 @@ const Navigation = () => {
 
   const getToken = async () => {
     const token = await StorageService.getAssessToken();
+    if (token) {
+      axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+    } else {
+      axios.defaults.headers.common.Authorization = false;
+      /*if setting null does not remove `Authorization` header then try
+          delete axios.defaults.headers.common['Authorization'];
+        */
+    }
     if (token) {
       dispatch(actions.auth.setAccessToken(token));
     }
