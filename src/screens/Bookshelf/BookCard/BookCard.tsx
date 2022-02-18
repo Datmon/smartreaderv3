@@ -1,26 +1,42 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { IBook } from 'types/interfaces';
+import { IApiBook, IBook } from 'types/interfaces';
 import { Text } from 'components/Text';
 import Button from 'components/Button';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
-const BookCard = ({ data }: { data: IBook }) => {
+const BookCard = ({ data }: { data: IApiBook }) => {
+  const format = data.file.split('.').slice(-1)[0].toUpperCase();
+  const dispatch = useDispatch();
+
+  const setDownloaded = async () => {
+    const res = await dispatch(actions.books.setDownloaded(data.id));
+  };
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => setDownloaded()}>
       <View style={styles.container}>
-        <Image source={data.image} />
+        <Image source={data.image} style={styles.image} />
         <View style={styles.text}>
           <View
             style={[
               styles.format,
-              data.format === 'PDF' && { backgroundColor: '#E64D48' },
+              format === 'PDF' && { backgroundColor: '#E64D48' },
             ]}>
-            <Text text={data.format} style={{ color: 'white' }} />
+            <Text text={format} style={{ color: 'white' }} />
           </View>
-          <Text text={data.title} style={styles.title} />
+          <Text
+            text={
+              data.title.length > 28
+                ? data.title.slice(0, 28) + '...'
+                : data.title
+            }
+            style={styles.title}
+          />
           <Text text={data.author} label style={styles.author} />
 
-          {data.readed > 0 ? (
+          {data.isLoaded === 'loaded' ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -94,6 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    height: 22,
     lineHeight: 22,
     fontSize: 16,
   },
@@ -106,9 +123,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     justifyContent: 'center',
     height: 18,
-    maxWidth: 36,
+    width: 'auto',
     backgroundColor: '#1890FF',
     borderRadius: 4,
+    marginRight: 'auto',
   },
   button: {
     borderWidth: 1,
@@ -123,5 +141,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 16,
     paddingHorizontal: 5,
+  },
+  image: {
+    height: 83,
+    width: 60,
   },
 });

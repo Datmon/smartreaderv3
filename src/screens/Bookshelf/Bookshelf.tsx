@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Button from 'components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from 'store';
@@ -15,7 +15,7 @@ import BookCard from './BookCard';
 import FormatTabs from './FormatTabs';
 import SortCheckbox from './SortCheckbox';
 import CustomFilters from './CustomFilters';
-import { IBook } from 'types/interfaces';
+import { IApiBook, IBook } from 'types/interfaces';
 import PDFExample from './PDFExample/PDFExample';
 import { PDFDocument } from 'pdf-lib';
 import axios, { Axios } from 'axios';
@@ -34,6 +34,7 @@ import {
   PermissionStatus,
 } from 'react-native-permissions';
 import { books } from 'api';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Rationale = {
   title: string;
@@ -61,10 +62,20 @@ const Bookshelf = ({
   const allBooks = useSelector(selectors.books.selectAllBooks);
 
   const [searchValue, setSearchValue] = useState('');
-  const [settedFiltredBooks, setFiltredBooks] = useState<IBook[]>();
-  const [result, setResult] = React.useState<
-    Array<DocumentPickerResponse> | DirectoryPickerResponse | undefined | null
-  >();
+  const [isLoading, setIsLoading] = useState(true);
+  const [settedFiltredBooks, setFiltredBooks] = useState<IApiBook[]>([]);
+
+  const sortAndSearchBooks = useMemo(() => {
+    if (settedFiltredBooks && !isLoading) {
+      console.log('settedFiltredBooks', settedFiltredBooks);
+
+      return settedFiltredBooks.filter(
+        post =>
+          post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+          post.author.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+    }
+  }, [settedFiltredBooks, searchValue, isLoading]);
 
   const modalizeRef = useRef<Modalize>(null);
 
@@ -90,9 +101,24 @@ const Bookshelf = ({
     }
   };
 
+  const getBooksMeta = async () => {
+    setIsLoading(true);
+    const res = await dispatch(actions.books.getBooks());
+    setIsLoading(false);
+    //setFiltredBooks(filtedBooks);
+
+    console.log('filtedBooks', filtedBooks);
+    console.log('allBooks', allBooks);
+  };
+
   useEffect(() => {
-    setFiltredBooks(filtedBooks);
+    getBooksMeta();
+    //converter();
   }, []);
+
+  useEffect(() => {
+    setFiltredBooks(allBooks);
+  }, [allBooks]);
 
   return (
     <SafeAreaView>
@@ -107,10 +133,14 @@ const Bookshelf = ({
           </TouchableOpacity>
         </View>
         {/* <PDFExample /> */}
-        {settedFiltredBooks &&
-          settedFiltredBooks.map(book => (
-            <BookCard key={book.id} data={book} />
-          ))}
+        <ScrollView>
+          {sortAndSearchBooks &&
+            !isLoading &&
+            sortAndSearchBooks.map((book: any) => (
+              <BookCard key={book.id} data={book} />
+            ))}
+        </ScrollView>
+        <Button title="click" onPress={() => getBooksMeta()} />
       </View>
       <TouchableOpacity
         style={styles.addButton}
@@ -121,9 +151,9 @@ const Bookshelf = ({
               copyTo: 'cachesDirectory',
               type: [types.allFiles],
             });
-            setResult([pickerResult]);
             console.log('pickerResult', pickerResult);
-            books.postBook(pickerResult);
+            const res = books.postBook(pickerResult);
+            console.log('res', res);
           } catch (e) {
             handleError(e);
           }
@@ -131,7 +161,10 @@ const Bookshelf = ({
         <PlusSign />
       </TouchableOpacity>
       <Portal>
-        <Modalize ref={modalizeRef} adjustToContentHeight={true}>
+        <Modalize
+          ref={modalizeRef}
+          adjustToContentHeight={true}
+          handlePosition="inside">
           <View style={styles.filterContainer}>
             <Text text={filter.title} header1 style={styles.filterTitle} />
             <Text text={filter.files} header2 style={styles.filterFiles} />

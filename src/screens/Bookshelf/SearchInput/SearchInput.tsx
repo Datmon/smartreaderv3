@@ -25,6 +25,7 @@ const SearchInput = ({
           styles.textInput,
           Platform.OS === 'ios' ? styles.fontIos : styles.fontAndroid,
         ]}
+        placeholderTextColor="#A0AEC0"
       />
     </View>
   );

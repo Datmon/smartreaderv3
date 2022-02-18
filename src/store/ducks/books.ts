@@ -6,25 +6,23 @@ import {
 import { books } from 'api';
 import moment from 'moment';
 import { RootState } from 'store';
-import { IBook } from 'types/interfaces';
+import { IApiBook, IBook } from 'types/interfaces';
 
-const addTypeFilter = createAction<string>('filters/addTypeFilter');
+const addTypeFilter = createAction<string>('books/addTypeFilter');
+const setDownloaded = createAction<string>('books/addTypeFilter');
 
-// const postBook = createAsyncThunk('books/postBook', async () => {
-//   try {
-//     const response = await books.postBook();
-//     if (response.data.error) {
-//       throw new Error(response.data.message);
-//     }
-//     console.log('response.data', response.data);
-//     await StorageService.setAccessToken(response.data.access_token);
-//     const token = await StorageService.getAssessToken();
-//     console.log('token', token);
-//     return response.data;
-//   } catch (err) {
-//     return err;
-//   }
-// });
+const getBooks = createAsyncThunk('books/getBooks', async () => {
+  try {
+    const response = await books.getBooks();
+    if (response.data.error) {
+      throw new Error(response.data.message);
+    }
+    console.log('response.data', response.data);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+});
 
 export const reducer = createReducer(
   {
@@ -66,40 +64,75 @@ export const reducer = createReducer(
         pages: 300,
       },
     ] as Array<IBook>,
+    getBooksStatus: 'idle',
+    allBooksMeta: [] as Array<IApiBook>,
   },
 
   builder => {
-    builder.addCase(addTypeFilter, (state, action) => {});
+    builder
+      .addCase(getBooks.pending, state => {
+        state.getBooksStatus = 'pending';
+      })
+      .addCase(getBooks.fulfilled, (state, action) => {
+        state.allBooksMeta = action.payload;
+        console.log('state.allBooksMeta', state.allBooksMeta);
+        state.getBooksStatus = 'fulfilled';
+      })
+      .addCase(getBooks.rejected, state => {
+        state.getBooksStatus = 'rejected';
+      });
+
+    builder.addCase(setDownloaded, (state, action) => {
+      const index = state.allBooksMeta.findIndex(
+        book => book.id === action.payload,
+      );
+      state.allBooksMeta[index].isLoaded = 'loaded';
+    });
   },
 );
 
 export const actions = {
   addTypeFilter,
+  getBooks,
+  setDownloaded,
 };
 
 export const selectors = {
-  selectAllBooks: (state: RootState) => state.books.defaultBooks,
-  selectBooksWithFilters: (state: RootState) => {
-    let filtredArray: Array<IBook> = state.books.defaultBooks;
+  selectAllBooks: (state: RootState) => state.books.allBooksMeta,
+  selectBooksWithFilters: (state: RootState) => state.books.allBooksMeta,
 
-    if (state.filters.typeFilters[0] !== 'All') {
-      filtredArray = state.books.defaultBooks.filter(book =>
-        state.filters.typeFilters.some(format => format === book.format),
-      );
-    }
-    if (state.filters.customFilters.length > 0) {
-      filtredArray = filtredArray.filter(book =>
-        state.filters.customFilters.some(filter => book.isLoaded === filter),
-      );
-    }
-    if (state.filters.sortFilter === 'interaction') {
-      return [...filtredArray].sort((a, b) =>
-        moment(a.dateOfTouched).diff(moment(b.dateOfTouched)),
-      );
-    } else {
-      return [...filtredArray].sort((a, b) =>
-        moment(a.dateOfUploading).diff(moment(b.dateOfUploading)),
-      );
-    }
-  },
+  // selectBooksWithFilters: (state: RootState) => {
+  //   let filtredArray = state.books.allBooksMeta;
+
+  //   if (state.filters.typeFilters[0] !== 'All') {
+  //     filtredArray = state.books.allBooksMeta.filter(book => {
+  //       const format = book.file.split('.').slice(-1)[0].toUpperCase();
+
+  //       return state.filters.typeFilters.some(
+  //         bookFormat => bookFormat === format,
+  //       );
+  //     });
+  //   }
+  //   if (state.filters.customFilters.length > 0) {
+  //     filtredArray = filtredArray.filter(book =>
+  //       state.filters.customFilters.some(filter => {
+  //         if (book.isLoaded === filter) {
+  //           return true;
+  //         }
+  //         if (filter === 'unloaded' && book.isLoaded === undefined) {
+  //           return true;
+  //         }
+  //       }),
+  //     );
+  //   }
+  //   if (state.filters.sortFilter === 'interaction') {
+  //     return [...filtredArray].sort((a, b) =>
+  //       moment(a.updated_at).diff(moment(b.updated_at)),
+  //     );
+  //   } else {
+  //     return [...filtredArray].sort((a, b) =>
+  //       moment(a.created_at).diff(moment(b.created_at)),
+  //     );
+  //   }
+  // },
 };

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://smart-reader-api.herokuapp.com/api/';
+//const BASE_URL = 'https://smart-reader-api.herokuapp.com/api/';
+
+const BASE_URL = 'http://130.193.38.44:3000/api/';
 
 export const signIn = async (email: string, password: string) => {
   const res = await axios.post(BASE_URL + 'auth/login', { email, password });
