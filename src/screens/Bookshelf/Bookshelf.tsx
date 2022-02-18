@@ -111,14 +111,30 @@ const Bookshelf = ({
     console.log('allBooks', allBooks);
   };
 
+  const handleUpload = async () => {
+    try {
+      const pickerResult = await DocumentPicker.pickSingle({
+        presentationStyle: 'formSheet',
+        copyTo: 'cachesDirectory',
+        type: [types.allFiles],
+      });
+      console.log('pickerResult', pickerResult);
+      const res = await books.postBook(pickerResult);
+      getBooksMeta();
+      console.log('res', res);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   useEffect(() => {
     getBooksMeta();
     //converter();
   }, []);
 
   useEffect(() => {
-    setFiltredBooks(allBooks);
-  }, [allBooks]);
+    setFiltredBooks(filtedBooks);
+  }, [filtedBooks]);
 
   return (
     <SafeAreaView>
@@ -141,23 +157,7 @@ const Bookshelf = ({
             ))}
         </ScrollView>
       </View>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={async () => {
-          try {
-            const pickerResult = await DocumentPicker.pickSingle({
-              presentationStyle: 'formSheet',
-              copyTo: 'cachesDirectory',
-              type: [types.allFiles],
-            });
-            console.log('pickerResult', pickerResult);
-            const res = books.postBook(pickerResult);
-            console.log('res', res);
-          } catch (e) {
-            handleError(e);
-          }
-          getBooksMeta();
-        }}>
+      <TouchableOpacity style={styles.addButton} onPress={handleUpload}>
         <PlusSign />
       </TouchableOpacity>
       <Portal>

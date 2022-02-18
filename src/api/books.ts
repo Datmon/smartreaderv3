@@ -39,24 +39,17 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
 
   const token = await StorageService.getAssessToken();
 
-  fetch('http://130.193.38.44:3000/api/books', {
+  const res = await fetch('http://130.193.38.44:3000/api/books', {
     method: 'post',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: formData,
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      console.log('responce of book: ', response);
-      return response;
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  });
+
+  const bookResponce = await res.json();
+  return bookResponce;
 };
 
 export const getBooks = async () => {
