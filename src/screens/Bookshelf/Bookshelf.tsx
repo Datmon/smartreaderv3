@@ -140,7 +140,6 @@ const Bookshelf = ({
               <BookCard key={book.id} data={book} />
             ))}
         </ScrollView>
-        <Button title="click" onPress={() => getBooksMeta()} />
       </View>
       <TouchableOpacity
         style={styles.addButton}
@@ -157,6 +156,7 @@ const Bookshelf = ({
           } catch (e) {
             handleError(e);
           }
+          getBooksMeta();
         }}>
         <PlusSign />
       </TouchableOpacity>

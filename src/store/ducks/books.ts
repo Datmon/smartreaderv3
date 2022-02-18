@@ -99,40 +99,44 @@ export const actions = {
 
 export const selectors = {
   selectAllBooks: (state: RootState) => state.books.allBooksMeta,
-  selectBooksWithFilters: (state: RootState) => state.books.allBooksMeta,
+  //selectBooksWithFilters: (state: RootState) => state.books.allBooksMeta,
 
-  // selectBooksWithFilters: (state: RootState) => {
-  //   let filtredArray = state.books.allBooksMeta;
+  selectBooksWithFilters: (state: RootState) => {
+    if (state.books.allBooksMeta && state.books.allBooksMeta.length > 0) {
+      let filtredArray = state.books.allBooksMeta;
 
-  //   if (state.filters.typeFilters[0] !== 'All') {
-  //     filtredArray = state.books.allBooksMeta.filter(book => {
-  //       const format = book.file.split('.').slice(-1)[0].toUpperCase();
+      if (state.filters.typeFilters[0] !== 'All') {
+        filtredArray = state.books.allBooksMeta.filter(book => {
+          const format = book.file.split('.').slice(-1)[0].toUpperCase();
 
-  //       return state.filters.typeFilters.some(
-  //         bookFormat => bookFormat === format,
-  //       );
-  //     });
-  //   }
-  //   if (state.filters.customFilters.length > 0) {
-  //     filtredArray = filtredArray.filter(book =>
-  //       state.filters.customFilters.some(filter => {
-  //         if (book.isLoaded === filter) {
-  //           return true;
-  //         }
-  //         if (filter === 'unloaded' && book.isLoaded === undefined) {
-  //           return true;
-  //         }
-  //       }),
-  //     );
-  //   }
-  //   if (state.filters.sortFilter === 'interaction') {
-  //     return [...filtredArray].sort((a, b) =>
-  //       moment(a.updated_at).diff(moment(b.updated_at)),
-  //     );
-  //   } else {
-  //     return [...filtredArray].sort((a, b) =>
-  //       moment(a.created_at).diff(moment(b.created_at)),
-  //     );
-  //   }
-  // },
+          return state.filters.typeFilters.some(
+            bookFormat => bookFormat === format,
+          );
+        });
+      }
+      if (state.filters.customFilters.length > 0) {
+        filtredArray = filtredArray.filter(book =>
+          state.filters.customFilters.some(filter => {
+            if (book.isLoaded === filter) {
+              return true;
+            }
+            if (filter === 'unloaded' && book.isLoaded === undefined) {
+              return true;
+            }
+          }),
+        );
+      }
+      if (state.filters.sortFilter === 'interaction') {
+        return [...filtredArray].sort((a, b) =>
+          moment(a.updated_at).diff(moment(b.updated_at)),
+        );
+      } else {
+        return [...filtredArray].sort((a, b) =>
+          moment(a.created_at).diff(moment(b.created_at)),
+        );
+      }
+    } else {
+      return state.books.allBooksMeta;
+    }
+  },
 };
