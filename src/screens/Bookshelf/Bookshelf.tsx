@@ -1,4 +1,10 @@
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Button from 'components/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,12 +33,13 @@ import DocumentPicker, {
   types,
 } from 'react-native-document-picker';
 import {
-  check,
   PERMISSIONS,
-  RESULTS,
   request,
-  PermissionStatus,
+  openLimitedPhotoLibraryPicker,
+  check,
+  RESULTS,
 } from 'react-native-permissions';
+import {} from 'react-native-permissions';
 import { books } from 'api';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -49,12 +56,6 @@ const Bookshelf = ({
 }: NativeStackScreenProps<RootStackParamList, 'Bookshelf'>) => {
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   request(PERMISSIONS.IOS.MEDIA_LIBRARY).then(result => {
-  //     // …
-  //   });
-  // }, []);
-
   const { BookshelfContext } = useTranslation();
   const { filter, title } = BookshelfContext;
 
@@ -63,10 +64,11 @@ const Bookshelf = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [settedFiltredBooks, setFiltredBooks] = useState<IApiBook[]>([]);
 
   const sortAndSearchBooks = useMemo(() => {
-    if (settedFiltredBooks && !isLoading) {
+    if (settedFiltredBooks.length > 0 && !isLoading) {
       console.log('settedFiltredBooks', settedFiltredBooks);
 
       return settedFiltredBooks.filter(
@@ -112,6 +114,8 @@ const Bookshelf = ({
   };
 
   const handleUpload = async () => {
+    await request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+
     try {
       const pickerResult = await DocumentPicker.pickSingle({
         presentationStyle: 'formSheet',
@@ -126,6 +130,34 @@ const Bookshelf = ({
       handleError(e);
     }
   };
+
+  check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+    .then(result => {
+      switch (result) {
+        case RESULTS.UNAVAILABLE:
+          console.log(
+            'This feature is not available (on this device / in this context)',
+          );
+          break;
+        case RESULTS.DENIED:
+          console.log(
+            'The permission has not been requested / is denied but requestable',
+          );
+          break;
+        case RESULTS.LIMITED:
+          console.log('The permission is limited: some actions are possible');
+          break;
+        case RESULTS.GRANTED:
+          console.log('The permission is granted');
+          break;
+        case RESULTS.BLOCKED:
+          console.log('The permission is denied and not requestable anymore');
+          break;
+      }
+    })
+    .catch(error => {
+      // …
+    });
 
   useEffect(() => {
     getBooksMeta();
@@ -149,7 +181,11 @@ const Bookshelf = ({
           </TouchableOpacity>
         </View>
         {/* <PDFExample /> */}
-        <ScrollView>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={getBooksMeta} />
+          }>
           {sortAndSearchBooks &&
             !isLoading &&
             sortAndSearchBooks.map((book: any) => (
@@ -201,7 +237,7 @@ export default Bookshelf;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    paddingHorizontal: 24,
     paddingTop: 10,
     height: '100%',
   },
@@ -277,4 +313,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   resetText: { width: 'auto', color: '#718096', marginLeft: 10 },
+  scrollView: {
+    minHeight: '100%',
+  },
 });

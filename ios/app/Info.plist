@@ -46,8 +46,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Get books from user storage to upload on API and use with reader</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Get books from user storage to upload on API and use with reader</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>EuclidCircular-400.ttf</string>

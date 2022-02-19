@@ -18,6 +18,7 @@ target 'app' do
 
   permissions_path = '../node_modules/react-native-permissions/ios'
 
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
   pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'

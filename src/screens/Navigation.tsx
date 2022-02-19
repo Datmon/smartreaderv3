@@ -67,7 +67,6 @@ const Navigation = () => {
   const deleteStateOnboarding = async () => {
     await StorageService.removeBeenAuthorized();
   };
-
   useEffect(() => {
     setIsLoading(true);
     getOnboarding();
