@@ -6,7 +6,7 @@ import { StorageService } from 'services';
 const BASE_URL = 'http://130.193.38.44:3000/api/';
 
 export const postBook = async (pickercFile: DocumentPickerResponse) => {
-  const formData = new FormData();
+  const formData = await new FormData();
 
   //   Object.entries(pikerFile).forEach(([key, val]) => {
   //     // HACK - make type happy…
@@ -22,7 +22,7 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
   //       console.log('error', err.message, err.code);
   //     });
 
-  formData.append('book', pickercFile);
+  await formData.append('book', pickercFile);
 
   // const config = {
   //   headers: {

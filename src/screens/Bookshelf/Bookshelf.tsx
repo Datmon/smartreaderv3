@@ -1,11 +1,19 @@
 import {
+  ActivityIndicator,
+  Alert,
   RefreshControl,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Button from 'components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, selectors } from 'store';
@@ -42,6 +50,7 @@ import {
 import {} from 'react-native-permissions';
 import { books } from 'api';
 import { ScrollView } from 'react-native-gesture-handler';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 type Rationale = {
   title: string;
@@ -64,6 +73,7 @@ const Bookshelf = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [addingBook, setAddingBook] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [settedFiltredBooks, setFiltredBooks] = useState<IApiBook[]>([]);
 
@@ -90,7 +100,8 @@ const Bookshelf = ({
     modalizeRef.current?.close();
   };
 
-  const handleError = (err: unknown) => {
+  const handleError = (err: any) => {
+    Alert.alert('Error', err.payload.message);
     if (DocumentPicker.isCancel(err)) {
       console.warn('cancelled');
       // User cancelled the picker, exit any dialogs or menus and move on
@@ -107,26 +118,40 @@ const Bookshelf = ({
     setIsLoading(true);
     const res = await dispatch(actions.books.getBooks());
     setIsLoading(false);
+    setRefreshing(false);
+
     //setFiltredBooks(filtedBooks);
 
     console.log('filtedBooks', filtedBooks);
     console.log('allBooks', allBooks);
   };
 
-  const handleUpload = async () => {
-    await request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+  const wait = (timeout: number) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getBooksMeta();
+  }, []);
+
+  const handleUpload = async () => {
     try {
       const pickerResult = await DocumentPicker.pickSingle({
         presentationStyle: 'formSheet',
         copyTo: 'cachesDirectory',
         type: [types.allFiles],
       });
-      console.log('pickerResult', pickerResult);
-      const res = await books.postBook(pickerResult);
-      getBooksMeta();
-      console.log('res', res);
+      if (!pickerResult.copyError) {
+        setAddingBook(true);
+        console.log('pickerResult', pickerResult);
+        const res = await books.postBook(pickerResult);
+        getBooksMeta();
+        console.log('res', res);
+        setAddingBook(false);
+      }
     } catch (e) {
+      setAddingBook(false);
       handleError(e);
     }
   };
@@ -161,6 +186,7 @@ const Bookshelf = ({
 
   useEffect(() => {
     getBooksMeta();
+    request(PERMISSIONS.IOS.MEDIA_LIBRARY);
     //converter();
   }, []);
 
@@ -184,13 +210,18 @@ const Bookshelf = ({
         <ScrollView
           contentContainerStyle={styles.scrollView}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={getBooksMeta} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           {sortAndSearchBooks &&
             !isLoading &&
             sortAndSearchBooks.map((book: any) => (
               <BookCard key={book.id} data={book} />
             ))}
+          {addingBook && (
+            <View style={styles.emptyBook}>
+              <ActivityIndicator size="large" color="#455AF7" />
+            </View>
+          )}
         </ScrollView>
       </View>
       <TouchableOpacity style={styles.addButton} onPress={handleUpload}>
@@ -315,5 +346,15 @@ const styles = StyleSheet.create({
   resetText: { width: 'auto', color: '#718096', marginLeft: 10 },
   scrollView: {
     minHeight: '100%',
+  },
+  emptyBook: {
+    height: 90,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    marginBottom: 16,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -23,6 +23,7 @@ const BookCard = ({ data }: { data: IApiBook }) => {
             style={[
               styles.format,
               format === 'PDF' && { backgroundColor: '#E64D48' },
+              format === 'TXT' && { backgroundColor: '#E64D48' },
             ]}>
             <Text text={format} style={{ color: 'white' }} />
           </View>
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   author: {
+    height: 20,
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 2,
