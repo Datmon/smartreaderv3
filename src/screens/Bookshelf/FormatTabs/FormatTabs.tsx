@@ -13,6 +13,7 @@ const FormatTabs = ({ style }: { style?: any }) => {
     <View style={[styles.container, style]}>
       {types.map(type => (
         <ParamButton
+          key={type}
           format={type}
           active={settedTypes.find(value => type === value) ? true : false}
         />

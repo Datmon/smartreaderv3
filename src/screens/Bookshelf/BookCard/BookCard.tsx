@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 83,
-    width: 60,
+    //width: 60,
+    width: 1,
   },
 });
