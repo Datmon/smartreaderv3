@@ -9,11 +9,11 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
 public class MainActivity extends ReactActivity {
 
-  @Override 
-    protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.show(this, true);  // here
-        super.onCreate(savedInstanceState);
-    }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    SplashScreen.show(this, true); // here
+    super.onCreate(savedInstanceState);
+  }
 
   @Override
   protected String getMainComponentName() {
@@ -25,7 +25,7 @@ public class MainActivity extends ReactActivity {
     return new ReactActivityDelegate(this, getMainComponentName()) {
       @Override
       protected ReactRootView createRootView() {
-       return new RNGestureHandlerEnabledRootView(MainActivity.this);
+        return new RNGestureHandlerEnabledRootView(MainActivity.this);
       }
     };
   }

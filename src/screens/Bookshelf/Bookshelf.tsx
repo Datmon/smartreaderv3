@@ -3,6 +3,7 @@ import {
   Alert,
   RefreshControl,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -49,7 +50,6 @@ import {
 } from 'react-native-permissions';
 import {} from 'react-native-permissions';
 import { books } from 'api';
-import { ScrollView } from 'react-native-gesture-handler';
 import LoadingIndicator from 'components/LoadingIndicator';
 
 type Rationale = {
@@ -64,6 +64,8 @@ const Bookshelf = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'Bookshelf'>) => {
   const dispatch = useDispatch();
+
+  const scrollViewRef = useRef();
 
   const { BookshelfContext } = useTranslation();
   const { filter, title } = BookshelfContext;
@@ -98,10 +100,12 @@ const Bookshelf = ({
   const setNewFiltedBooks = () => {
     setFiltredBooks(filtedBooks);
     modalizeRef.current?.close();
+    scrollViewRef.current.scrollTo(0);
   };
 
   const handleError = (err: any) => {
-    Alert.alert('Error', err.payload.message);
+    //Alert.alert('Error', err);
+    console.log('Error', err);
     if (DocumentPicker.isCancel(err)) {
       console.warn('cancelled');
       // User cancelled the picker, exit any dialogs or menus and move on
@@ -144,13 +148,15 @@ const Bookshelf = ({
       });
       if (!pickerResult.copyError) {
         setAddingBook(true);
+
         console.log('pickerResult', pickerResult);
         const res = await books.postBook(pickerResult);
-        getBooksMeta();
         console.log('res', res);
+        getBooksMeta();
         setAddingBook(false);
       }
     } catch (e) {
+      console.log('for');
       setAddingBook(false);
       handleError(e);
     }
@@ -187,6 +193,7 @@ const Bookshelf = ({
   useEffect(() => {
     getBooksMeta();
     request(PERMISSIONS.IOS.MEDIA_LIBRARY);
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
     //converter();
   }, []);
 
@@ -208,7 +215,12 @@ const Bookshelf = ({
         </View>
         {/* <PDFExample /> */}
         <ScrollView
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
+          }
           contentContainerStyle={styles.scrollView}
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
