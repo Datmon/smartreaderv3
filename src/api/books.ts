@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { Alert } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { StorageService } from 'services';
+const Frisbee = require('frisbee');
 
-const BASE_URL = 'http://130.193.38.44:3000/api/';
+const BASE_URL = 'https://6d46-130-193-38-44.ngrok.io/api';
 
 export const postBook = async (pickercFile: DocumentPickerResponse) => {
   const formData = await new FormData();
@@ -39,20 +41,66 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
 
   const token = await StorageService.getAssessToken();
 
-  const res = await fetch('http://130.193.38.44:3000/api/books', {
+  const res = await fetch('https://6d46-130-193-38-44.ngrok.io/api/books', {
     method: 'post',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
     },
     body: formData,
   });
 
   const bookResponce = await res.json();
   return bookResponce;
+  //
+  //
+
+  // var api = new Frisbee({
+  //   baseURI: 'http://130.193.38.44:3000/api', // optional
+  //   headers: {
+  //     Accept: 'application/json',
+  //     Authorization: `Bearer ${token}`,
+  //     'Content-Type': 'multipart/form-data; ',
+  //   },
+  // });
+  // console.log('res from api ///////////////');
+  // await api
+  //   .post('/books', { body: formData })
+  //   .then(console.log)
+  //   .catch(console.error);
+  //
+  //
+
+  // var http = new XMLHttpRequest();
+  // var url = 'https://daa6-130-193-38-44.ngrok.io/api/books';
+  // http.open('POST', url, true);
+
+  // //Send the proper header information along with the request
+  // http.setRequestHeader('Authorization', `Bearer ${token}`);
+  // http.setRequestHeader('Content-type', 'multipart/form-data');
+
+  // http.onreadystatechange = function () {
+  //   //Call a function when the state changes.
+  //   if (http.readyState == 4 && http.status == 200) {
+  //     console.log('//////////////////////http.responseText', http.responseText);
+  //   }
+  // };
+
+  // http.onload = function () {
+  //   // do something to response
+  //   console.log('this.responseText', this.responseText);
+  //   return;
+  // };
+
+  // http.send(formData);
+
+  // http.onerror = function () {
+  //   console.log('fuck you //////////////////////////////');
+  // };
 };
 
 export const getBooks = async () => {
-  const res = await axios.get(BASE_URL + 'books').catch(error => error);
+  const res = await axios.get(BASE_URL + '/books').catch(error => error);
   return res;
 };
