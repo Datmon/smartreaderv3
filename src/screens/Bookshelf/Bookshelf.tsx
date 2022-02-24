@@ -224,7 +224,11 @@ const Bookshelf = ({
           {sortAndSearchBooks &&
             !isLoading &&
             sortAndSearchBooks.map((book: any) => (
-              <BookCard key={book.id} data={book} />
+              <BookCard
+                key={book.id}
+                data={book}
+                onPress={() => navigation.push('ReadingSpace')}
+              />
             ))}
           {addingBook && (
             <View style={styles.emptyBook}>

@@ -28,8 +28,10 @@ import {
 } from 'assets/svg';
 import { Host } from 'react-native-portalize';
 import axios from 'axios';
+import ReadingSpace from './ReadingSpace';
 
 const AuthStack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator();
 const MainTabs = createBottomTabNavigator();
 
 const Navigation = () => {
@@ -83,10 +85,51 @@ const Navigation = () => {
     return <LoadingIndicator isLoading={isLoading} />;
   }
 
+  const Tabs = () => (
+    <MainTabs.Navigator
+      initialRouteName="Bookshelf"
+      screenOptions={{
+        headerShown: false,
+        // contentStyle: {
+        //   backgroundColor: '#FFFFFF',
+        // },
+      }}>
+      <MainTabs.Screen
+        name="Bookshelf"
+        component={Bookshelf}
+        options={{
+          tabBarIcon: ({ focused }) => <BookshelfIcon focused={focused} />,
+        }}
+      />
+
+      <MainTabs.Screen
+        name="Organaizer"
+        component={Organaizer}
+        options={{
+          tabBarIcon: ({ focused }) => <OrganaizerIcon focused={focused} />,
+        }}
+      />
+      <MainTabs.Screen
+        name="Meeting"
+        component={Meeting}
+        options={{
+          tabBarIcon: ({ focused }) => <MeetingIcon focused={focused} />,
+        }}
+      />
+      <MainTabs.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ focused }) => <ProfileIcon focused={focused} />,
+        }}
+      />
+    </MainTabs.Navigator>
+  );
+
   console.log('beenAuthorized: ', beenAuthorized);
   return (
     <NavigationContainer>
-      {!accessToken ? (
+      {accessToken ? (
         <AuthStack.Navigator
           initialRouteName={beenAuthorized ? 'Auth' : 'Onboarding'}
           screenOptions={{
@@ -107,48 +150,17 @@ const Navigation = () => {
         </AuthStack.Navigator>
       ) : (
         <Host>
-          <MainTabs.Navigator
-            initialRouteName="Bookshelf"
+          <MainStack.Navigator
+            initialRouteName="ReadingSpace"
             screenOptions={{
               headerShown: false,
-              // contentStyle: {
-              //   backgroundColor: '#FFFFFF',
-              // },
+              contentStyle: {
+                backgroundColor: '#FFFFFF',
+              },
             }}>
-            <MainTabs.Screen
-              name="Bookshelf"
-              component={Bookshelf}
-              options={{
-                tabBarIcon: ({ focused }) => (
-                  <BookshelfIcon focused={focused} />
-                ),
-              }}
-            />
-
-            <MainTabs.Screen
-              name="Organaizer"
-              component={Organaizer}
-              options={{
-                tabBarIcon: ({ focused }) => (
-                  <OrganaizerIcon focused={focused} />
-                ),
-              }}
-            />
-            <MainTabs.Screen
-              name="Meeting"
-              component={Meeting}
-              options={{
-                tabBarIcon: ({ focused }) => <MeetingIcon focused={focused} />,
-              }}
-            />
-            <MainTabs.Screen
-              name="Profile"
-              component={Profile}
-              options={{
-                tabBarIcon: ({ focused }) => <ProfileIcon focused={focused} />,
-              }}
-            />
-          </MainTabs.Navigator>
+            <MainStack.Screen name="Tabs" component={Tabs} />
+            <MainStack.Screen name="ReadingSpace" component={ReadingSpace} />
+          </MainStack.Navigator>
         </Host>
       )}
     </NavigationContainer>

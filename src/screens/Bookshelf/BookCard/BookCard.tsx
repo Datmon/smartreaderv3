@@ -6,7 +6,13 @@ import Button from 'components/Button';
 import { useDispatch } from 'react-redux';
 import { actions } from 'store';
 
-const BookCard = ({ data }: { data: IApiBook }) => {
+const BookCard = ({
+  data,
+  onPress,
+}: {
+  data: IApiBook;
+  onPress: () => void;
+}) => {
   const format = data.file.split('.').slice(-1)[0].toUpperCase();
   const dispatch = useDispatch();
 
@@ -15,7 +21,7 @@ const BookCard = ({ data }: { data: IApiBook }) => {
   };
 
   return (
-    <TouchableOpacity onPress={() => setDownloaded()}>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
         <Image source={data.image} style={styles.image} />
         <View style={styles.text}>

@@ -295,7 +295,7 @@ PODS:
     - React-Core
   - react-native-pdf (6.4.0):
     - React-Core
-  - react-native-safe-area-context (3.3.2):
+  - react-native-safe-area-context (3.4.1):
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
@@ -615,7 +615,7 @@ SPEC CHECKSUMS:
   react-native-blob-util: 180714990c4563645fa70e9202cd32e27656a6e6
   react-native-document-picker: 429972f7ece4463aa5bcdd789622b3a674a3c5d1
   react-native-pdf: a6a5a3f0bdf340eb2eed6c96034424d2cc3f84b0
-  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
@@ -641,6 +641,6 @@ SPEC CHECKSUMS:
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b955232377a2ad09a89b5d6e28ee5f416ad123a0
+PODFILE CHECKSUM: 7dd68a2aec5087a6726dc05cc90f2c59821958b8
 
 COCOAPODS: 1.11.2
