@@ -31,9 +31,6 @@ import FormatTabs from './FormatTabs';
 import SortCheckbox from './SortCheckbox';
 import CustomFilters from './CustomFilters';
 import { IApiBook, IBook } from 'types/interfaces';
-import PDFExample from './PDFExample/PDFExample';
-import { PDFDocument } from 'pdf-lib';
-import axios, { Axios } from 'axios';
 import { PolyfillBlob, ReactNativeBlobUtilFile } from 'react-native-blob-util';
 import DocumentPicker, {
   DirectoryPickerResponse,
@@ -50,7 +47,6 @@ import {
 } from 'react-native-permissions';
 import {} from 'react-native-permissions';
 import { books } from 'api';
-import LoadingIndicator from 'components/LoadingIndicator';
 
 type Rationale = {
   title: string;
@@ -123,8 +119,6 @@ const Bookshelf = ({
     const res = await dispatch(actions.books.getBooks());
     setIsLoading(false);
     setRefreshing(false);
-
-    //setFiltredBooks(filtedBooks);
 
     console.log('filtedBooks', filtedBooks);
     console.log('allBooks', allBooks);
@@ -210,7 +204,6 @@ const Bookshelf = ({
             </View>
           </TouchableOpacity>
         </View>
-        {/* <PDFExample /> */}
         <ScrollView
           ref={scrollViewRef}
           onContentSizeChange={() =>
