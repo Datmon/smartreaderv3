@@ -1,10 +1,12 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native/scripts/react_native_pods'
 
 platform :ios, '11.0'
 
 target 'app' do
   config = use_native_modules!
+
+  pod 'PDFNet', podspec: 'https://pdftron.com/downloads/ios/react-native/latest.podspec'
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -24,6 +26,8 @@ target 'app' do
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
   target 'appTests' do
     inherit! :complete
