@@ -56,6 +56,8 @@ type Rationale = {
   buttonNeutral?: string;
 };
 
+var RNFS = require('react-native-fs');
+
 const Bookshelf = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'Bookshelf'>) => {
@@ -68,6 +70,7 @@ const Bookshelf = ({
 
   const filtedBooks = useSelector(selectors.books.selectBooksWithFilters);
   const allBooks = useSelector(selectors.books.selectAllBooks);
+  const accessToken = useSelector(selectors.auth.selectAccessToken);
 
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -124,14 +127,10 @@ const Bookshelf = ({
     console.log('allBooks', allBooks);
   };
 
-  const wait = (timeout: number) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  };
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     getBooksMeta();
-  }, []);
+  }, [accessToken]);
 
   const handleUpload = async () => {
     try {
@@ -181,16 +180,38 @@ const Bookshelf = ({
       // …
     });
 
+  const handlePressBook = async (book: IApiBook) => {
+    if (true) {
+      navigation.push('ReadingSpace', { bookId: book.id });
+      dispatch(actions.books.setDownloaded(book.id));
+    } else {
+      //dispatch(actions.books);
+      const downloadedBook = await books.downloadBook(book.id);
+      writeBook(book.id, downloadedBook);
+      console.log('downloadedBook', downloadedBook);
+    }
+  };
+
+  const writeBook = (bookId: string, bookData: any) => {
+    var path = RNFS.DocumentDirectoryPath + `/${bookId}.pdf`;
+    RNFS.writeFile(path, bookData, 'utf8')
+      .then(success => {
+        console.log('FILE WRITTEN!');
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
+  };
+
   useEffect(() => {
     getBooksMeta();
     request(PERMISSIONS.IOS.MEDIA_LIBRARY);
     scrollViewRef.current.scrollTo({ y: 0, animated: true });
-    //converter();
   }, []);
 
   useEffect(() => {
     setFiltredBooks(filtedBooks);
-  }, [filtedBooks]);
+  }, [filtedBooks, allBooks]);
 
   return (
     <SafeAreaView>
@@ -216,11 +237,11 @@ const Bookshelf = ({
           }>
           {sortAndSearchBooks &&
             !isLoading &&
-            sortAndSearchBooks.map((book: any) => (
+            sortAndSearchBooks.map((book: IApiBook) => (
               <BookCard
                 key={book.id}
                 data={book}
-                onPress={() => navigation.push('ReadingSpace')}
+                onPress={() => handlePressBook(book)}
               />
             ))}
           {addingBook && (

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://6d46-130-193-38-44.ngrok.io/api/';
+const BASE_URL = 'https://6773-62-84-121-251.ngrok.io/api/';
 
 //const BASE_URL = 'http://130.193.38.44:3000/api/';
 

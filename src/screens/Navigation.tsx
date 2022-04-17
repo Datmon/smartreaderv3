@@ -37,21 +37,19 @@ const MainTabs = createBottomTabNavigator();
 const Navigation = () => {
   const dispatch = useDispatch();
   const accessToken = useSelector(selectors.auth.selectAccessToken);
-  const [beenAuthorized, setBeenAuthorized] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const getToken = async () => {
     const token = await StorageService.getAssessToken();
     if (token) {
+      setBearer(token);
       dispatch(actions.auth.setAccessToken(token));
     }
     console.log('getToken: ', token);
-    setBearer();
   };
 
-  const setBearer = () => {
-    if (accessToken) {
-      axios.defaults.headers.common.Authorization = 'Bearer ' + accessToken;
+  const setBearer = (token: string) => {
+    if (token) {
+      axios.defaults.headers.common.Authorization = 'Bearer ' + token;
     } else {
       axios.defaults.headers.common.Authorization = false;
       /*if setting null does not remove `Authorization` header then try
@@ -60,30 +58,14 @@ const Navigation = () => {
     }
   };
 
-  const getOnboarding = async () => {
-    const beenAuthorizedState = await StorageService.getBeenAuthorized();
-    setBeenAuthorized(beenAuthorizedState === 'true' ? true : false);
-    setIsLoading(false);
-  };
-
-  const deleteStateOnboarding = async () => {
-    await StorageService.removeBeenAuthorized();
-  };
   useEffect(() => {
-    setIsLoading(true);
-    getOnboarding();
-    setBearer();
+    setBearer(accessToken);
   }, [accessToken]);
 
   useEffect(() => {
-    deleteStateOnboarding();
     SplashScreen.hide();
     getToken();
   }, []);
-
-  if (isLoading) {
-    return <LoadingIndicator isLoading={isLoading} />;
-  }
 
   const Tabs = () => (
     <MainTabs.Navigator
@@ -126,12 +108,11 @@ const Navigation = () => {
     </MainTabs.Navigator>
   );
 
-  console.log('beenAuthorized: ', beenAuthorized);
   return (
     <NavigationContainer>
-      {accessToken ? (
+      {false ? (
         <AuthStack.Navigator
-          initialRouteName={beenAuthorized ? 'Auth' : 'Onboarding'}
+          initialRouteName={'Onboarding'}
           screenOptions={{
             headerShown: false,
             contentStyle: {
@@ -151,7 +132,7 @@ const Navigation = () => {
       ) : (
         <Host>
           <MainStack.Navigator
-            initialRouteName="ReadingSpace"
+            initialRouteName="Tabs"
             screenOptions={{
               headerShown: false,
               contentStyle: {

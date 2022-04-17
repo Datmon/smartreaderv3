@@ -14,11 +14,6 @@ const BookCard = ({
   onPress: () => void;
 }) => {
   const format = data.file.split('.').slice(-1)[0].toUpperCase();
-  const dispatch = useDispatch();
-
-  const setDownloaded = async () => {
-    const res = await dispatch(actions.books.setDownloaded(data.id));
-  };
 
   return (
     <TouchableOpacity onPress={onPress}>

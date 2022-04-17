@@ -16,13 +16,4 @@ export const StorageService = {
   getAssessToken: () => {
     return AsyncStorage.getItem(Key.ACCESS_TOKEN);
   },
-  setBeenAuthorized: (beenAuthorized: string) => {
-    return AsyncStorage.setItem(Key.AUTHORIZED_STATE, beenAuthorized);
-  },
-  removeBeenAuthorized: () => {
-    return AsyncStorage.removeItem(Key.AUTHORIZED_STATE);
-  },
-  getBeenAuthorized: () => {
-    return AsyncStorage.getItem(Key.AUTHORIZED_STATE);
-  },
 };

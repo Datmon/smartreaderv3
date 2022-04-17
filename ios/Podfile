@@ -14,6 +14,8 @@ target 'app' do
 
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   pod 'GoogleSignIn', '~> 6.0.2'
 
   permissions_path = '../node_modules/react-native-permissions/ios'

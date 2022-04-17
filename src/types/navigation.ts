@@ -9,6 +9,6 @@ export type RootStackParamList = {
   Organaizer: undefined;
   Meeting: undefined;
   Profile: undefined;
-  ReadingSpace: undefined;
+  ReadingSpace: { bookId: string };
   Tabs: undefined;
 };

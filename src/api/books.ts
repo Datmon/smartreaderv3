@@ -5,7 +5,7 @@ import RNFS from 'react-native-fs';
 import { StorageService } from 'services';
 const Frisbee = require('frisbee');
 
-const BASE_URL = 'https://6d46-130-193-38-44.ngrok.io/api';
+const BASE_URL = 'https://6773-62-84-121-251.ngrok.io/api';
 
 export const postBook = async (pickercFile: DocumentPickerResponse) => {
   const formData = await new FormData();
@@ -41,7 +41,7 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
 
   const token = await StorageService.getAssessToken();
 
-  const res = await fetch('https://6d46-130-193-38-44.ngrok.io/api/books', {
+  const res = await fetch(`${BASE_URL}/books`, {
     method: 'post',
     headers: {
       Accept: 'application/json',
@@ -102,5 +102,13 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
 
 export const getBooks = async () => {
   const res = await axios.get(BASE_URL + '/books').catch(error => error);
+  console.log('res', res);
   return res;
+};
+
+export const downloadBook = async (bookId: string) => {
+  const res = await axios
+    .get(`${BASE_URL}/books/${bookId}`)
+    .catch(error => error);
+  return res.data;
 };

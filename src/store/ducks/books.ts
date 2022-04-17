@@ -24,6 +24,22 @@ const getBooks = createAsyncThunk('books/getBooks', async () => {
   }
 });
 
+// const downloadBook = createAsyncThunk(
+//   'books/downloadBook',
+//   async (bookId: string) => {
+//     try {
+//       const response = await books.downloadBook(bookId);
+//       if (response.data.error) {
+//         throw new Error(response.data.message);
+//       }
+//       console.log('response.data', response.data);
+//       return response.data;
+//     } catch (err) {
+//       return err;
+//     }
+//   },
+// );
+
 export const reducer = createReducer(
   {
     defaultBooks: [
@@ -88,6 +104,13 @@ export const reducer = createReducer(
       );
       state.allBooksMeta[index].isLoaded = 'loaded';
     });
+
+    // builder.addCase(downloadBook, (state, action) => {
+    //   const index = state.allBooksMeta.findIndex(
+    //     book => book.id === action.payload,
+    //   );
+    //   state.allBooksMeta[index].isLoaded = 'loaded';
+    // });
   },
 );
 
@@ -99,7 +122,6 @@ export const actions = {
 
 export const selectors = {
   selectAllBooks: (state: RootState) => state.books.allBooksMeta,
-  //selectBooksWithFilters: (state: RootState) => state.books.allBooksMeta,
 
   selectBooksWithFilters: (state: RootState) => {
     if (state.books.allBooksMeta && state.books.allBooksMeta.length > 0) {

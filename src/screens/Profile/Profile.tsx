@@ -8,8 +8,7 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const logOut = async () => {
-    await StorageService.setBeenAuthorized('true');
-    console.log('setted to true');
+    //await StorageService.removeAssessToken();
     dispatch(actions.auth.signOut());
   };
 
