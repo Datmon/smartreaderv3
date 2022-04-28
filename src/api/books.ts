@@ -1,11 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import axios from 'axios';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { StorageService } from 'services';
-const Frisbee = require('frisbee');
+// const Frisbee = require('frisbee');
+import RNFetchBlob from 'rn-fetch-blob';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
-const BASE_URL = 'https://6773-62-84-121-251.ngrok.io/api';
+const BASE_URL = 'https://smartreader.space/api';
 
 export const postBook = async (pickercFile: DocumentPickerResponse) => {
   const formData = await new FormData();
@@ -107,8 +111,28 @@ export const getBooks = async () => {
 };
 
 export const downloadBook = async (bookId: string) => {
-  const res = await axios
-    .get(`${BASE_URL}/books/${bookId}`)
-    .catch(error => error);
-  return res.data;
+  console.log('first');
+
+  const token = await StorageService.getAssessToken();
+
+  const { dirs } = RNFetchBlob.fs;
+  // const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
+  const dirToSave = RNFetchBlob.fs.dirs.DocumentDir;
+
+  await RNFetchBlob.fetch('GET', `${BASE_URL}/books/${bookId}`, {
+    Authorization: `Bearer ${token}`,
+    // more headers  ..
+  })
+    .then(res => {
+      console.log('second');
+      console.log('res', res.data);
+      let pdfLocation = dirToSave + '/' + bookId + '.pdf';
+      RNFetchBlob.fs.writeFile(pdfLocation, res.data, 'base64');
+      console.log('pdfLocation', pdfLocation);
+    })
+    // Something went wrong:
+    .catch((errorMessage: any, _statusCode: any) => {
+      console.log('errorMessage', errorMessage);
+      // error handling
+    });
 };

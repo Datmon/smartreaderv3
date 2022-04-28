@@ -47,6 +47,7 @@ import {
 } from 'react-native-permissions';
 import {} from 'react-native-permissions';
 import { books } from 'api';
+import { Slider } from '@miblanchard/react-native-slider';
 
 type Rationale = {
   title: string;
@@ -63,7 +64,7 @@ const Bookshelf = ({
 }: NativeStackScreenProps<RootStackParamList, 'Bookshelf'>) => {
   const dispatch = useDispatch();
 
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const { BookshelfContext } = useTranslation();
   const { filter, title } = BookshelfContext;
@@ -180,27 +181,11 @@ const Bookshelf = ({
       // …
     });
 
-  const handlePressBook = async (book: IApiBook) => {
-    if (true) {
-      navigation.push('ReadingSpace', { bookId: book.id });
-      dispatch(actions.books.setDownloaded(book.id));
-    } else {
-      //dispatch(actions.books);
-      const downloadedBook = await books.downloadBook(book.id);
-      writeBook(book.id, downloadedBook);
-      console.log('downloadedBook', downloadedBook);
-    }
-  };
-
-  const writeBook = (bookId: string, bookData: any) => {
-    var path = RNFS.DocumentDirectoryPath + `/${bookId}.pdf`;
-    RNFS.writeFile(path, bookData, 'utf8')
-      .then(success => {
-        console.log('FILE WRITTEN!');
-      })
-      .catch(err => {
-        console.log(err.message);
-      });
+  const handlePressBook = async (bookId: string) => {
+    const downloadedBook = await books.downloadBook(bookId);
+    console.log('downloadedBook', downloadedBook);
+    dispatch(actions.books.setDownloaded(bookId));
+    navigation.push('ReadingSpace', { bookId });
   };
 
   useEffect(() => {
@@ -241,9 +226,13 @@ const Bookshelf = ({
               <BookCard
                 key={book.id}
                 data={book}
-                onPress={() => handlePressBook(book)}
+                onPress={() => handlePressBook(book.id)}
               />
             ))}
+          <Button
+            title="Click"
+            onPress={() => navigation.navigate('ReadingSpace', { bookId: '' })}
+          />
           {addingBook && (
             <View style={styles.emptyBook}>
               <ActivityIndicator size="large" color="#455AF7" />
@@ -372,7 +361,7 @@ const styles = StyleSheet.create({
   },
   resetText: { width: 'auto', color: '#718096', marginLeft: 10 },
   scrollView: {
-    minHeight: '100%',
+    // minHeight: '100%',
   },
   emptyBook: {
     height: 90,

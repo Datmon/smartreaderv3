@@ -41,15 +41,16 @@ const Navigation = () => {
   const getToken = async () => {
     const token = await StorageService.getAssessToken();
     if (token) {
-      setBearer(token);
+      await setBearer(token);
       dispatch(actions.auth.setAccessToken(token));
     }
     console.log('getToken: ', token);
   };
 
-  const setBearer = (token: string) => {
+  const setBearer = async (token: string) => {
     if (token) {
       axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+      dispatch(actions.books.getBooks());
     } else {
       axios.defaults.headers.common.Authorization = false;
       /*if setting null does not remove `Authorization` header then try
@@ -110,7 +111,7 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      {false ? (
+      {!accessToken ? (
         <AuthStack.Navigator
           initialRouteName={'Onboarding'}
           screenOptions={{

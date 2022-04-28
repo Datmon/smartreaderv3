@@ -19,6 +19,7 @@ export default BackButton;
 
 const styles = StyleSheet.create({
   backButton: {
+    marginTop: 10,
     width: 40,
     height: 40,
     borderRadius: 8,
