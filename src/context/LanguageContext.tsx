@@ -5,7 +5,7 @@ import * as RNLocalize from 'react-native-localize';
 import App from '../../App';
 
 type LaguageContextType = {
-  [key: string]: string;
+  [key: string]: any;
 };
 
 const LanguageContext = React.createContext<LaguageContextType>(

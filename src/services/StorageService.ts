@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 enum Key {
   ACCESS_TOKEN = 'ACCESS_TOKEN',
+  AUTHORIZED_STATE = 'AUTHORIZED_STATE',
 }
 
 export const StorageService = {

@@ -6,13 +6,19 @@ import {
   StyleSheet,
   Animated,
   View,
-  Text,
+  TouchableOpacity,
 } from 'react-native';
 import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
 import NextButton from './NextButton';
+import { StorageService } from 'services';
+import { RootStackParamList } from 'types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Text } from 'components/Text';
 
-const Onboarding = ({ navigation }: any) => {
+const Onboarding = ({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, 'Onboarding'>) => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const slideRef = useRef(null as any);
 
@@ -23,6 +29,7 @@ const Onboarding = ({ navigation }: any) => {
     OnboardingDescription2,
     OnboardingTitle3,
     OnboardingDescription3,
+    OnboardingSkip,
   } = useTranslation();
 
   const slides = [
@@ -54,19 +61,20 @@ const Onboarding = ({ navigation }: any) => {
 
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const scrollTo = () => {
+  const scrollTo = async () => {
     console.log('currentIndex', currentIndex);
     if (currentIndex < slides.length - 1) {
       slideRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       console.log('last item');
-      navigation.navigate('SignIn');
+      navigation.navigate('Auth');
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
+        style={styles.flatlist}
         data={slides}
         renderItem={({ item }) => <OnboardingItem item={item} />}
         horizontal
@@ -93,15 +101,15 @@ const Onboarding = ({ navigation }: any) => {
       />
       <Paginator data={slides} scrollX={scrollX} />
       <View style={styles.bottomPanel}>
-        <Text
-          style={styles.skipButton}
-          onPress={() => navigation.navigate('SignIn')}>
-          Skip
-        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Auth')}
+          style={styles.skipButtonView}>
+          <Text text={OnboardingSkip} clickbale style={styles.skipButton} />
+        </TouchableOpacity>
+
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
-          navigation={navigation}
         />
       </View>
     </SafeAreaView>
@@ -113,8 +121,12 @@ export default Onboarding;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  flatlist: {
+    flexGrow: 0,
+    height: '84%',
   },
   bottomPanel: {
     flex: 1,
@@ -122,10 +134,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   skipButton: {
-    color: '#455AF7',
     fontSize: 16,
+    height: 'auto',
   },
+  skipButtonView: {},
 });

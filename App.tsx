@@ -1,31 +1,17 @@
-import React, { useEffect } from 'react';
-import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider as ReduxProvider } from 'react-redux';
+import React from 'react';
+import { Provider as StoreProvider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import Onboarding from 'screens/Onboarding';
-import SignIn from 'screens/SignIn';
-import { store } from 'store';
-
-const Stack = createNativeStackNavigator();
+import { persistor, store } from 'store';
+import Navigation from 'screens/Navigation';
 
 const App = () => {
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-
   return (
-    <ReduxProvider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Onboarding"
-          screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Onboarding" component={Onboarding} />
-          <Stack.Screen name="SignIn" component={SignIn} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ReduxProvider>
+    <StoreProvider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Navigation />
+      </PersistGate>
+    </StoreProvider>
   );
 };
 

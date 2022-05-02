@@ -126,16 +126,32 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitectures")
 
 android {
+    packagingOptions {
+    pickFirst 'lib/x86/libc++_shared.so'
+    pickFirst 'lib/x86_64/libjsc.so'
+    pickFirst 'lib/arm64-v8a/libjsc.so'
+    pickFirst 'lib/arm64-v8a/libc++_shared.so'
+    pickFirst 'lib/x86_64/libc++_shared.so'
+    pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.app"
+        applicationId 'com.smartReader'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+        manifestPlaceholders = [pdftronLicenseKey:PDFTRON_LICENSE_KEY]
     }
     splits {
         abi {
@@ -147,10 +163,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storeFile file('keystore.jks')
+            storePassword '123456'
+            keyAlias '123456'
+            keyPassword '123456'
         }
     }
     buildTypes {
@@ -189,12 +205,21 @@ android {
 }
 
 dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
     implementation project(':react-native-splash-screen')
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    implementation 'androidx.sqlite:sqlite-framework:2.2.0-alpha01'
+
+    implementation 'com.android.support:multidex:2.0.1'
+
+    implementation project(':react-native-fs')
+
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
@@ -226,3 +251,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'

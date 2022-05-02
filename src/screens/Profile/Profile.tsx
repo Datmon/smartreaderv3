@@ -1,0 +1,24 @@
+import { Button, SafeAreaView, StyleSheet, Text } from 'react-native';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { StorageService } from 'services';
+import { actions } from 'store';
+
+const Profile = () => {
+  const dispatch = useDispatch();
+
+  const logOut = async () => {
+    //await StorageService.removeAssessToken();
+    dispatch(actions.auth.signOut());
+  };
+
+  return (
+    <SafeAreaView>
+      <Button title="Logout" onPress={logOut} />
+    </SafeAreaView>
+  );
+};
+
+export default Profile;
+
+const styles = StyleSheet.create({});

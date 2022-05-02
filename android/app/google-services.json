@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "835684202283",
+    "project_id": "smartreader-339508",
+    "storage_bucket": "smartreader-339508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835684202283:android:885307ec8ee98db9a6776e",
+        "android_client_info": {
+          "package_name": "com.smartReader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835684202283-e8hml7mui8a2n79t3tecv508no4o8796.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartReader",
+            "certificate_hash": "102cb2ae46b06e5bd7cf5603224d2bb8d92c6782"
+          }
+        },
+        {
+          "client_id": "835684202283-klgrvelp2563d6r416bnui0dj5an7lb3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartReader",
+            "certificate_hash": "fc5fc3fd6d0e26d4bd9847820a4f9588b7ac67df"
+          }
+        },
+        {
+          "client_id": "835684202283-nq1u3ogu5atbh99gpu23j9bski2vaomh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartReader",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "835684202283-jp3078rli0lrrk81ip19oeotcl5lqcso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-xohT-S6ntIUiESyK0JB5DLN83B3X634"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835684202283-jp3078rli0lrrk81ip19oeotcl5lqcso.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "835684202283-klfmeg9ebibfv2js15ljdc9sclf8efvn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smartreader"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
