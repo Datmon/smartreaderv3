@@ -72,6 +72,7 @@ const Bookshelf = ({
   const filtedBooks = useSelector(selectors.books.selectBooksWithFilters);
   const allBooks = useSelector(selectors.books.selectAllBooks);
   const accessToken = useSelector(selectors.auth.selectAccessToken);
+  const allPages = useSelector(selectors.books.selectAllPages);
 
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -100,7 +101,7 @@ const Bookshelf = ({
   const setNewFiltedBooks = () => {
     setFiltredBooks(filtedBooks);
     modalizeRef.current?.close();
-    scrollViewRef.current.scrollTo(0);
+    scrollViewRef.current && scrollViewRef.current.scrollTo(0);
   };
 
   const handleError = (err: any) => {
@@ -163,7 +164,7 @@ const Bookshelf = ({
           break;
         case RESULTS.DENIED:
           console.log(
-            'The permission has not been requested / is denied but requestable',
+            'The permission has not been requested / is denied but requestable ',
           );
           break;
         case RESULTS.LIMITED:
@@ -196,7 +197,7 @@ const Bookshelf = ({
 
   useEffect(() => {
     setFiltredBooks(filtedBooks);
-  }, [filtedBooks, allBooks]);
+  }, [allBooks]);
 
   return (
     <SafeAreaView>
@@ -227,12 +228,11 @@ const Bookshelf = ({
                 key={book.id}
                 data={book}
                 onPress={() => handlePressBook(book.id)}
+                pages={
+                  allPages && allPages.find(({ bookId }) => bookId === book.id)
+                }
               />
             ))}
-          <Button
-            title="Click"
-            onPress={() => navigation.navigate('ReadingSpace', { bookId: '' })}
-          />
           {addingBook && (
             <View style={styles.emptyBook}>
               <ActivityIndicator size="large" color="#455AF7" />
@@ -240,7 +240,10 @@ const Bookshelf = ({
           )}
         </ScrollView>
       </View>
-      <TouchableOpacity style={styles.addButton} onPress={handleUpload}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={handleUpload}
+        disabled={isLoading}>
         <PlusSign />
       </TouchableOpacity>
       <Portal>

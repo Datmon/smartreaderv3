@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IApiBook, IBook } from 'types/interfaces';
 import { Text } from 'components/Text';
 import Button from 'components/Button';
@@ -9,9 +10,11 @@ import { actions } from 'store';
 const BookCard = ({
   data,
   onPress,
+  pages,
 }: {
   data: IApiBook;
   onPress: () => void;
+  pages?: { bookId: string; count: number; max: number };
 }) => {
   const format = data.file.split('.').slice(-1)[0].toUpperCase();
 
@@ -54,7 +57,11 @@ const BookCard = ({
                   source={require('../../../assets/images/hourglass.png')}
                 />
                 <Text
-                  text={'4%'}
+                  text={
+                    pages
+                      ? `${((pages.max * 100) / pages.count).toFixed(0)}%`
+                      : '00%'
+                  }
                   label
                   style={{ fontSize: 12, color: '#00AB55' }}
                 />

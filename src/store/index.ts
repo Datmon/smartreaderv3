@@ -1,7 +1,19 @@
 // import AsyncStorage from '@react-native-community/async-storage';
-import { configureStore } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
+import { Middleware } from 'react-native-svg';
 import { useDispatch } from 'react-redux';
-// import { persistReducer, persistStore } from 'redux-persist';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
+
 import thunk from 'redux-thunk';
 
 import { actions, reducer, selectors } from './ducks';
@@ -27,15 +39,56 @@ export const rootReducer = (state: State, action: any) => {
   return reducer(nextState, action);
 };
 
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage: AsyncStorage,
+  whitelist: ['books'],
+};
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+const middlewares: Middleware[] = [];
+
 // @ts-ignore
 // const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = configureStore({
-  // @ts-ignore
-  reducer: rootReducer,
-  devTools: true,
-  middleware: [thunk],
-});
+// export const store = configureStore({
+//   // @ts-ignore
+//   // reducer: rootReducer,
+//   reducer: persistedReducer,
+//   devTools: true,
+//   middleware: getDefaultMiddleware => [
+//     ...getDefaultMiddleware({
+//       serializableCheck: {
+//         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+//       },
+//     }),
+//     ...middlewares,
+//   ],
+//   ...options,
+// });
+
+export const createStore = (
+  options?: ConfigureStoreOptions['preloadedState'],
+) =>
+  configureStore({
+    reducer: persistedReducer,
+    devTools: true,
+    middleware: getDefaultMiddleware => [
+      ...getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+      ...middlewares,
+    ],
+    ...options,
+  });
+
+export const store = createStore();
+
+export const persistor = persistStore(store);
 
 // export const persistor = persistStore(store);
 

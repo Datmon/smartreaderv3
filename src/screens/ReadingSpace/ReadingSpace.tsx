@@ -12,8 +12,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Config, DocumentView, RNPdftron } from 'react-native-pdftron';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'types';
-import { useSelector } from 'react-redux';
-import { selectors } from 'store';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions, selectors } from 'store';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Text } from 'components/Text';
 import BackButton from 'components/BackButton/BackButton';
@@ -55,6 +55,19 @@ const ReadingSpace = ({
   const [pageValue, setPageValue] = useState<number>(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [pageChange, setPageChange] =
+    useState<{ previousPageNumber: number; pageNumber: number }>();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      actions.books.setLastPage({
+        id: route.params.bookId,
+        page: pageChange?.pageNumber || 0,
+      }),
+    );
+  }, [pageChange]);
 
   const insets = useSafeAreaInsets();
   const PDFRef = useRef<DocumentView>(null);
@@ -118,17 +131,26 @@ const ReadingSpace = ({
         // Config.ReflowOrientation.Vertical;
 
         // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
-        // PDFRef.current?.props.autoResizeFreeTextEnabled(true)
+        PDFRef.current?.isReflowMode();
 
         // PDFRef.current?.onChange(event => console.log('event', event));
 
         // node.props.reflowOrientation = 'vertical';
 
-        // PDFRef.current?.toggleReflow
+        // PDFRef.current
+        //   ?.getPageCount()
+        //   .then(value => console.log('value', value));
+
         // await PDFRef.current?.toggleReflow();
 
         // node.getPageCount()
-        await node.toggleReflow();
+        (await node.isReflowMode()) || (await node.toggleReflow());
+        await node?.getPageCount().then((value: number) => {
+          console.log('value', value);
+          dispatch(
+            actions.books.setPages({ id: route.params.bookId, page: value }),
+          );
+        });
         // node.forceUpdate();
 
         // node.autoResizeFreeTextEnabled(true);
@@ -140,6 +162,7 @@ const ReadingSpace = ({
   useEffect(() => {
     RNPdftron.initialize('Insert commercial license key here after purchase');
     RNPdftron.enableJavaScript(true);
+
     // PDFRef.current?._viewerRef.toggleReflow();
   }, []);
 
@@ -156,22 +179,27 @@ const ReadingSpace = ({
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
         // onResponderEnd={() => setIsModalVisible(!isModalVisible)}
+        // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
+        onBehaviorActivated={event => console.log('event', event)}
         onDocumentLoaded={() => setIsLoaded(true)}
-        showQuickNavigationButton={false}
-        showLeadingNavButton={false}
+        onPageChanged={value => setPageChange(value)}
+        pageChangeOnTap={true}
+        // showQuickNavigationButton={true}
+        showLeadingNavButton={true}
+        onLeadingNavButtonPressed={() => navigation.goBack()}
         hideAnnotationToolbarSwitcher={true}
         pageIndicatorEnabled={false}
-        topToolbarEnabled={false}
-        pageNumber={pageValue}
-        onPageChanged={({ pageNumber }) => setPageValue(pageNumber)}
-        hideTopToolbars={true}
-        hideScrollbars={true}
+        // topToolbarEnabled={false}
+        // hideTopToolbars={true}
+        hideScrollbars={false}
+        tabletLayoutEnabled
+        // onBehaviorActivated={event => console.log(event)}
+        multiTabEnabled={false}
         // padStatusBar={false}
         // hideTopToolbars={false}
         // hideTopAppNavBar={true}
         // showLeadingNavButton={false}
         // layoutMode={'Single'}
-
         bottomToolbarEnabled={false}
         leadingNavButtonIcon={
           Platform.OS === 'ios'

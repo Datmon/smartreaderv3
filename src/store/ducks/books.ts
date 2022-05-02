@@ -9,7 +9,11 @@ import { RootState } from 'store';
 import { IApiBook, IBook } from 'types/interfaces';
 
 const addTypeFilter = createAction<string>('books/addTypeFilter');
-const setDownloaded = createAction<string>('books/addTypeFilter');
+const setDownloaded = createAction<string>('books/setDownloaded');
+const setLastPage =
+  createAction<{ id: string; page: number }>('books/setLastPage');
+
+const setPages = createAction<{ id: string; page: number }>('books/setPages');
 
 const getBooks = createAsyncThunk('books/getBooks', async () => {
   try {
@@ -42,46 +46,9 @@ const getBooks = createAsyncThunk('books/getBooks', async () => {
 
 export const reducer = createReducer(
   {
-    defaultBooks: [
-      {
-        title: 'Non fermentum varius neciler...',
-        author: 'Jamees Fray',
-        format: 'PDF',
-        dateOfUploading: new Date(2014, 1, 1),
-        dateOfTouched: new Date(2013, 1, 1),
-        isLoaded: 'loaded',
-        image: require('../../assets/books/images/0.png'),
-        id: 0,
-        readed: 0,
-        pages: 300,
-      },
-      {
-        title: 'Quam duis commod...',
-        author: 'Fray Jamees',
-        format: 'TXT',
-        dateOfUploading: new Date(2011, 1, 1),
-        dateOfTouched: new Date(2018, 1, 1),
-        isLoaded: 'unloaded',
-        image: require('../../assets/books/images/1.png'),
-        id: 1,
-        readed: 10,
-        pages: 300,
-      },
-      {
-        title: 'Neciler non fermentum varius...',
-        author: 'Jamees Fray',
-        format: 'PDF',
-        dateOfUploading: new Date(2020, 1, 1),
-        dateOfTouched: new Date(2004, 1, 1),
-        isLoaded: 'loaded',
-        image: require('../../assets/books/images/2.png'),
-        id: 2,
-        readed: 0,
-        pages: 300,
-      },
-    ] as Array<IBook>,
     getBooksStatus: 'idle',
     allBooksMeta: [] as Array<IApiBook>,
+    pages: [] as Array<{ bookId: string; count: number; max: number }>,
   },
 
   builder => {
@@ -105,6 +72,27 @@ export const reducer = createReducer(
       state.allBooksMeta[index].isLoaded = 'loaded';
     });
 
+    builder.addCase(setLastPage, (state, { payload }) => {
+      const index = state.pages.findIndex(
+        ({ bookId }) => bookId === payload.id,
+      );
+      if (state.pages[index] && state.pages[index].max < payload.page) {
+        state.pages[index].max = payload.page;
+      }
+    });
+
+    builder.addCase(setPages, (state, { payload }) => {
+      const neededState = state.pages.find(
+        ({ bookId }) => bookId === payload.id,
+      );
+
+      if (neededState) {
+        neededState.count = payload.page;
+      } else {
+        state.pages.push({ bookId: payload.id, count: payload.page, max: 0 });
+      }
+    });
+
     // builder.addCase(downloadBook, (state, action) => {
     //   const index = state.allBooksMeta.findIndex(
     //     book => book.id === action.payload,
@@ -118,10 +106,14 @@ export const actions = {
   addTypeFilter,
   getBooks,
   setDownloaded,
+  setLastPage,
+  setPages,
 };
 
 export const selectors = {
   selectAllBooks: (state: RootState) => state.books.allBooksMeta,
+
+  selectAllPages: (state: RootState) => state.books.pages,
 
   selectBooksWithFilters: (state: RootState) => {
     if (state.books.allBooksMeta && state.books.allBooksMeta.length > 0) {
