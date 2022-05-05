@@ -5,7 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { auth } from 'api';
-import { StorageService } from 'services';
 
 const setAccessToken = createAction<string>('auth/setAccessToken');
 
@@ -18,9 +17,7 @@ const signIn = createAsyncThunk(
         throw new Error(response.data.message);
       }
       console.log('response.data', response.data);
-      await StorageService.setAccessToken(response.data.access_token);
-      const token = await StorageService.getAssessToken();
-      console.log('token', token);
+
       return response.data;
     } catch (err) {
       return err;
@@ -30,14 +27,19 @@ const signIn = createAsyncThunk(
 
 const serviceSignUp = createAsyncThunk(
   'auth/service',
-  async ({ email, username }: { email: string; username: string }) => {
+  async ({
+    email,
+    username,
+    photo,
+  }: {
+    email: string;
+    username: string;
+    photo: string;
+  }) => {
     try {
       const response = await auth.serviceSignUp(email, username);
       console.log('response.data', response.data);
-      await StorageService.setAccessToken(response.data.access_token);
-      const token = await StorageService.getAssessToken();
-      console.log('token', token);
-      return response.data;
+      return { ...response.data, photo: photo };
     } catch (err) {
       return err;
     }
@@ -89,16 +91,16 @@ const resetPassword = createAsyncThunk(
   },
 );
 
-const signOut = createAsyncThunk('auth/signOut', async () => {
-  return StorageService.removeAssessToken();
-});
+const signOut = createAction('auth/signOut');
 
 interface User {
   email: string;
   password: string;
-  access_token: string;
+  access_token: string | undefined;
   id: string;
   verificationCode?: string;
+  username: string;
+  photo?: string;
 }
 
 export const reducer = createReducer(
@@ -162,6 +164,9 @@ export const reducer = createReducer(
       .addCase(userExists.rejected, state => {
         state.userExistsStatus = 'rejected';
       });
+    builder.addCase(signOut, state => {
+      state.user.access_token = undefined;
+    });
   },
 );
 
@@ -181,4 +186,5 @@ export const selectors = {
   selectVerificationCode: (state: RootState) =>
     state.auth.user.verificationCode,
   selectUserData: (state: RootState) => state.auth.user,
+  selectUserPhoto: (state: RootState) => state.auth.user.photo,
 };

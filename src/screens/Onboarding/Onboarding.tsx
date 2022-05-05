@@ -11,7 +11,6 @@ import {
 import OnboardingItem from './OnboardingItem';
 import Paginator from './Paginator';
 import NextButton from './NextButton';
-import { StorageService } from 'services';
 import { RootStackParamList } from 'types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Text } from 'components/Text';

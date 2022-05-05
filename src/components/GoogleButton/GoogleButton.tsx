@@ -44,6 +44,7 @@ const GoogleButton = ({
           actions.auth.serviceSignUp({
             email: userInfo.user.email,
             username: userInfo.user.email.split('@')[0],
+            photo: userInfo.user.photo || '',
           }),
         );
       }

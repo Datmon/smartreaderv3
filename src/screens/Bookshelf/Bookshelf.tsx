@@ -4,6 +4,7 @@ import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -81,7 +82,7 @@ const Bookshelf = ({
   const [settedFiltredBooks, setFiltredBooks] = useState<IApiBook[]>([]);
 
   const sortAndSearchBooks = useMemo(() => {
-    if (settedFiltredBooks.length > 0 && !isLoading) {
+    if (settedFiltredBooks && settedFiltredBooks.length > 0 && !isLoading) {
       console.log('settedFiltredBooks', settedFiltredBooks);
 
       return settedFiltredBooks.filter(
@@ -101,7 +102,8 @@ const Bookshelf = ({
   const setNewFiltedBooks = () => {
     setFiltredBooks(filtedBooks);
     modalizeRef.current?.close();
-    scrollViewRef.current && scrollViewRef.current.scrollTo(0);
+    scrollViewRef.current &&
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
 
   const handleError = (err: any) => {
@@ -183,7 +185,7 @@ const Bookshelf = ({
     });
 
   const handlePressBook = async (bookId: string) => {
-    const downloadedBook = await books.downloadBook(bookId);
+    const downloadedBook = await books.downloadBook(bookId, accessToken);
     console.log('downloadedBook', downloadedBook);
     dispatch(actions.books.setDownloaded(bookId));
     navigation.push('ReadingSpace', { bookId });
@@ -197,10 +199,11 @@ const Bookshelf = ({
 
   useEffect(() => {
     setFiltredBooks(filtedBooks);
-  }, [allBooks]);
+  }, [filtedBooks]);
 
   return (
     <SafeAreaView>
+      <StatusBar barStyle={'dark-content'} />
       <View style={styles.container}>
         <Text text={title} title style={styles.title} />
         <View style={styles.searchTab}>
@@ -259,7 +262,7 @@ const Bookshelf = ({
             <SortCheckbox />
             <CustomFilters style={styles.customFilters} />
             <View style={styles.modalButtons}>
-              {filtedBooks.length !== allBooks.length && (
+              {filtedBooks && allBooks && filtedBooks[0] !== allBooks[0] && (
                 <TouchableOpacity style={styles.resetButton}>
                   <CrossIcon />
                   <Text text={filter.reset} style={styles.resetText} />
@@ -268,9 +271,11 @@ const Bookshelf = ({
 
               <Button
                 title={
-                  filtedBooks.length === allBooks.length
+                  filtedBooks && allBooks && filtedBooks[0] === allBooks[0]
                     ? `${filter.buttonShow} ${filter.buttonAll}`
-                    : `${filter.buttonShow} ${filtedBooks.length} ${filter.buttonResults}`
+                    : `${filter.buttonShow} ${
+                        filtedBooks ? filtedBooks.length : '0'
+                      } ${filter.buttonResults}`
                 }
                 style={styles.buttonShow}
                 onPress={setNewFiltedBooks}

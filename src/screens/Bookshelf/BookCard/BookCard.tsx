@@ -60,7 +60,7 @@ const BookCard = ({
                   text={
                     pages
                       ? `${((pages.max * 100) / pages.count).toFixed(0)}%`
-                      : '00%'
+                      : '0%'
                   }
                   label
                   style={{ fontSize: 12, color: '#00AB55' }}
@@ -85,11 +85,23 @@ const BookCard = ({
                 <Image
                   source={require('../../../assets/images/hourglassEmpty.png')}
                 />
-                <Text
-                  text="NOT YET READ"
-                  label
-                  style={{ fontSize: 10, color: '#4A5568' }}
-                />
+                {pages?.max && pages.max > 0 ? (
+                  <Text
+                    text={
+                      pages
+                        ? `${((pages.max * 100) / pages.count).toFixed(0)}%`
+                        : '0%'
+                    }
+                    label
+                    style={{ fontSize: 12, color: '#00AB55' }}
+                  />
+                ) : (
+                  <Text
+                    text="NOT YET READ"
+                    label
+                    style={{ fontSize: 10, color: '#4A5568' }}
+                  />
+                )}
               </View>
               <View style={styles.button}>
                 <Text text="DOWNLOAD" style={{ fontSize: 10 }} />

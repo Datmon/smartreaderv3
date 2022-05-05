@@ -31,6 +31,7 @@ export const LanguageContextProvider: React.FC = () => {
   const value = {
     ...languageObj[selectedLanguage as 'en' | 'ru'],
   };
+
   return (
     <LanguageContext.Provider value={value}>
       <App />

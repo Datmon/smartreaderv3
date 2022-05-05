@@ -9,7 +9,6 @@ import Onboarding from 'screens/Onboarding';
 import Auth from 'screens/Auth';
 import ResetPassword from 'screens/ChangePasswordFlow/ResetPassword';
 import Verification from 'screens/ChangePasswordFlow/Verification';
-import { StorageService } from 'services';
 import Bookshelf from 'screens/Bookshelf';
 import { actions } from 'store';
 import CreateNewPassword from './ChangePasswordFlow/CreateNewPassword';
@@ -19,7 +18,6 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Organaizer from './Organaizer';
 import Meeting from './Meeting';
-import Profile from './Profile';
 import {
   BookshelfIcon,
   MeetingIcon,
@@ -29,23 +27,29 @@ import {
 import { Host } from 'react-native-portalize';
 import axios from 'axios';
 import ReadingSpace from './ReadingSpace';
+import Profile from './ProfileScreens/Profile';
+import ProfileSettings from './ProfileScreens/ProfileSettings';
+import Language from './ProfileScreens/Language';
+import ChangePassword from './ProfileScreens/ChangePassword';
+import Notifications from './ProfileScreens/Notifications';
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
 const MainTabs = createBottomTabNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 const Navigation = () => {
   const dispatch = useDispatch();
   const accessToken = useSelector(selectors.auth.selectAccessToken);
 
-  const getToken = async () => {
-    const token = await StorageService.getAssessToken();
-    if (token) {
-      await setBearer(token);
-      dispatch(actions.auth.setAccessToken(token));
-    }
-    console.log('getToken: ', token);
-  };
+  // const getToken = async () => {
+  //   const token = await StorageService.getAssessToken();
+  //   if (token) {
+  //     await setBearer(token);
+  //     dispatch(actions.auth.setAccessToken(token));
+  //   }
+  //   console.log('getToken: ', token);
+  // };
 
   const setBearer = async (token: string) => {
     if (token) {
@@ -65,8 +69,58 @@ const Navigation = () => {
 
   useEffect(() => {
     SplashScreen.hide();
-    getToken();
+    // getToken();
   }, []);
+
+  const ProfileTabNavigator = () => (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="ProfileScreen"
+        component={Profile}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="ProfileSettings"
+        component={ProfileSettings}
+        options={{
+          title: 'Profile',
+          headerStyle: { backgroundColor: '#F7F8F9' },
+          // headerBackImageSource: require('assets/images/backArrow.png'),
+          headerBackTitleVisible: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="Language"
+        component={Language}
+        options={{
+          title: 'Language',
+          headerStyle: { backgroundColor: '#F7F8F9' },
+          // headerBackImageSource: require('assets/images/backArrow.png'),
+          headerBackTitleVisible: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
+        options={{
+          title: 'Change password',
+          headerStyle: { backgroundColor: '#F7F8F9' },
+          // headerBackImageSource: require('assets/images/backArrow.png'),
+          headerBackTitleVisible: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          title: 'Notifications',
+          headerStyle: { backgroundColor: '#F7F8F9' },
+          // headerBackImageSource: require('assets/images/backArrow.png'),
+          headerBackTitleVisible: false,
+        }}
+      />
+    </ProfileStack.Navigator>
+  );
 
   const Tabs = () => (
     <MainTabs.Navigator
@@ -101,7 +155,7 @@ const Navigation = () => {
       />
       <MainTabs.Screen
         name="Profile"
-        component={Profile}
+        component={ProfileTabNavigator}
         options={{
           tabBarIcon: ({ focused }) => <ProfileIcon focused={focused} />,
         }}

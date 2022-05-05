@@ -56,5 +56,10 @@
         "title": "We are still working on this page.",
         "label": "we make every effort to create the best application for you",
         "button": "<     Back to bookshelfs"
+    },
+    "NotificationsContext": {
+        "email": "Email subscription",
+        "push": "Push Notification",
+        "monthly": "Monthly statistic "
     }
 }

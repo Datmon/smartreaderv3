@@ -8,7 +8,7 @@ const BackButton = ({ onPress }: { onPress: () => void }) => {
       activeOpacity={0.6}
       style={styles.backButton}>
       <Image
-        source={require('../../assets/images/left_arrow.png')}
+        source={require('../../assets/images/backArrow.png')}
         style={styles.image}
       />
     </TouchableOpacity>

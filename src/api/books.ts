@@ -1,13 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import axios from 'axios';
-import { Alert, Platform } from 'react-native';
 import { DocumentPickerResponse } from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import { StorageService } from 'services';
 // const Frisbee = require('frisbee');
 import RNFetchBlob from 'rn-fetch-blob';
-import { useDispatch } from 'react-redux';
-import { actions } from 'store';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions, selectors } from 'store';
 
 const BASE_URL = 'https://smartreader.space/api';
 
@@ -43,7 +41,7 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
   //   .post(BASE_URL + 'books', formData, config)
   //   .catch(error => error);
 
-  const token = await StorageService.getAssessToken();
+  const token = useSelector(selectors.auth.selectAccessToken);
 
   const res = await fetch(`${BASE_URL}/books`, {
     method: 'post',
@@ -110,10 +108,11 @@ export const getBooks = async () => {
   return res;
 };
 
-export const downloadBook = async (bookId: string) => {
-  console.log('first');
+export const downloadBook = async (bookId: string, token: stirng) => {
+  console.log('asdasdsada');
 
-  const token = await StorageService.getAssessToken();
+  // const token = useSelector(selectors.auth.selectAccessToken);
+  // console.log('token', token);
 
   const { dirs } = RNFetchBlob.fs;
   // const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir;

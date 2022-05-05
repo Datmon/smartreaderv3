@@ -7,16 +7,27 @@ interface IButton {
   disabled?: boolean;
   style?: any;
   onPress?: () => void;
+  alternative?: boolean;
 }
 
-const Button = ({ title, style, disabled, onPress }: IButton) => {
+const Button = ({ title, style, disabled, onPress, alternative }: IButton) => {
   return (
     <TouchableOpacity
-      style={[styles.button, style, disabled && styles.disabled]}
+      style={[
+        styles.button,
+        style,
+        disabled && styles.disabled,
+        alternative && styles.alternative,
+      ]}
       activeOpacity={0.6}
       onPress={onPress}
       disabled={disabled}>
-      <Text text={title} style={styles.text} clickbale />
+      <Text
+        text={title}
+        style={[styles.text, alternative && styles.alternativeText]}
+        header4={alternative ? true : false}
+        clickbale
+      />
     </TouchableOpacity>
   );
 };
@@ -36,4 +47,12 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   disabled: {},
+  alternative: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#455AF7',
+  },
+  alternativeText: {
+    color: '#27303F',
+  },
 });

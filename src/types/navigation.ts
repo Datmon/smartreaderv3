@@ -8,7 +8,11 @@ export type RootStackParamList = {
   Bookshelf: undefined;
   Organaizer: undefined;
   Meeting: undefined;
-  Profile: undefined;
+  ProfileScreen: undefined;
+  ProfileSettings: undefined;
+  Language: undefined;
+  Notifications: undefined;
+  ChangePassword: undefined;
   ReadingSpace: { bookId: string };
   Tabs: undefined;
 };

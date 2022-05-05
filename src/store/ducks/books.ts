@@ -18,7 +18,7 @@ const setPages = createAction<{ id: string; page: number }>('books/setPages');
 const getBooks = createAsyncThunk('books/getBooks', async () => {
   try {
     const response = await books.getBooks();
-    if (response.data.error) {
+    if (response.data && response.data.error) {
       throw new Error(response.data.message);
     }
     console.log('response.data', response.data);

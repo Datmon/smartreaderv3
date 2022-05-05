@@ -1,5 +1,6 @@
-import { Platform, StyleSheet, Text } from 'react-native';
+import { Platform, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
 import React from 'react';
+import { TextStyle } from 'pdfjs-dist/types/src/display/api';
 
 //TODO: TS for customStyles
 const CustomText = ({
@@ -9,17 +10,27 @@ const CustomText = ({
   title,
   label,
   error,
+  header0,
   header1,
   header2,
+  header3,
+  header4,
+  description,
+  body14,
 }: {
   text: string;
-  style?: any;
+  style?: StyleProp<any>;
   clickbale?: boolean;
   title?: boolean;
   label?: boolean;
   error?: boolean;
+  header0?: boolean;
   header1?: boolean;
   header2?: boolean;
+  header3?: boolean;
+  header4?: boolean;
+  description?: boolean;
+  body14?: boolean;
 }) => {
   const iosPlatform = Platform.OS === 'ios' ? 'ios' : 'android';
   return (
@@ -32,8 +43,13 @@ const CustomText = ({
               title && stylesIos.title,
               label && stylesIos.label,
               error && stylesIos.error,
+              header0 && stylesIos.header0,
               header1 && stylesIos.header1,
               header2 && stylesIos.header2,
+              header3 && stylesIos.header3,
+              header4 && stylesIos.header4,
+              description && stylesIos.description,
+              body14 && stylesIos.body14,
               style,
             ]
           : [
@@ -42,8 +58,14 @@ const CustomText = ({
               title && stylesAndroid.title,
               label && stylesAndroid.label,
               error && stylesAndroid.error,
+              header0 && stylesAndroid.header0,
               header1 && stylesAndroid.header1,
               header2 && stylesAndroid.header2,
+              header3 && stylesAndroid.header3,
+              header4 && stylesAndroid.header4,
+              description && stylesAndroid.description,
+              body14 && stylesAndroid.body14,
+
               style,
             ]
       }>
@@ -81,6 +103,10 @@ const stylesAndroid = StyleSheet.create({
     marginBottom: -4,
     marginTop: 1,
   },
+  header0: {
+    fontSize: 24,
+    fontFamily: 'EuclidCircular-500',
+  },
   header1: {
     fontSize: 20,
     fontFamily: 'EuclidCircular-500',
@@ -88,6 +114,23 @@ const stylesAndroid = StyleSheet.create({
   header2: {
     fontSize: 18,
     fontFamily: 'EuclidCircular-500',
+  },
+  header3: {
+    fontSize: 16,
+    fontFamily: 'EuclidCircular-500',
+  },
+  header4: {
+    fontSize: 14,
+    fontFamily: 'EuclidCircular-500',
+  },
+  description: {
+    fontFamily: 'EuclidCircular-400',
+    fontSize: 12,
+    color: '#718096',
+  },
+  body14: {
+    fontSize: 14,
+    fontFamily: 'EuclidCircular-400',
   },
 });
 
@@ -119,6 +162,10 @@ const stylesIos = StyleSheet.create({
     marginBottom: -4,
     marginTop: 1,
   },
+  header0: {
+    fontSize: 24,
+    fontWeight: '500',
+  },
   header1: {
     fontSize: 20,
     fontWeight: '500',
@@ -126,5 +173,22 @@ const stylesIos = StyleSheet.create({
   header2: {
     fontSize: 18,
     fontWeight: '500',
+  },
+  header3: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  header4: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  description: {
+    fontWeight: '400',
+    fontSize: 12,
+    color: '#718096',
+  },
+  body14: {
+    fontSize: 14,
+    fontWeight: '400',
   },
 });
