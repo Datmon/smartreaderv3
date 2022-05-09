@@ -147,7 +147,7 @@ const Bookshelf = ({
         setAddingBook(true);
 
         console.log('pickerResult', pickerResult);
-        const res = await books.postBook(pickerResult);
+        const res = await books.postBook(pickerResult, accessToken!);
         console.log('res', res);
         getBooksMeta();
         setAddingBook(false);
@@ -185,7 +185,7 @@ const Bookshelf = ({
     });
 
   const handlePressBook = async (bookId: string) => {
-    const downloadedBook = await books.downloadBook(bookId, accessToken);
+    const downloadedBook = await books.downloadBook(bookId, accessToken!);
     console.log('downloadedBook', downloadedBook);
     dispatch(actions.books.setDownloaded(bookId));
     navigation.push('ReadingSpace', { bookId });

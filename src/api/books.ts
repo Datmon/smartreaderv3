@@ -9,7 +9,10 @@ import { actions, selectors } from 'store';
 
 const BASE_URL = 'https://smartreader.space/api';
 
-export const postBook = async (pickercFile: DocumentPickerResponse) => {
+export const postBook = async (
+  pickercFile: DocumentPickerResponse,
+  token: string,
+) => {
   const formData = await new FormData();
 
   //   Object.entries(pikerFile).forEach(([key, val]) => {
@@ -41,7 +44,9 @@ export const postBook = async (pickercFile: DocumentPickerResponse) => {
   //   .post(BASE_URL + 'books', formData, config)
   //   .catch(error => error);
 
-  const token = useSelector(selectors.auth.selectAccessToken);
+  // const token = useSelector(selectors.auth.selectAccessToken);
+
+  console.log('token', token);
 
   const res = await fetch(`${BASE_URL}/books`, {
     method: 'post',
@@ -108,9 +113,7 @@ export const getBooks = async () => {
   return res;
 };
 
-export const downloadBook = async (bookId: string, token: stirng) => {
-  console.log('asdasdsada');
-
+export const downloadBook = async (bookId: string, token: string) => {
   // const token = useSelector(selectors.auth.selectAccessToken);
   // console.log('token', token);
 

@@ -1,0 +1,72 @@
+{
+    "OnboardingTitle1": "Радник",
+    "OnboardingDescription1": "Будь-яка книга, прочитана за допомогою Smart Reader, назавжди стає вашим другом, порадником і союзником.",
+    "OnboardingTitle2": "Спілкування",
+    "OnboardingDescription2": "Використовуючи Smart Reader, ви зрозумієте, на що здатна квантова фізика. За допомогою Smart Reader ви зможете працювати в команді, водночас спілкуючись з друзями та родиною!",
+    "OnboardingTitle3": "Помічник",
+    "OnboardingDescription3": "Smart Reader — ваш провідник і помічник на вашому шляху до успіху та процвітання!",
+    "OnboardingSkip": "Пропустити",
+    "SignInMeeting": "Еге! З поверненням",
+    "SignInLabel": "Увійдіть у свій обліковий запис",
+    "SignInForgotPass": "Забули пароль?",
+    "SignUpMeeting": "Зареєструватися",
+    "SignInButton": "Ввійти",
+    "SignUpButton": "Зареєструватися",
+    "SignUpOrLogin": "Або увійдіть за допомогою",
+    "SignUpQuestionIn": "Немає облікового запису? Зареєструватися",
+    "SignUpQuestionUp": "Have an account?",
+    "AppleButtonLabel": "Продовжуйте з Apple",
+
+    "GoogleButtonLabel": "Продовжуйте з Google",
+    "ResetTitle": "Скинути пароль",
+    "ResetLabel": "Введіть свою електронну адресу, ми надішлемо вам код підтвердження.",
+    "ResetButton": "Надіслати посилання",
+    "VerificationTitle": "Код підтвердження",
+    "VerificationLabel": "Введіть код підтвердження, який ми надіслали на вашу електронну пошту",
+    "VerificationResend": "Надіслати код повторно",
+    "VerificationContinue": "Продовжуйте",
+    "CreateNewPasswordTitle": "Create New Password",
+    "CreateNewPasswordLabel": "Your password must be different from previous used password",
+    "CreateNewPasswordEnter": "Enter new password",
+    "CreateNewPasswordConfirm": "Confrim password",
+    "CreateNewPasswordResetPassword": "Reset Password",
+    "SuccessChangedTitle": "Password Changed",
+    "SuccessChangedLabelP1": "Password changed succesfully, you",
+    "SuccessChangedLabelP2": "can login again with new password",
+    "SuccessChangedLogin": "Login",
+    "BookshelfContext": {
+        "title": "Bookshelf",
+        "searchPlaceholder": "Search in my books...",
+        "filter": {
+            "title": "Filter Events",
+            "files": "Files",
+            "sortBy": "Sort by",
+            "byInteraction": "By date of the last interaction",
+            "byAddnig": "By date of adding",
+            "loaded": "Loaded",
+            "unloaded": "Unloaded",
+            "buttonShow": "Show",
+            "buttonAll": "all",
+            "buttonResults": "results",
+            "reset": "Reset"
+        }
+    },
+    "UnfilledScreens": {
+        "title": "We are still working on this page.",
+        "label": "we make every effort to create the best application for you",
+        "button": "<     Back to bookshelfs"
+    },
+    "NotificationsContext": {
+        "email": "Email subscription",
+        "push": "Push Notification",
+        "monthly": "Monthly statistic "
+    },
+    "PlaceholderContext": {
+        "EmailPlaceholder": "Email",
+        "PasswordPlaceholder": "Password",
+        "UsernamePlaceholder": "Username",
+        "CurrentPassword": "Current password",
+        "NewPassword": "New password",
+        "ConfirmPassword": "Confirm password",
+    }
+}

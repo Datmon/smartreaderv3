@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { books } from 'api';
 import moment from 'moment';
+import { Alert } from 'react-native';
 import { RootState } from 'store';
 import { IApiBook, IBook } from 'types/interfaces';
 
@@ -22,7 +23,9 @@ const getBooks = createAsyncThunk('books/getBooks', async () => {
       throw new Error(response.data.message);
     }
     console.log('response.data', response.data);
-    return response.data;
+    if (response.data) {
+      return response.data;
+    }
   } catch (err) {
     return err;
   }
@@ -89,7 +92,10 @@ export const reducer = createReducer(
       if (neededState) {
         neededState.count = payload.page;
       } else {
-        state.pages.push({ bookId: payload.id, count: payload.page, max: 0 });
+        state.pages = [
+          ...state.pages,
+          { bookId: payload.id, count: payload.page, max: 0 },
+        ];
       }
     });
 

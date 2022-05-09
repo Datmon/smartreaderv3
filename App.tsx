@@ -6,13 +6,7 @@ import { persistor, store } from 'store';
 import Navigation from 'screens/Navigation';
 
 const App = () => {
-  return (
-    <StoreProvider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Navigation />
-      </PersistGate>
-    </StoreProvider>
-  );
+  return <Navigation />;
 };
 
 export default App;

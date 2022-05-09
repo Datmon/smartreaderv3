@@ -1,8 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import en from '../lang/en.json';
-import ru from '../lang/ru.json';
+import ue from '../lang/ue.json';
 import * as RNLocalize from 'react-native-localize';
 import App from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import { actions, persistor, selectors, store } from 'store';
 
 type LaguageContextType = {
   [key: string]: any;
@@ -14,12 +19,28 @@ const LanguageContext = React.createContext<LaguageContextType>(
 
 const languageObj = {
   en: en,
-  //ru: ru,
-  ru: en,
+  ue: ue,
 };
 
 export const LanguageContextProvider: React.FC = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  return (
+    <StoreProvider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <LanguageProvider />
+      </PersistGate>
+    </StoreProvider>
+  );
+};
+
+const LanguageProvider = () => {
+  const selectedLanguage = useSelector(selectors.settings.selectLanguage);
+  // const [selectedLanguage, setSelectedLanguage] = useState('en');
+
+  const dispatch = useDispatch();
+
+  const setSelectedLanguage = (lang: string) => {
+    dispatch(actions.settings.changeLanguage(lang));
+  };
 
   useEffect(() => {
     const currentLanguage = RNLocalize.findBestAvailableLanguage(
@@ -31,6 +52,8 @@ export const LanguageContextProvider: React.FC = () => {
   const value = {
     ...languageObj[selectedLanguage as 'en' | 'ru'],
   };
+
+  console.log('value', value);
 
   return (
     <LanguageContext.Provider value={value}>

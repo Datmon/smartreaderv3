@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   Image,
   Platform,
@@ -55,8 +56,7 @@ const ReadingSpace = ({
   const [pageValue, setPageValue] = useState<number>(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [pageChange, setPageChange] =
-    useState<{ previousPageNumber: number; pageNumber: number }>();
+  const [pageChange, setPageChange] = useState<number>(0);
 
   const dispatch = useDispatch();
 
@@ -64,7 +64,7 @@ const ReadingSpace = ({
     dispatch(
       actions.books.setLastPage({
         id: route.params.bookId,
-        page: pageChange?.pageNumber || 0,
+        page: pageChange,
       }),
     );
   }, [pageChange]);
@@ -131,7 +131,6 @@ const ReadingSpace = ({
         // Config.ReflowOrientation.Vertical;
 
         // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
-        PDFRef.current?.isReflowMode();
 
         // PDFRef.current?.onChange(event => console.log('event', event));
 
@@ -182,7 +181,14 @@ const ReadingSpace = ({
         // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         onBehaviorActivated={event => console.log('event', event)}
         onDocumentLoaded={() => setIsLoaded(true)}
-        onPageChanged={value => setPageChange(value)}
+        // onPageChanged={value => setPageChange(value.pageNumber)}
+        // onPageMoved={value => setPageChange(value.pageNumber)}
+        // onPageMoved={({ pageNumber }) =>
+        //   pageNumber && setPageChange(pageNumber)
+        // }
+        onPageChanged={({ pageNumber }) =>
+          pageNumber && setPageChange(pageNumber)
+        }
         pageChangeOnTap={true}
         // showQuickNavigationButton={true}
         showLeadingNavButton={true}

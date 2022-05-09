@@ -41,6 +41,8 @@ export const rootReducer = (state: State, action: any) => {
 
 const persistConfig = {
   key: 'root',
+  keyPrefix: '',
+  timeout: null,
   version: 1,
   storage: AsyncStorage,
   whitelist: ['books', 'auth'],

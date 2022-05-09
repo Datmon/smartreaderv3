@@ -24,7 +24,10 @@ import LoadingIndicator from 'components/LoadingIndicator';
 const ResetPassword = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'ResetPassword'>) => {
-  const { ResetTitle, ResetLabel, ResetButton } = useTranslation();
+  const { ResetTitle, ResetLabel, ResetButton, PlaceholderContext } =
+    useTranslation();
+  const { EmailPlaceholder } = PlaceholderContext;
+
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +70,7 @@ const ResetPassword = ({
                         meta={meta}
                         input={input}
                         style={styles.input}
-                        placeholder="Email"
+                        placeholder={EmailPlaceholder}
                         autoComplete="email"
                         textContentType="emailAddress"
                         secureTextEntry={false}

@@ -61,5 +61,22 @@
         "email": "Email subscription",
         "push": "Push Notification",
         "monthly": "Monthly statistic "
+    },
+    "ProfileContext": {
+        "saveButton": "Save changes",
+        "generalSettings": "General settings",
+        "emailSub": "Email subscription",
+        "pushNot": "Push notification",
+        "static": "Monthly statistic",
+        "logout": "Logout",
+        "back": "Back to bookshelf"
+    },
+    "PlaceholderContext": {
+        "EmailPlaceholder": "Email",
+        "PasswordPlaceholder": "Password",
+        "UsernamePlaceholder": "Username",
+        "CurrentPassword": "Current password",
+        "NewPassword": "New password",
+        "ConfirmPassword": "Confirm password"
     }
 }

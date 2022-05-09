@@ -48,6 +48,8 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Get books from user storage to upload on API and use with reader</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Access to bluetooth to manage apple tv from library PDFTron</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>

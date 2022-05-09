@@ -19,6 +19,7 @@ import Button from 'components/Button';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'types';
+import { useTranslation } from 'context/LanguageContext';
 
 const Profile = ({
   navigation,
@@ -27,12 +28,25 @@ const Profile = ({
 
   const pages = useSelector(selectors.books.selectAllPages);
   const avatar = useSelector(selectors.auth.selectUserPhoto);
+  const language = useSelector(selectors.settings.selectLanguage);
   const { email, username } = useSelector(selectors.auth.selectUserData);
 
   const logOut = async () => {
     //await StorageService.removeAssessToken();
     dispatch(actions.auth.signOut());
   };
+
+  const { ProfileContext } = useTranslation();
+
+  const {
+    saveButton,
+    generalSettings,
+    emailSub,
+    pushNot,
+    static,
+    logout,
+    back,
+  } = ProfileContext;
 
   const summaryPages = useMemo(() => {
     let sum = 0;
@@ -90,7 +104,7 @@ const Profile = ({
               <View style={styles.row}>
                 <FlagIcon />
                 <Text text="Language " header4 style={{ marginLeft: 12 }} />
-                <Text text="(English)" label />
+                <Text text={`(${language})`} label />
               </View>
               <RightArrow />
             </TouchableOpacity>
@@ -136,7 +150,7 @@ const Profile = ({
             </View>
           </View>
 
-          <Button title="Logout" onPress={logOut} alternative />
+          <Button title={logout} onPress={logOut} alternative />
         </View>
       </ScrollView>
     </SafeAreaView>

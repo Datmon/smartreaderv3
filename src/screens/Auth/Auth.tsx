@@ -44,6 +44,10 @@ const Auth = ({
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0);
 
+  const { PlaceholderContext } = useTranslation();
+  const { EmailPlaceholder, PasswordPlaceholder, UsernamePlaceholder } =
+    PlaceholderContext;
+
   const handleVerifyUser = async (email: string, id: string) => {
     await auth.verifyUser(email, id);
   };
@@ -147,7 +151,7 @@ const Auth = ({
                             meta={meta}
                             input={input}
                             style={styles.input}
-                            placeholder="Email"
+                            placeholder={EmailPlaceholder}
                             autoComplete="email"
                             textContentType="emailAddress"
                             secureTextEntry={false}
@@ -166,7 +170,7 @@ const Auth = ({
                             input={input}
                             style={styles.input}
                             secureTextEntry={true}
-                            placeholder="Password"
+                            placeholder={PasswordPlaceholder}
                             autoComplete="password"
                             textContentType="password"
                             leftIcon={(color: string) => (
@@ -205,7 +209,7 @@ const Auth = ({
                             meta={meta}
                             input={input}
                             style={styles.input}
-                            placeholder="Username"
+                            placeholder={UsernamePlaceholder}
                             autoComplete="username"
                             textContentType="username"
                             leftIcon={(color: string) => (
@@ -222,7 +226,7 @@ const Auth = ({
                             meta={meta}
                             input={input}
                             style={styles.input}
-                            placeholder="Email"
+                            placeholder={EmailPlaceholder}
                             autoComplete="email"
                             textContentType="emailAddress"
                             secureTextEntry={false}
@@ -241,7 +245,7 @@ const Auth = ({
                             input={input}
                             style={styles.input}
                             secureTextEntry={true}
-                            placeholder="Password"
+                            placeholder={PasswordPlaceholder}
                             autoComplete="password"
                             textContentType="password"
                             leftIcon={(color: string) => (

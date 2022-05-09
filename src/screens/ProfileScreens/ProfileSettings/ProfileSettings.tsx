@@ -33,11 +33,13 @@ const ProfileSettings = ({
     selectors.auth.selectUserData,
   );
 
+  const avatar = useSelector(selectors.auth.selectUserPhoto);
+
   return (
     <View style={styles.root}>
       <View style={styles.content}>
         <TouchableOpacity style={styles.image}>
-          <Image />
+          <Image style={styles.imageContainer} source={{ uri: avatar }} />
           <View style={styles.imageButton}>
             <PhotoIcon />
           </View>
@@ -143,6 +145,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 30,
     alignSelf: 'center',
+  },
+  imageContainer: {
+    height: 124,
+    width: 124,
   },
   imageButton: {
     position: 'absolute',

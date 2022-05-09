@@ -8,15 +8,19 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import Card from './components/Card';
-import { LanguageContextProvider } from 'context/LanguageContext';
+
 import { Text } from 'components/Text';
-import { Modalize } from 'react-native-modalize';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+import { actions } from 'store';
 
 const Language = () => {
   const [activeCard, setActiveCard] = useState<string>('English');
   const [modalTitle, setModalTitle] = useState<string>('');
   const [isVisible, setIsVisible] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handlePress = (language: string) => {
     setModalTitle(language);
@@ -24,6 +28,22 @@ const Language = () => {
   };
 
   const handleAccept = () => {
+    let lang = '';
+    switch (modalTitle) {
+      case 'English':
+        lang = 'en';
+        break;
+      case 'Deutch':
+        lang = 'de';
+        break;
+      case 'French':
+        lang = 'fr';
+        break;
+      case 'Ukrainian':
+        lang = 'ue';
+        break;
+    }
+    dispatch(actions.settings.changeLanguage(lang));
     setActiveCard(modalTitle);
     setIsVisible(false);
   };
@@ -31,11 +51,40 @@ const Language = () => {
   return (
     <>
       <View style={styles.root}>
-        <Modal visible={isVisible} transparent>
-          <Pressable
-            style={styles.background}
-            onPress={() => setIsVisible(false)}>
-            {/* <TouchableWithoutFeedback> */}
+        <Card
+          title="English"
+          image={require('assets/images/english.png')}
+          style={{ marginBottom: 16 }}
+          active={activeCard === 'English'}
+          onPress={() => handlePress('English')}
+        />
+        <Card
+          title="Deutch"
+          image={require('assets/images/deutch.png')}
+          style={{ marginBottom: 16 }}
+          active={activeCard === 'Deutch'}
+          onPress={() => handlePress('Deutch')}
+        />
+        <Card
+          title="French"
+          image={require('assets/images/french.png')}
+          style={{ marginBottom: 16 }}
+          active={activeCard === 'French'}
+          onPress={() => handlePress('French')}
+        />
+        <Card
+          title="Ukrainian"
+          image={require('assets/images/ukrainian.png')}
+          style={{ marginBottom: 16 }}
+          active={activeCard === 'Ukrainian'}
+          onPress={() => handlePress('Ukrainian')}
+        />
+      </View>
+      {isVisible && (
+        <Pressable
+          style={styles.background}
+          onPress={() => setIsVisible(false)}>
+          <TouchableWithoutFeedback>
             <View style={styles.modal}>
               <Text text={`Change to ${modalTitle}?`} header3 />
               <View
@@ -67,39 +116,9 @@ const Language = () => {
                 </View>
               </View>
             </View>
-            {/* </TouchableWithoutFeedback> */}
-          </Pressable>
-        </Modal>
-
-        <Card
-          title="English"
-          image={require('assets/images/english.png')}
-          style={{ marginBottom: 16 }}
-          active={activeCard === 'English'}
-          onPress={() => handlePress('English')}
-        />
-        <Card
-          title="Deutch"
-          image={require('assets/images/deutch.png')}
-          style={{ marginBottom: 16 }}
-          active={activeCard === 'Deutch'}
-          onPress={() => handlePress('Deutch')}
-        />
-        <Card
-          title="French"
-          image={require('assets/images/french.png')}
-          style={{ marginBottom: 16 }}
-          active={activeCard === 'French'}
-          onPress={() => handlePress('French')}
-        />
-        <Card
-          title="Ukrainian"
-          image={require('assets/images/ukrainian.png')}
-          style={{ marginBottom: 16 }}
-          active={activeCard === 'Ukrainian'}
-          onPress={() => handlePress('Ukrainian')}
-        />
-      </View>
+          </TouchableWithoutFeedback>
+        </Pressable>
+      )}
     </>
   );
 };
@@ -114,7 +133,9 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   background: {
-    flex: 1,
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
     backgroundColor: 'rgba(36, 34, 34, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
