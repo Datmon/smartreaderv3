@@ -145,7 +145,8 @@ const ReadingSpace = ({
         // node.getPageCount()
         (await node.isReflowMode()) || (await node.toggleReflow());
         await node?.getPageCount().then((value: number) => {
-          console.log('value', value);
+          setPageValue(value);
+          console.log('value page', value);
           dispatch(
             actions.books.setPages({ id: route.params.bookId, page: value }),
           );
@@ -178,11 +179,11 @@ const ReadingSpace = ({
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
         // onResponderEnd={() => setIsModalVisible(!isModalVisible)}
-        // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
+        onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         onBehaviorActivated={event => console.log('event', event)}
         onDocumentLoaded={() => setIsLoaded(true)}
         // onPageChanged={value => setPageChange(value.pageNumber)}
-        // onPageMoved={value => setPageChange(value.pageNumber)}
+        // onPageMoved={value => console.log(value.pageNumber)}
         // onPageMoved={({ pageNumber }) =>
         //   pageNumber && setPageChange(pageNumber)
         // }
@@ -195,14 +196,12 @@ const ReadingSpace = ({
         onLeadingNavButtonPressed={() => navigation.goBack()}
         hideAnnotationToolbarSwitcher={true}
         pageIndicatorEnabled={false}
-        // topToolbarEnabled={false}
-        // hideTopToolbars={true}
+        topToolbarEnabled={false}
+        hideTopToolbars={true}
         hideScrollbars={false}
         tabletLayoutEnabled
-        // onBehaviorActivated={event => console.log(event)}
         multiTabEnabled={false}
-        // padStatusBar={false}
-        // hideTopToolbars={false}
+        padStatusBar={false}
         // hideTopAppNavBar={true}
         // showLeadingNavButton={false}
         // layoutMode={'Single'}
