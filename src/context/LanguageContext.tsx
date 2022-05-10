@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import en from '../lang/en.json';
 import ue from '../lang/ue.json';
+import de from '../lang/de.json';
+import fr from '../lang/fr.json';
 import * as RNLocalize from 'react-native-localize';
 import App from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +22,8 @@ const LanguageContext = React.createContext<LaguageContextType>(
 const languageObj = {
   en: en,
   ue: ue,
+  de: de,
+  fr: fr,
 };
 
 export const LanguageContextProvider: React.FC = () => {

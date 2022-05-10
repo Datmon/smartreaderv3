@@ -1,0 +1,81 @@
+{
+    "OnboardingTitle1": "Conseiller",
+    "OnboardingDescription1": "Tout livre lu à l'aide de Smart Reader devient votre ami, votre conseiller et votre allié pour toujours.",
+    "OnboardingTitle2": "Communication",
+    "OnboardingDescription2": "En utilisant Smart Reader, vous réaliserez ce dont la physique quantique est capable. Avec l'aide de Smart Reader, vous pourrez travailler en équipe tout en communiquant avec vos amis et votre famille !",
+    "OnboardingTitle3": "Assistant",
+    "OnboardingDescription3": "Smart Reader est votre guide et votre assistant dans votre cheminement vers le succès et la prospérité !",
+    "OnboardingSkip": "Sauter",
+    "SignInMeeting": "Hé! Content de te revoir",
+    "SignInLabel": "Connectez-vous à votre compte",
+    "SignInForgotPass": "Mot de passe oublié?",
+    "SignUpMeeting": "S'inscrire",
+    "SignInButton": "Connexion",
+    "SignUpButton": "S'inscrire",
+    "SignUpOrLogin": "Ou connectez-vous avec l'aide",
+    "SignUpQuestionIn": "Vous n'avez pas de compte ? S'inscrire",
+    "SignUpQuestionUp": "Vous avez un accent ?",
+    "AppleButtonLabel": "Continuer avec Apple",
+
+    "GoogleButtonLabel": "Continuer avec Google",
+    "ResetTitle": "Réinitialiser le mot de passe",
+    "ResetLabel": "Entrez votre e-mail, nous vous enverrons un code de vérification sur votre e-mail.",
+    "ResetButton": "Envoyer un lien",
+    "VerificationTitle": "Code de vérification",
+    "VerificationLabel": "Entrez le code de vérification que nous vous avons envoyé par e-mail",
+    "VerificationResend": "Renvoyer le code",
+    "VerificationContinue": "Continuez",
+    "CreateNewPasswordTitle": "Créer un nouveau mot de passe",
+    "CreateNewPasswordLabel": "Votre mot de passe doit être différent du mot de passe utilisé précédemment",
+    "CreateNewPasswordEnter": "Entrez un nouveau mot de passe",
+    "CreateNewPasswordConfirm": "Confirmez le mot de passe",
+    "CreateNewPasswordResetPassword": "Réinitialiser le mot de passe",
+    "SuccessChangedTitle": "Mot de passe changé",
+    "SuccessChangedLabelP1": "Mot de passe changé avec succès, vous",
+    "SuccessChangedLabelP2": "peut se reconnecter avec un nouveau mot de passe",
+    "SuccessChangedLogin": "Connexion",
+    "BookshelfContext": {
+        "title": "Étagère livres",
+        "searchPlaceholder": "Rechercher dans mes livres...",
+        "filter": {
+            "title": "Filtrer les événements",
+            "files": "Des dossiers",
+            "sortBy": "Trier par",
+            "byInteraction": "Par date de la dernière interaction",
+            "byAddnig": "Par date d'ajout",
+            "loaded": "Chargée",
+            "unloaded": "Déchargée",
+            "buttonShow": "Spectacle",
+            "buttonAll": "all",
+            "buttonResults": "résultats",
+            "reset": "Réinitialiser"
+        }
+    },
+    "UnfilledScreens": {
+        "title": "Nous travaillons toujours sur cette page.",
+        "label": "nous mettons tout en œuvre pour créer la meilleure application pour vous",
+        "button": "<     Retour aux étagères"
+    },
+    "ProfileContext": {
+        "saveButton": "Sauvegarder les modifications",
+        "generalSettings": "Réglages généraux",
+        "emailSub": "Abonnement par courrier électronique",
+        "pushNot": "Notification push",
+        "static": "Statistique mensuelle",
+        "logout": "Se déconnecter",
+        "back": "Retour à la bibliothèque"
+    },
+    "NotificationsContext": {
+        "email": "Abonnement par courrier électronique",
+        "push": "Notification push",
+        "monthly": "Statistique mensuelle"
+    },
+    "PlaceholderContext": {
+        "EmailPlaceholder": "E-mail",
+        "PasswordPlaceholder": "Mot de passe",
+        "UsernamePlaceholder": "Nom d'utilisateur",
+        "CurrentPassword": "Mot de passe actuel",
+        "NewPassword": "Nouveau mot de passe",
+        "ConfirmPassword": "Confirmez le mot de passe",
+    }
+}

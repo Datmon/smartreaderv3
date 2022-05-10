@@ -1,0 +1,81 @@
+{
+    "OnboardingTitle1": "Berater",
+    "OnboardingDescription1": "Jedes Buch, das mit Smart Reader gelesen wird, wird für immer Ihr Freund, Berater und Verbündeter.",
+    "OnboardingTitle2": "Kommunikation",
+    "OnboardingDescription2": "Mit Smart Reader werden Sie erkennen, wozu die Quantenphysik fähig ist. Mit Hilfe von Smart Reader können Sie im Team arbeiten und gleichzeitig mit Freunden und Familie kommunizieren!",
+    "OnboardingTitle3": "Assistent",
+    "OnboardingDescription3": "Smart Reader ist Ihr Führer und Assistent auf Ihrem Weg zu Erfolg und Wohlstand!",
+    "OnboardingSkip": "überspringen",
+    "SignInMeeting": "Hey! Willkommen zurück",
+    "SignInLabel": "Melden Sie sich bei Ihrem Konto an",
+    "SignInForgotPass": "Passwort vergessen?",
+    "SignUpMeeting": "Anmeldung",
+    "SignInButton": "Einloggen",
+    "SignUpButton": "Anmeldung",
+    "SignUpOrLogin": "Oder melden Sie sich mit an",
+    "SignUpQuestionIn": "Sie haben kein Konto? Anmeldung",
+    "SignUpQuestionUp": "Een account hebben?",
+    "AppleButtonLabel": "Weiter mit Apple",
+
+    "GoogleButtonLabel": "Weiter mit Google",
+    "ResetTitle": "Passwort zurücksetzen",
+    "ResetLabel": "Geben Sie Ihre E-Mail-Adresse ein, wir senden einen Bestätigungscode an Ihre E-Mail-Adresse.",
+    "ResetButton": "Link senden",
+    "VerificationTitle": "Bestätigungs-Code",
+    "VerificationLabel": "Geben Sie den Bestätigungscode ein, den wir an Ihre E-Mail gesendet haben",
+    "VerificationResend": "Code erneut senden",
+    "VerificationContinue": "Fortsetzen",
+    "CreateNewPasswordTitle": "Nieuw wachtwoord aanmaken",
+    "CreateNewPasswordLabel": "Uw wachtwoord moet anders zijn dan het eerder gebruikte wachtwoord",
+    "CreateNewPasswordEnter": "Voer nieuw wachtwoord in",
+    "CreateNewPasswordConfirm": "Bevestig wachtwoord",
+    "CreateNewPasswordResetPassword": "Passwort zurücksetzen",
+    "SuccessChangedTitle": "Wachtwoord veranderd",
+    "SuccessChangedLabelP1": "Wachtwoord succesvol gewijzigd, jij",
+    "SuccessChangedLabelP2": "kan opnieuw inloggen met nieuw wachtwoord",
+    "SuccessChangedLogin": "Log in",
+    "BookshelfContext": {
+        "title": "Bücherregal",
+        "searchPlaceholder": "Zoek in mijn boeken...",
+        "filter": {
+            "title": "Gebeurtenissen filteren",
+            "files": "Bestanden",
+            "sortBy": "Sorteer op",
+            "byInteraction": "Op datum van de laatste interactie",
+            "byAddnig": "Op datum van toevoegen",
+            "loaded": "Geladen",
+            "unloaded": "gelost",
+            "buttonShow": "Tonen",
+            "buttonAll": "alle",
+            "buttonResults": "resultaten",
+            "reset": "Resetten"
+        }
+    },
+    "UnfilledScreens": {
+        "title": "We werken nog aan deze pagina.",
+        "label": "we doen er alles aan om de beste applicatie voor u te maken",
+        "button": "<     Terug naar boekenplanken"
+    },
+    "ProfileContext": {
+        "saveButton": "Änderungen speichern",
+        "generalSettings": "Allgemeine Einstellungen",
+        "emailSub": "E-Mail-Abonnement",
+        "pushNot": "Push-Benachrichtigung",
+        "static": "Monatliche Statistik",
+        "logout": "Ausloggen",
+        "back": "Terug naar boekenplank"
+    },
+    "NotificationsContext": {
+        "email": "E-Mail-Abonnement",
+        "push": "Push-Benachrichtigung",
+        "monthly": "Monatliche Statistik "
+    },
+    "PlaceholderContext": {
+        "EmailPlaceholder": "Email",
+        "PasswordPlaceholder": "Passwort",
+        "UsernamePlaceholder": "Nutzername",
+        "CurrentPassword": "Huidig wachtwoord",
+        "NewPassword": "Nieuw paswoord",
+        "ConfirmPassword": "Bevestig wachtwoord"
+    }
+}

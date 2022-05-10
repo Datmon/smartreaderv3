@@ -12,15 +12,17 @@ import Card from './components/Card';
 import { Text } from 'components/Text';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { actions } from 'store';
 
 const Language = () => {
-  const [activeCard, setActiveCard] = useState<string>('English');
+  const selectedLanguage = useSelector(state => state.settings.selectedLanguage)
+  const [activeCard, setActiveCard] = useState<string>(selectedLanguage);
   const [modalTitle, setModalTitle] = useState<string>('');
   const [isVisible, setIsVisible] = useState(false);
 
   const dispatch = useDispatch();
+
 
   const handlePress = (language: string) => {
     setModalTitle(language);
@@ -55,28 +57,28 @@ const Language = () => {
           title="English"
           image={require('assets/images/english.png')}
           style={{ marginBottom: 16 }}
-          active={activeCard === 'English'}
+          active={activeCard === 'en'}
           onPress={() => handlePress('English')}
         />
         <Card
           title="Deutch"
           image={require('assets/images/deutch.png')}
           style={{ marginBottom: 16 }}
-          active={activeCard === 'Deutch'}
+          active={activeCard === 'de'}
           onPress={() => handlePress('Deutch')}
         />
         <Card
           title="French"
           image={require('assets/images/french.png')}
           style={{ marginBottom: 16 }}
-          active={activeCard === 'French'}
+          active={activeCard === 'fr'}
           onPress={() => handlePress('French')}
         />
         <Card
           title="Ukrainian"
           image={require('assets/images/ukrainian.png')}
           style={{ marginBottom: 16 }}
-          active={activeCard === 'Ukrainian'}
+          active={activeCard === 'ue'}
           onPress={() => handlePress('Ukrainian')}
         />
       </View>

@@ -74,7 +74,7 @@
     "PlaceholderContext": {
         "EmailPlaceholder": "Email",
         "PasswordPlaceholder": "Password",
-        "UsernamePlaceholder": "Username",
+        "UsernamePlaceholder": "User name",
         "CurrentPassword": "Current password",
         "NewPassword": "New password",
         "ConfirmPassword": "Confirm password"
