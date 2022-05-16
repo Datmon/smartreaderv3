@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PhotoIcon from 'assets/svg/PhotoIcon';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import { Field, Form } from 'react-final-form';
+import ImagePicker from 'react-native-image-crop-picker';
 import {
   composeValidators,
   isEmail,
@@ -32,14 +33,31 @@ const ProfileSettings = ({
   const { email, username, password } = useSelector(
     selectors.auth.selectUserData,
   );
+  const [newPhoto, setNewPhoto] = useState([]);
+  // const userPassword = useSelector(state => state.auth.userPassword);
+
+  const handleChoosePhoto = () =>
+    ImagePicker.openPicker({
+      compressImageMaxWidth: 400,
+      compressImageMaxHeight: 400,
+      multiple: true,
+      maxFiles: 1,
+    }).then(images => setNewPhoto(images));
+
+  // useEffect(() => {
+  //   console.log('photo', newPhoto);
+  // }, [newPhoto]);
 
   const avatar = useSelector(selectors.auth.selectUserPhoto);
 
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        <TouchableOpacity style={styles.image}>
-          <Image style={styles.imageContainer} source={{ uri: avatar }} />
+        <TouchableOpacity style={styles.image} onPress={handleChoosePhoto}>
+          <Image
+            style={styles.imageContainer}
+            source={{ uri: avatar ?? newPhoto[0]?.path }}
+          />
           <View style={styles.imageButton}>
             <PhotoIcon />
           </View>
@@ -86,6 +104,7 @@ const ProfileSettings = ({
                 </Field>
                 <Field
                   name="password"
+                  // initialValue={userPassword}
                   validate={composeValidators(
                     required,
                     minLength(6),
