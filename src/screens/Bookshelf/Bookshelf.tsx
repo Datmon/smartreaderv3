@@ -188,7 +188,12 @@ const Bookshelf = ({
     const downloadedBook = await books.downloadBook(bookId, accessToken!);
     console.log('downloadedBook', downloadedBook);
     dispatch(actions.books.setDownloaded(bookId));
-    navigation.push('ReadingSpace', { bookId });
+    const saveData = allPages.filter(item => item.bookId === bookId);
+    navigation.push('ReadingSpace', {
+      bookId,
+      saveNote: saveData ? saveData[0]?.saveNote : '',
+      saveBookmark: saveData ? saveData[0]?.saveBookmark : '',
+    });
   };
 
   useEffect(() => {

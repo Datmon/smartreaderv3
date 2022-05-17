@@ -11,10 +11,17 @@ import { IApiBook, IBook } from 'types/interfaces';
 
 const addTypeFilter = createAction<string>('books/addTypeFilter');
 const setDownloaded = createAction<string>('books/setDownloaded');
-const setLastPage =
-  createAction<{ id: string; page: number }>('books/setLastPage');
+const setLastPage = createAction<{
+  id: string;
+  page: number;
+}>('books/setLastPage');
 
 const setPages = createAction<{ id: string; page: number }>('books/setPages');
+
+const setNotes =
+  createAction<{ id: string; saveNote: string; saveBookmark: string }>(
+    'books/setNotes',
+  );
 
 const getBooks = createAsyncThunk('books/getBooks', async () => {
   try {
@@ -51,7 +58,13 @@ export const reducer = createReducer(
   {
     getBooksStatus: 'idle',
     allBooksMeta: [] as Array<IApiBook>,
-    pages: [] as Array<{ bookId: string; count: number; max: number }>,
+    pages: [] as Array<{
+      bookId: string;
+      count: number;
+      max: number;
+      // saveNote: string;
+      // saveBookmark: string;
+    }>,
   },
 
   builder => {
@@ -84,6 +97,18 @@ export const reducer = createReducer(
       }
     });
 
+    builder.addCase(setNotes, (state, { payload }) => {
+      const index = state.pages.findIndex(
+        ({ bookId }) => bookId === payload.id,
+      );
+      if (payload.saveNote) {
+        state.pages[index].saveNote = payload.saveNote;
+      }
+      if (payload.saveBookmark) {
+        state.pages[index].saveBookmark = payload.saveBookmark;
+      }
+    });
+
     builder.addCase(setPages, (state, { payload }) => {
       const neededState = state.pages.find(
         ({ bookId }) => bookId === payload.id,
@@ -94,7 +119,11 @@ export const reducer = createReducer(
       } else {
         state.pages = [
           ...state.pages,
-          { bookId: payload.id, count: payload.page, max: 0 },
+          {
+            bookId: payload.id,
+            count: payload.page,
+            max: 0,
+          },
         ];
       }
     });
@@ -114,6 +143,7 @@ export const actions = {
   setDownloaded,
   setLastPage,
   setPages,
+  setNotes,
 };
 
 export const selectors = {

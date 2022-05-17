@@ -13,6 +13,6 @@ export type RootStackParamList = {
   Language: undefined;
   Notifications: undefined;
   ChangePassword: undefined;
-  ReadingSpace: { bookId: string };
+  ReadingSpace: { bookId: string; saveNote: string; saveBookmark: string };
   Tabs: undefined;
 };

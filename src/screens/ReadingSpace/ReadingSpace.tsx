@@ -124,40 +124,78 @@ const ReadingSpace = ({
 
   const document = `${dirs.DocumentDir}/${resultId}.pdf`;
 
-  const elRef = useCallback(
-    async node => {
-      if (node !== null) {
-        console.log('ref', node); // node = elRef.current
-        // Config.ReflowOrientation.Vertical;
+  // const elRef = useCallback(
+  //   async node => {
+  //     if (node !== null) {
+  //       console.log('ref', node); // node = elRef.current
+  //
+  //       // Config.ReflowOrientation.Vertical;
+  //
+  //       // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
+  //
+  //       // PDFRef.current?.onChange(event => console.log('event', event));
+  //
+  //       // node.props.reflowOrientation = 'vertical';
+  //
+  //       // PDFRef.current
+  //       //   ?.getPageCount()
+  //       //   .then(value => console.log('value', value));
+  //
+  //       // await PDFRef.current?.toggleReflow();
+  //
+  //       // node.getPageCount()
+  //       (await node.isReflowMode()) || (await node.toggleReflow());
+  //       const xfdf = await node.exportAnnotations().then(xfdf => {
+  //         return xfdf;
+  //       });
+  //       await node?.getPageCount().then((value: number) => {
+  //         setPageValue(value);
+  //         console.log('value page', value);
+  //         dispatch(
+  //           actions.books.setPages({
+  //             id: route.params.bookId,
+  //             page: value,
+  //             saveView: xfdf,
+  //           }),
+  //         );
+  //       });
+  //       // node.forceUpdate();
+  //
+  //       // node.autoResizeFreeTextEnabled(true);
+  //     }
+  //   },
+  //   [isLoaded],
+  // );
 
-        // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
+  useEffect(() => {
+    if (PDFRef.current !== null) {
+      console.log('ref', PDFRef.current);
 
-        // PDFRef.current?.onChange(event => console.log('event', event));
+      (async () => {
+        (await PDFRef.current?.isReflowMode()) ||
+          (await PDFRef.current?.toggleReflow());
 
-        // node.props.reflowOrientation = 'vertical';
-
-        // PDFRef.current
-        //   ?.getPageCount()
-        //   .then(value => console.log('value', value));
-
-        // await PDFRef.current?.toggleReflow();
-
-        // node.getPageCount()
-        (await node.isReflowMode()) || (await node.toggleReflow());
-        await node?.getPageCount().then((value: number) => {
+        await PDFRef.current?.getPageCount().then((value: number) => {
           setPageValue(value);
           console.log('value page', value);
           dispatch(
-            actions.books.setPages({ id: route.params.bookId, page: value }),
+            actions.books.setPages({
+              id: route.params.bookId,
+              page: value,
+            }),
           );
         });
-        // node.forceUpdate();
 
-        // node.autoResizeFreeTextEnabled(true);
-      }
-    },
-    [isLoaded],
-  );
+        if (route.params?.saveNote) {
+          PDFRef.current?.importAnnotations(`${route.params?.saveNote}`);
+        }
+
+        if (route.params?.saveBookmark) {
+          PDFRef.current?.importBookmarkJson(`${route.params?.saveBookmark}`);
+        }
+      })();
+    }
+  }, [isLoaded]);
 
   useEffect(() => {
     RNPdftron.initialize('Insert commercial license key here after purchase');
@@ -170,16 +208,38 @@ const ReadingSpace = ({
   //   PDFRef.current?.toggleReflow();
   // }, [PDFRef]);
 
+  const saveNote = () => {
+    PDFRef.current?.exportAnnotations().then(xfdf => {
+      dispatch(
+        actions.books.setNotes({
+          id: route.params.bookId,
+          saveNote: `${xfdf}`,
+          saveBookmark: '',
+        }),
+      );
+    });
+  };
+
+  const saveBookmark = (bookmark: string) => {
+    dispatch(
+      actions.books.setNotes({
+        id: route.params.bookId,
+        saveNote: '',
+        saveBookmark: `${bookmark}`,
+      }),
+    );
+  };
+
   return (
     <>
       <DocumentView
-        ref={elRef}
+        ref={PDFRef}
         document={document}
-        // bottomToolbarEnabled={false}
+        bottomToolbarEnabled={true}
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
         // onResponderEnd={() => setIsModalVisible(!isModalVisible)}
-        onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
+        // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         onBehaviorActivated={event => console.log('event', event)}
         onDocumentLoaded={() => setIsLoaded(true)}
         // onPageChanged={value => setPageChange(value.pageNumber)}
@@ -191,26 +251,126 @@ const ReadingSpace = ({
           pageNumber && setPageChange(pageNumber)
         }
         pageChangeOnTap={true}
-        // showQuickNavigationButton={true}
+        showQuickNavigationButton={true}
         showLeadingNavButton={true}
         onLeadingNavButtonPressed={() => navigation.goBack()}
         hideAnnotationToolbarSwitcher={true}
         pageIndicatorEnabled={false}
         topToolbarEnabled={false}
-        hideTopToolbars={true}
+        hideTopToolbars={false}
         hideScrollbars={false}
         tabletLayoutEnabled
         multiTabEnabled={false}
         padStatusBar={false}
-        // hideTopAppNavBar={true}
+        hideTopAppNavBar={false}
         // showLeadingNavButton={false}
         // layoutMode={'Single'}
-        bottomToolbarEnabled={false}
         leadingNavButtonIcon={
           Platform.OS === 'ios'
             ? 'ic_close_black_24px.png'
             : 'ic_arrow_back_white_24dp'
         }
+        annotationPermissionCheckEnabled={true}
+        // disabledTools={[Config.Tools.annotationCreateLink]}
+        // onToolChanged={({ previousTool, tool }) => {
+        //   console.log('Tool has been changed from', previousTool, 'to', tool);
+        // }}
+        // hideViewModeItems={[
+        //   Config.ViewModePickerItem.Crop,
+        //   Config.ViewModePickerItem.Rotation,
+        //   Config.ViewModePickerItem.ColorMode,
+        // ]}
+        // annotationToolbars={[Config.DefaultToolbars.Annotate, myToolbar]}
+        onAnnotationToolbarItemPress={({ id }) => {
+          console.log('toolbar item press: ' + id);
+          // верхняя панель
+        }}
+        // hideDefaultAnnotationToolbars={[
+        //   Config.DefaultToolbars.Annotate,
+        //   Config.DefaultToolbars.Favorite,
+        // ]}
+        // onAnnotationMenuPress={({ annotationMenu, annotations }) => {
+        //   console.log(
+        //     'Annotation menu item',
+        //     annotationMenu,
+        //     'has been pressed',
+        //   );
+        //   annotations.forEach(annotation => {
+        //     console.log('The id of selected annotation is', annotation.id);
+        //     console.log(
+        //       'The page number of selected annotation is',
+        //       annotation.pageNumber,
+        //     );
+        //     console.log('The type of selected annotation is', annotation.type);
+        //     console.log(
+        //       'The screenRect of selected annotation is',
+        //       annotation.screenRect,
+        //     );
+        //     console.log(
+        //       'The pageRect of selected annotation is',
+        //       annotation.pageRect,
+        //     );
+        //   });
+        // }}
+        // longPressMenuItems={[
+        //   Config.LongPressMenu.copy,
+        //   Config.LongPressMenu.read,
+        // ]}
+        // onLongPressMenuPress={({ longPressMenu, longPressText }) => {
+        //   console.log(
+        //     'Long press menu item',
+        //     longPressMenu,
+        //     'has been pressed',
+        //   );
+        //   if (longPressText !== '') {
+        //     console.log('The selected text is', longPressText);
+        //   }
+        // }}
+        // onExportAnnotationCommand={({ action, xfdfCommand, annotations }) => {
+        //   console.log('Annotation edit action is', action);
+        //   console.log('The exported xfdfCommand is', xfdfCommand);
+        //   console.log('Annotation', annotations);
+        //   annotations.forEach(annotation => {
+        //     console.log('Annotation id is', annotation.id);
+        //     // if (!this.state.collabEnabled) {
+        //     console.log('Annotation pageNumber is', annotation.pageNumber);
+        //     console.log('Annotation type is', annotation.type);
+        //     // }
+        //   });
+        // }}
+        // // collabEnabled={this.state.collabEnabled}
+        // currentUser={'Pdftron'}
+        // onTextSearchResult={({ found, textSelection }) => {
+        //   if (found) {
+        //     console.log('Found selection on page', textSelection.pageNumber);
+        //     for (let i = 0; i < textSelection.quads.length; i++) {
+        //       const quad = textSelection.quads[i];
+        //       console.log('selection boundary quad', i);
+        //       for (const quadPoint of quad) {
+        //         console.log(
+        //           'A quad point has coordinates',
+        //           quadPoint.x,
+        //           quadPoint.y,
+        //         );
+        //       }
+        //     }
+        //   }
+        // }}
+        onBookmarkChanged={({ bookmarkJson }) => {
+          saveBookmark(bookmarkJson);
+        }}
+        onAnnotationMenuPress={() => {
+          saveNote();
+        }}
+        onAnnotationChanged={({ action, annotations }) => {
+          saveNote();
+          console.log('Annotation edit action is', action);
+          annotations.forEach(annotation => {
+            console.log('The id of changed annotation is', annotation.id);
+            console.log('It is in page', annotation.pageNumber);
+            console.log('Its type is', annotation.type);
+          });
+        }}
       />
 
       {isModalVisible && (
