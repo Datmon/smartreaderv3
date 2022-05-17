@@ -103,9 +103,12 @@ interface User {
   photo?: string;
 }
 
+const savePassword = createAction('auth/save');
+
 export const reducer = createReducer(
   {
     user: {} as User,
+    userPassword: '',
     signingInStatus: 'idle',
     serviceSignUpStatus: 'idle',
     verificateStatus: 'idle',
@@ -167,6 +170,9 @@ export const reducer = createReducer(
     builder.addCase(signOut, state => {
       state.user.access_token = undefined;
     });
+    builder.addCase(savePassword, (state, action) => {
+      state.userPassword = action.payload;
+    });
   },
 );
 
@@ -178,6 +184,7 @@ export const actions = {
   verificate,
   userExists,
   resetPassword,
+  savePassword,
 };
 
 export const selectors = {

@@ -29,12 +29,14 @@ import { selectors } from 'store';
 const ProfileSettings = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'ProfileSettings'>) => {
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    navigation.navigate('ProfileScreen');
+  };
   const { email, username, password } = useSelector(
     selectors.auth.selectUserData,
   );
   const [newPhoto, setNewPhoto] = useState([]);
-  // const userPassword = useSelector(state => state.auth.userPassword);
+  const userPassword = useSelector(state => state.auth.userPassword);
 
   const handleChoosePhoto = () =>
     ImagePicker.openPicker({
@@ -102,36 +104,40 @@ const ProfileSettings = ({
                     />
                   )}
                 </Field>
-                <Field
-                  name="password"
-                  // initialValue={userPassword}
-                  validate={composeValidators(
-                    required,
-                    minLength(6),
-                    isSame(password),
-                  )}>
-                  {({ input, meta }) => (
-                    <Input
-                      meta={meta}
-                      input={input}
-                      style={styles.input}
-                      secureTextEntry={true}
-                      placeholder="Password"
-                      autoComplete="password"
-                      textContentType="password"
-                      leftIcon={(color: string) => (
-                        <PasswordIcon color={color} />
+                {userPassword ? (
+                  <>
+                    <Field
+                      name="password"
+                      initialValue={userPassword}
+                      validate={composeValidators(
+                        required,
+                        minLength(6),
+                        isSame(userPassword),
+                      )}>
+                      {({ input, meta }) => (
+                        <Input
+                          meta={meta}
+                          input={input}
+                          style={styles.input}
+                          secureTextEntry={true}
+                          placeholder="Password"
+                          autoComplete="password"
+                          textContentType="password"
+                          leftIcon={(color: string) => (
+                            <PasswordIcon color={color} />
+                          )}
+                        />
                       )}
+                    </Field>
+                    <ClickableText
+                      style={styles.forgotPass}
+                      text={'Change password'}
+                      onPress={() => {
+                        navigation.navigate('ChangePassword');
+                      }}
                     />
-                  )}
-                </Field>
-                <ClickableText
-                  style={styles.forgotPass}
-                  text={'Change password'}
-                  onPress={() => {
-                    navigation.navigate('ChangePassword');
-                  }}
-                />
+                  </>
+                ) : null}
               </View>
               <Button
                 style={styles.button}

@@ -55,6 +55,7 @@ const Auth = ({
   const signIn = async (data: { email: string; password: string }) => {
     console.log('data: ', data);
     setIsLoading(true);
+    dispatch(actions.auth.savePassword(data.password));
     if (data.email && data.password) {
       const res: any = await dispatch(
         actions.auth.signIn({ email: data.email, password: data.password }),
