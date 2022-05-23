@@ -25,6 +25,7 @@ import SettingsIcon from 'assets/svg/Settings';
 import { Slider } from '@miblanchard/react-native-slider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { IBookmark } from 'store/ducks/books';
 
 // function useHookWithRefCallback() {
 //   const ref = useRef<DocumentView>(null);
@@ -57,6 +58,15 @@ const ReadingSpace = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageChange, setPageChange] = useState<number>(0);
+  const resultId = route.params.bookId;
+  const allBooks = useSelector(selectors.books.selectAllBooks);
+  const bookmarks = useSelector(selectors.books.selectAllBookmarks);
+  const bookId = allBooks.findIndex(book => book?.id === resultId);
+  const bookName = allBooks[bookId]?.title;
+  const bookmarksId = bookmarks.findIndex(
+    (bookmark: IBookmark) => bookmark?.document === bookName,
+  );
+  const bookmarkJson = bookmarks[bookmarksId]?.bookmarkJSON;
 
   const dispatch = useDispatch();
 
@@ -117,7 +127,6 @@ const ReadingSpace = ({
 
   // const document = 'file:///storage/emulated/0/Download/test.pdf';
   // const document = '/storage/emulated/0/Download/test.pdf';
-  const resultId = route.params.bookId;
 
   const { dirs } = RNFetchBlob.fs;
   // const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
@@ -128,24 +137,25 @@ const ReadingSpace = ({
     async node => {
       if (node !== null) {
         console.log('ref', node); // node = elRef.current
-        // Config.ReflowOrientation.Vertical;
+          // Config.ReflowOrientation.Vertical;
 
-        // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
+          // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
 
-        // PDFRef.current?.onChange(event => console.log('event', event));
+          // PDFRef.current?.onChange(event => console.log('event', event));
 
-        // node.props.reflowOrientation = 'vertical';
+          // node.props.reflowOrientation = 'vertical';
 
-        // PDFRef.current
-        //   ?.getPageCount()
-        //   .then(value => console.log('value', value));
+          // PDFRef.current
+          //   ?.getPageCount()
+          //   .then(value => console.log('value', value));
 
-        // await PDFRef.current?.toggleReflow();
+          // await PDFRef.current?.toggleReflow();
 
-        // node.getPageCount()
-        (await node.isReflowMode()) || (await node.toggleReflow());
+          // node.getPageCount()
+          (await node.isReflowMode()) || (await node.toggleReflow());
         await node?.getPageCount().then((value: number) => {
           console.log('value', value);
+          node.importBookmarkJson(bookmarkJson);
           dispatch(
             actions.books.setPages({ id: route.params.bookId, page: value }),
           );
@@ -161,7 +171,6 @@ const ReadingSpace = ({
   useEffect(() => {
     RNPdftron.initialize('Insert commercial license key here after purchase');
     RNPdftron.enableJavaScript(true);
-
     // PDFRef.current?._viewerRef.toggleReflow();
   }, []);
 
@@ -174,12 +183,32 @@ const ReadingSpace = ({
       <DocumentView
         ref={elRef}
         document={document}
+        // onAnnotationChanged={({ action, annotations }) => {
+        //   console.log('111111111Annotation edit action is', action);
+        //   annotations.forEach(annotation => {
+        //     console.log(
+        //       '22222222The id of changed annotation is',
+        //       annotation.id,
+        //     );
+        //     console.log('3333333It is in page', annotation.pageNumber);
+        //     console.log('444444Its type is', annotation.type);
+        //   });
+        // }}
+        onBookmarkChanged={({ bookmarkJson }) => {
+          dispatch(
+            actions.books.addBookmark({
+              bookmark: JSON.parse(bookmarkJson),
+              document: bookName,
+              bookmarkJSON: bookmarkJson,
+            }),
+          );
+        }}
         // bottomToolbarEnabled={false}
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
         // onResponderEnd={() => setIsModalVisible(!isModalVisible)}
         // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
-        onBehaviorActivated={event => console.log('event', event)}
+        // onBehaviorActivated={event => console.log('event', event)}
         onDocumentLoaded={() => setIsLoaded(true)}
         // onPageChanged={value => setPageChange(value.pageNumber)}
         // onPageMoved={value => setPageChange(value.pageNumber)}
@@ -191,22 +220,22 @@ const ReadingSpace = ({
         }
         pageChangeOnTap={true}
         // showQuickNavigationButton={true}
-        showLeadingNavButton={true}
-        onLeadingNavButtonPressed={() => navigation.goBack()}
-        hideAnnotationToolbarSwitcher={true}
+        // showLeadingNavButton={true}
+        // onLeadingNavButtonPressed={() => navigation.goBack()}
+        hideAnnotationToolbarSwitcher={false}
         pageIndicatorEnabled={false}
         // topToolbarEnabled={false}
         // hideTopToolbars={true}
         hideScrollbars={false}
         tabletLayoutEnabled
         // onBehaviorActivated={event => console.log(event)}
-        multiTabEnabled={false}
+        multiTabEnabled={true}
         // padStatusBar={false}
         // hideTopToolbars={false}
         // hideTopAppNavBar={true}
         // showLeadingNavButton={false}
         // layoutMode={'Single'}
-        bottomToolbarEnabled={false}
+        // bottomToolbarEnabled={false}
         leadingNavButtonIcon={
           Platform.OS === 'ios'
             ? 'ic_close_black_24px.png'

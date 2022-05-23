@@ -9,6 +9,21 @@ import { Alert } from 'react-native';
 import { RootState } from 'store';
 import { IApiBook, IBook } from 'types/interfaces';
 
+export interface IAnnotation {
+  id: string;
+  pageNumber: number;
+  type: string;
+}
+
+export interface IBookmark {
+  bookmark: object;
+  bookmarkJSON: string;
+  document: string;
+}
+
+const addAnnotation = createAction<IAnnotation>('books/addAnnotation');
+const addBookmark = createAction<IBookmark>('books/addBookmark');
+
 const addTypeFilter = createAction<string>('books/addTypeFilter');
 const setDownloaded = createAction<string>('books/setDownloaded');
 const setLastPage =
@@ -52,6 +67,8 @@ export const reducer = createReducer(
     getBooksStatus: 'idle',
     allBooksMeta: [] as Array<IApiBook>,
     pages: [] as Array<{ bookId: string; count: number; max: number }>,
+    annotations: [] as Array<{ id: string; pageNumber: number; type: string }>,
+    bookmarks: [] as Array<any>,
   },
 
   builder => {
@@ -62,6 +79,7 @@ export const reducer = createReducer(
       .addCase(getBooks.fulfilled, (state, action) => {
         state.allBooksMeta = action.payload;
         console.log('state.allBooksMeta', state.allBooksMeta);
+        console.log('payload.allBooksMeta', action.payload);
         state.getBooksStatus = 'fulfilled';
       })
       .addCase(getBooks.rejected, state => {
@@ -99,6 +117,32 @@ export const reducer = createReducer(
       }
     });
 
+    builder.addCase(addAnnotation, (state, action) => {
+      const isExistsAnnotate = state.annotations?.includes(action.payload);
+      const newAnnotates = state.annotations;
+      if (!isExistsAnnotate) {
+        newAnnotates.push(action.payload);
+      }
+      state.annotations = newAnnotates;
+    });
+
+    builder.addCase(addBookmark, (state, action) => {
+      let bookmarks = state.bookmarks;
+      if (
+        bookmarks?.some(
+          (item: IBookmark) => item?.document === action.payload.document,
+        )
+      ) {
+        const index = bookmarks.findIndex(
+          (item: IBookmark) => item?.document === action.payload.document,
+        );
+        bookmarks[index] = action.payload;
+      } else {
+        bookmarks.push(action.payload);
+      }
+      state.bookmarks = bookmarks;
+    });
+
     // builder.addCase(downloadBook, (state, action) => {
     //   const index = state.allBooksMeta.findIndex(
     //     book => book.id === action.payload,
@@ -114,12 +158,18 @@ export const actions = {
   setDownloaded,
   setLastPage,
   setPages,
+  addAnnotation,
+  addBookmark,
 };
 
 export const selectors = {
   selectAllBooks: (state: RootState) => state.books.allBooksMeta,
 
   selectAllPages: (state: RootState) => state.books.pages,
+
+  selectAllAnnotations: (state: RootState) => state.books.annotations,
+
+  selectAllBookmarks: (state: RootState) => state.books.bookmarks,
 
   selectBooksWithFilters: (state: RootState) => {
     if (state.books.allBooksMeta && state.books.allBooksMeta.length > 0) {
