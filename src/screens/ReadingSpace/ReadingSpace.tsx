@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Config, DocumentView, RNPdftron } from 'react-native-pdftron';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -25,6 +26,7 @@ import SettingsIcon from 'assets/svg/Settings';
 import { Slider } from '@miblanchard/react-native-slider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { IBookmark } from 'store/ducks/books';
 
 // function useHookWithRefCallback() {
 //   const ref = useRef<DocumentView>(null);
@@ -48,17 +50,32 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 // }
 
 const ReadingSpace = ({
-  navigation,
   route,
 }: NativeStackScreenProps<RootStackParamList, 'ReadingSpace'>) => {
   const accessToken = useSelector(selectors.auth.selectAccessToken);
+
+  const navigation = useNavigation();
 
   const [pageValue, setPageValue] = useState<number>(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageChange, setPageChange] = useState<number>(0);
+  const resultId = route.params.bookId;
+  const allBooks = useSelector(selectors.books.selectAllBooks);
+  const bookmarks = useSelector(selectors.books.selectAllBookmarks);
+  const allPages = useSelector(selectors.books.selectAllPages);
+  const bookId = allBooks.findIndex(book => book?.bookId === resultId);
+  const bookName = allBooks[bookId]?.title;
+  const bookmarksId = bookmarks.findIndex(
+    (bookmark: IBookmark) => bookmark?.document === bookName,
+  );
+  const bookmarkJson = bookmarks[bookmarksId]?.bookmarkJSON;
 
   const dispatch = useDispatch();
+
+  const currentPage = allPages.filter(
+    page => page.bookId === route.params.bookId,
+  );
 
   useEffect(() => {
     dispatch(
@@ -117,55 +134,11 @@ const ReadingSpace = ({
 
   // const document = 'file:///storage/emulated/0/Download/test.pdf';
   // const document = '/storage/emulated/0/Download/test.pdf';
-  const resultId = route.params.bookId;
 
   const { dirs } = RNFetchBlob.fs;
   // const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
 
   const document = `${dirs.DocumentDir}/${resultId}.pdf`;
-
-  // const elRef = useCallback(
-  //   async node => {
-  //     if (node !== null) {
-  //       console.log('ref', node); // node = elRef.current
-  //
-  //       // Config.ReflowOrientation.Vertical;
-  //
-  //       // PDFRef.current?.props.fitMode(Config.FitMode.FitWidth);
-  //
-  //       // PDFRef.current?.onChange(event => console.log('event', event));
-  //
-  //       // node.props.reflowOrientation = 'vertical';
-  //
-  //       // PDFRef.current
-  //       //   ?.getPageCount()
-  //       //   .then(value => console.log('value', value));
-  //
-  //       // await PDFRef.current?.toggleReflow();
-  //
-  //       // node.getPageCount()
-  //       (await node.isReflowMode()) || (await node.toggleReflow());
-  //       const xfdf = await node.exportAnnotations().then(xfdf => {
-  //         return xfdf;
-  //       });
-  //       await node?.getPageCount().then((value: number) => {
-  //         setPageValue(value);
-  //         console.log('value page', value);
-  //         dispatch(
-  //           actions.books.setPages({
-  //             id: route.params.bookId,
-  //             page: value,
-  //             saveView: xfdf,
-  //           }),
-  //         );
-  //       });
-  //       // node.forceUpdate();
-  //
-  //       // node.autoResizeFreeTextEnabled(true);
-  //     }
-  //   },
-  //   [isLoaded],
-  // );
 
   useEffect(() => {
     if (PDFRef.current !== null) {
@@ -178,6 +151,7 @@ const ReadingSpace = ({
         await PDFRef.current?.getPageCount().then((value: number) => {
           setPageValue(value);
           console.log('value page', value);
+          PDFRef.current?.importBookmarkJson(bookmarkJson);
           dispatch(
             actions.books.setPages({
               id: route.params.bookId,
@@ -230,20 +204,52 @@ const ReadingSpace = ({
     );
   };
 
+  const goBookmark = async () => {
+    const xfdf = await PDFRef.current?.exportAnnotations().then(xfdf => {
+      return xfdf;
+    });
+    // navigation.setParams({ params: '{selectedStyleIds}' });
+    navigation.navigate('TabsNote', {
+      notes: xfdf,
+      id: route.params.bookId,
+      bookName,
+    });
+  };
+
   return (
     <>
       <DocumentView
         ref={PDFRef}
         document={document}
+        initialPageNumber={route.params?.pageNum || null}
         bottomToolbarEnabled={true}
+        onBookmarkChanged={({ bookmarkJson }) => {
+          dispatch(
+            actions.books.addBookmark({
+              bookmark: JSON.parse(bookmarkJson),
+              document: bookName,
+              bookmarkJSON: bookmarkJson,
+              bookId: route.params.bookId,
+            }),
+          );
+        }}
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
         // onResponderEnd={() => setIsModalVisible(!isModalVisible)}
-        // onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
-        onBehaviorActivated={event => console.log('event', event)}
+        onStartShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
+        // onBehaviorActivated={event => console.log('event', event)}
+        // onExportAnnotationCommand={({ action, xfdfCommand, annotations }) => {
+        //   // console.log('Annotation edit action is', action);
+        //   console.log('The exported xfdfCommand is', xfdfCommand);
+        //   console.log('annot', annotations)
+        //   annotations.forEach(annotation => {
+        //     console.log('Annotation id is', annotation.id);
+        //     console.log('Annotation pageNumber is', annotation.pageNumber);
+        //     console.log('Annotation type is', annotation.type);
+        //   });
+        // }}
         onDocumentLoaded={() => setIsLoaded(true)}
         // onPageChanged={value => setPageChange(value.pageNumber)}
-        // onPageMoved={value => console.log(value.pageNumber)}
         // onPageMoved={({ pageNumber }) =>
         //   pageNumber && setPageChange(pageNumber)
         // }
@@ -256,14 +262,13 @@ const ReadingSpace = ({
         onLeadingNavButtonPressed={() => navigation.goBack()}
         hideAnnotationToolbarSwitcher={true}
         pageIndicatorEnabled={false}
-        topToolbarEnabled={false}
-        hideTopToolbars={false}
+        // topToolbarEnabled={false}
+        // hideTopToolbars={false}
         hideScrollbars={false}
         tabletLayoutEnabled
         multiTabEnabled={false}
         padStatusBar={false}
-        hideTopAppNavBar={false}
-        // showLeadingNavButton={false}
+        // hideTopAppNavBar={false}
         // layoutMode={'Single'}
         leadingNavButtonIcon={
           Platform.OS === 'ios'
@@ -356,20 +361,22 @@ const ReadingSpace = ({
         //     }
         //   }
         // }}
-        onBookmarkChanged={({ bookmarkJson }) => {
-          saveBookmark(bookmarkJson);
-        }}
+        // onBookmarkChanged={({ bookmarkJson }) => {
+        //   saveBookmark(bookmarkJson);
+        // }}
         onAnnotationMenuPress={() => {
           saveNote();
         }}
         onAnnotationChanged={({ action, annotations }) => {
           saveNote();
-          console.log('Annotation edit action is', action);
-          annotations.forEach(annotation => {
-            console.log('The id of changed annotation is', annotation.id);
-            console.log('It is in page', annotation.pageNumber);
-            console.log('Its type is', annotation.type);
-          });
+          console.log('156156156156', annotations);
+          // console.log('156156156156', annotations.content)
+          // console.log('Annotation edit action is', action);
+          // annotations.forEach(annotation => {
+          //   console.log('The id of changed annotation is', annotation.id);
+          //   console.log('It is in page', annotation.pageNumber);
+          //   console.log('Its type is', annotation.type);
+          // });
         }}
       />
 
@@ -377,38 +384,38 @@ const ReadingSpace = ({
         <View
           style={[
             styles.topBar,
-            { height: insets.top + 60, paddingTop: insets.top },
+            { height: insets.top + 44, paddingTop: insets.top },
           ]}>
           <BackButton onPress={() => navigation.goBack()} />
           <View style={styles.row}>
-            <TouchableOpacity>
-              <SettingsIcon />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <ListIcon />
-            </TouchableOpacity>
-            <TouchableOpacity>
+            {/*<TouchableOpacity>*/}
+            {/*  <SettingsIcon />*/}
+            {/*</TouchableOpacity>*/}
+            {/*<TouchableOpacity>*/}
+            {/*  <ListIcon />*/}
+            {/*</TouchableOpacity>*/}
+            <TouchableOpacity onPress={goBookmark}>
               <Bookmark />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Image
-                resizeMode="cover"
-                source={require('../../assets/images/note.png')}
-                style={{ height: 28, width: 28 }}
-              />
-            </TouchableOpacity>
+            {/*<TouchableOpacity>*/}
+            {/*  <Image*/}
+            {/*    resizeMode="cover"*/}
+            {/*    source={require('../../assets/images/note.png')}*/}
+            {/*    style={{ height: 28, width: 28 }}*/}
+            {/*  />*/}
+            {/*</TouchableOpacity>*/}
           </View>
         </View>
       )}
 
-      {isModalVisible && (
-        <View style={styles.bottomBar}>
-          <Slider
-            value={[pageValue, 300]}
-            // onValueChange={value => setPageValue(value[0])}
-          />
-        </View>
-      )}
+      {/*{isModalVisible && (*/}
+      {/*  <View style={styles.bottomBar}>*/}
+      {/*    <Slider*/}
+      {/*      value={[pageValue, 300]}*/}
+      {/*      // onValueChange={value => setPageValue(value[0])}*/}
+      {/*    />*/}
+      {/*  </View>*/}
+      {/*)}*/}
     </>
   );
 };
@@ -455,6 +462,6 @@ const styles = StyleSheet.create({
     width: 150,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
 });

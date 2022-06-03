@@ -12,12 +12,13 @@ export interface IBook {
 }
 
 export interface IApiBook {
-  author: string;
-  book: string;
+  author: string | null;
+  book: string | null;
   created_at: Date;
-  file: string;
-  id: string;
-  title: string;
-  updated_at: Date;
+  // file: string | null;
+  bookId: string;
+  title: string | null;
+  updatedDate: Date;
+  createdDate: Date | null;
   isLoaded?: 'unloaded' | 'loaded';
 }

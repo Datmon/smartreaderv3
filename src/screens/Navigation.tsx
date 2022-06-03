@@ -32,11 +32,15 @@ import ProfileSettings from './ProfileScreens/ProfileSettings';
 import Language from './ProfileScreens/Language';
 import ChangePassword from './ProfileScreens/ChangePassword';
 import Notifications from './ProfileScreens/Notifications';
+import Bookmark from 'screens/Bookmark/bookmark';
+import NoteScreen from 'screens/Notes/Note';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
 const MainTabs = createBottomTabNavigator();
 const ProfileStack = createNativeStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -163,6 +167,30 @@ const Navigation = () => {
     </MainTabs.Navigator>
   );
 
+  const TabsNote = () => (
+    <Tab.Navigator
+      initialRouteName="NoteScreen"
+      screenOptions={{
+        tabBarShowLabel: true,
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarStyle: { backgroundColor: 'powderblue', marginTop: 40 },
+      }}>
+      <Tab.Screen
+        name="NoteScreen"
+        component={NoteScreen}
+        options={({ route }) => ({ params: route.params })}
+      />
+
+      <Tab.Screen
+        name="BookmarkScreen"
+        component={Bookmark}
+        options={{
+          tabBarIcon: ({ focused }) => <OrganaizerIcon focused={focused} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+
   return (
     <NavigationContainer>
       {!accessToken ? (
@@ -196,6 +224,17 @@ const Navigation = () => {
             }}>
             <MainStack.Screen name="Tabs" component={Tabs} />
             <MainStack.Screen name="ReadingSpace" component={ReadingSpace} />
+            <MainStack.Screen
+              options={{
+                headerShown: true,
+                headerBackTitleVisible: false,
+                contentStyle: {
+                  backgroundColor: '#FFFFFF',
+                },
+              }}
+              name="TabsNote"
+              component={NoteScreen}
+            />
           </MainStack.Navigator>
         </Host>
       )}

@@ -15,4 +15,7 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   ReadingSpace: { bookId: string; saveNote: string; saveBookmark: string };
   Tabs: undefined;
+  BookmarkScreen: undefined;
+  NoteScreen: undefined;
+  TabsNote: { bookId: string; saveNote: string; saveBookmark: string };
 };
