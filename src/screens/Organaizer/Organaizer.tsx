@@ -28,7 +28,7 @@ const Organaizer = ({
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [activeModal, setActiveModal] = useState(false);
   const [bookID, setBookID] = useState('');
-  const [bookPage, setBookPage] = useState(null);
+  const [bookPage, setBookPage] = useState(0);
   const [nameBook, setNameBook] = useState('');
   const { UnfilledScreens } = useTranslation();
   const annotaions = useSelector(selectors.books.selectAllAnnotations);
@@ -59,7 +59,7 @@ const Organaizer = ({
     });
   };
 
-  const deleteBookmark = () => {
+  const deleteBookmark = async () => {
     const bookmark1 = bookmarks.filter(item => item.bookId === bookID);
     let aaa = '';
     let bbb = '';
@@ -71,19 +71,18 @@ const Organaizer = ({
       ccc = e.bookmarkJSON.indexOf(`${bookPage - 1}`);
       fff = e.bookmarkJSON;
     });
-    console.log('statrt', ccc);
-    console.log('end', aaa);
     // const strJson = fff.slice(0, ccc - 1) + fff.slice(aaa + bbb.length + 2);
 
     const strJson =
       fff.slice(0, ccc - 1) +
       fff.slice(
         aaa + bbb.length + 2 === fff.length
-          ? aaa + bbb.length
+          ? aaa + bbb.length + 1
           : aaa + bbb.length + 2,
       );
-    console.log('121212', fff);
-    console.log('sdfsdf', strJson);
+
+    await books.postBookmark(bookID, strJson);
+
     dispatch(
       actions.books.addBookmark({
         bookmark: JSON.parse(strJson),

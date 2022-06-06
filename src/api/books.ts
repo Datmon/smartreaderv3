@@ -5,48 +5,17 @@ import RNFS from 'react-native-fs';
 // const Frisbee = require('frisbee');
 import RNFetchBlob from 'rn-fetch-blob';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, selectors } from 'store';
 
-const BASE_URL = 'https://smartreader.space/api';
+// const BASE_URL = 'https://smartreader.space/api';
+const BASE_URL = 'https://smart-reader-api.herokuapp.com/api';
 
 export const postBook = async (
   pickercFile: DocumentPickerResponse,
   token: string,
 ) => {
-  const formData = await new FormData();
+  const formData = new FormData();
 
-  //   Object.entries(pikerFile).forEach(([key, val]) => {
-  //     // HACK - make type happy…
-  //     const hackVal = val as string;
-  //     formData.append(key, hackVal);
-  //   });
-
-  //formData.append('book', { uri, name, type });
-
-  //   RNFS.readFile(uri)
-  //     .then(value => console.log('value: ', value))
-  //     .catch(err => {
-  //       console.log('error', err.message, err.code);
-  //     });
-
-  await formData.append('book', pickercFile);
-
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //     Accept: 'application/json',
-  //     Authorization:
-  //       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlN2Q3NzNiNi1lODQ2LTQzZjMtYWUxMS0yOTQ2ODY0NzlkZmUiLCJpYXQiOjE2NDQ3NDkyMTQsImV4cCI6MTY0NTM1NDAxNH0.Dutj9TRLQjfYUQdIv6GCYMYutpjsI9dYlf_yHeHe4a8',
-  //   },
-  // };
-
-  // const res = await axios
-  //   .post(BASE_URL + 'books', formData, config)
-  //   .catch(error => error);
-
-  // const token = useSelector(selectors.auth.selectAccessToken);
-
-  console.log('token', token);
+  await formData.append('file', pickercFile);
 
   const res = await fetch(`${BASE_URL}/books`, {
     method: 'post',
@@ -59,6 +28,19 @@ export const postBook = async (
   });
 
   const bookResponce = await res.json();
+
+  if (res.ok) {
+    const response = await axios.patch(
+      `${BASE_URL}/books/${bookResponce.bookId}`,
+      {
+        title: pickercFile.name,
+        book: pickercFile.name,
+        author: pickercFile?.author || 'author',
+      },
+    );
+    return response;
+  }
+  // return response;
   return bookResponce;
   //
   //
@@ -114,20 +96,16 @@ export const getBooks = async () => {
 };
 
 export const downloadBook = async (bookId: string, token: string) => {
-  // const token = useSelector(selectors.auth.selectAccessToken);
-  // console.log('token', token);
-
+  const respons = await axios
+    .get(`${BASE_URL}/books/${bookId}`)
+    .catch(e => console.log('error', e));
   const { dirs } = RNFetchBlob.fs;
   // const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir;
   const dirToSave = RNFetchBlob.fs.dirs.DocumentDir;
 
-  await RNFetchBlob.fetch('GET', `${BASE_URL}/books/${bookId}`, {
-    Authorization: `Bearer ${token}`,
-    // more headers  ..
-  })
+  await RNFetchBlob.fetch('GET', `${respons.data.url}`)
     .then(res => {
       console.log('second');
-      console.log('res', res.data);
       let pdfLocation = dirToSave + '/' + bookId + '.pdf';
       RNFetchBlob.fs.writeFile(pdfLocation, res.data, 'base64');
       console.log('pdfLocation', pdfLocation);
@@ -137,4 +115,30 @@ export const downloadBook = async (bookId: string, token: string) => {
       console.log('errorMessage', errorMessage);
       // error handling
     });
+};
+
+export const getAllNotesAndBookmarks = async (
+  bookId: string,
+  token: string,
+) => {
+  const res = await axios
+    .get(BASE_URL + `/books/import/${bookId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .catch(e => console.log('error getAllNotesAndBookmarks', e));
+  return res;
+};
+
+export const postNote = async (bookId: string, note: string) => {
+  const response = await axios
+    .post(BASE_URL + '/notes', { bookId, note })
+    .catch(e => console.log('error post note', e));
+  return response;
+};
+
+export const postBookmark = async (bookId: string, bookmark: string) => {
+  const response = await axios
+    .post(BASE_URL + '/bookmarks', { bookId, bookmark })
+    .catch(e => console.log('error post bookmark', e));
+  return response;
 };

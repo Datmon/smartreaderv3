@@ -23,32 +23,71 @@ import { EmailIcon, NicknameIcon, PasswordIcon } from 'assets/svg';
 import ClickableText from 'components/ClickableText';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'types';
-import { useSelector } from 'react-redux';
-import { selectors } from 'store';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions, selectors } from 'store';
+import { user } from 'api';
 
 const ProfileSettings = ({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'ProfileSettings'>) => {
-  const onSubmit = () => {
-    navigation.navigate('ProfileScreen');
-  };
   const { email, username, password } = useSelector(
     selectors.auth.selectUserData,
   );
+  const dispatch = useDispatch();
+  const accessToken = useSelector(selectors.auth.selectAccessToken);
   const [newPhoto, setNewPhoto] = useState([]);
   const userPassword = useSelector(state => state.auth.userPassword);
 
-  const handleChoosePhoto = () =>
-    ImagePicker.openPicker({
+  const handleChoosePhoto = async () => {
+    const pickerResult = await ImagePicker.openPicker({
       compressImageMaxWidth: 400,
       compressImageMaxHeight: 400,
       multiple: true,
       maxFiles: 1,
-    }).then(images => setNewPhoto(images));
+    });
+    dispatch(
+      actions.auth.postPhoto({ photo: pickerResult, token: accessToken }),
+    );
+    // user.postPhoto(pickerResult, accessToken!);
+  };
+  // ImagePicker.openPicker({
+  //   compressImageMaxWidth: 400,
+  //   compressImageMaxHeight: 400,
+  //   multiple: true,
+  //   maxFiles: 1,
+  // }).then(images => setNewPhoto(images));
 
-  // useEffect(() => {
-  //   console.log('photo', newPhoto);
-  // }, [newPhoto]);
+  const onSubmit = async () => {
+    // await user.postPhoto(newPhoto, accessToken!);
+    navigation.navigate('ProfileScreen');
+  };
+
+  // const photo = new FormData();
+  // newPhoto.forEach(file => {
+  //   photos.append('file', {
+  //     uri: `${file.path}`,
+  //     type: file.mime,
+  //     name: file.filename ?? `${file.path}`,
+  //   });
+  // });
+  // photo.append(
+  //   'photo',
+  // photo,
+  // {
+  //   presentationStyle: 'formSheet',
+  //   copyTo: 'cachesDirectory',
+  //   type: [types.allFiles],
+  //   uri: `${photo.path}`,
+  //   type: photo.mime,
+  //   name: photo.filename ?? `${photo.path}`,
+  // },
+  // );
+  useEffect(() => {
+    console.log('newPhoto', newPhoto);
+    // (async () => {
+    //
+    // })();
+  }, [newPhoto]);
 
   const avatar = useSelector(selectors.auth.selectUserPhoto);
 

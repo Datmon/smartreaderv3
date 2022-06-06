@@ -16,7 +16,7 @@ const BookCard = ({
   onPress: () => void;
   pages?: { bookId: string; count: number; max: number };
 }) => {
-  const format = data.file.split('.').slice(-1)[0].toUpperCase();
+  const format = data?.book?.split('.').slice(-1)[0].toUpperCase();
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -33,13 +33,13 @@ const BookCard = ({
           </View>
           <Text
             text={
-              data.title.length > 28
+              data.title?.length > 28
                 ? data.title.slice(0, 28) + '...'
                 : data.title
             }
             style={styles.title}
           />
-          <Text text={data.author} label style={styles.author} />
+          <Text text={data.author || 'author'} label style={styles.author} />
 
           {data.isLoaded === 'loaded' ? (
             <View

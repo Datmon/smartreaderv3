@@ -27,6 +27,7 @@ import { Slider } from '@miblanchard/react-native-slider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { IBookmark } from 'store/ducks/books';
+import { books } from 'api';
 
 // function useHookWithRefCallback() {
 //   const ref = useRef<DocumentView>(null);
@@ -64,23 +65,21 @@ const ReadingSpace = ({
   const allBooks = useSelector(selectors.books.selectAllBooks);
   const bookmarks = useSelector(selectors.books.selectAllBookmarks);
   const allPages = useSelector(selectors.books.selectAllPages);
-  const bookId = allBooks.findIndex(book => book?.bookId === resultId);
+  const bookId = allBooks?.findIndex(book => book?.bookId === resultId);
   const bookName = allBooks[bookId]?.title;
-  const bookmarksId = bookmarks.findIndex(
+  const bookmarksId = bookmarks?.findIndex(
     (bookmark: IBookmark) => bookmark?.document === bookName,
   );
   const bookmarkJson = bookmarks[bookmarksId]?.bookmarkJSON;
 
   const dispatch = useDispatch();
 
-  const currentPage = allPages.filter(
-    page => page.bookId === route.params.bookId,
-  );
+  const currentPage = allPages.filter(page => page.bookId === resultId);
 
   useEffect(() => {
     dispatch(
       actions.books.setLastPage({
-        id: route.params.bookId,
+        id: resultId,
         page: pageChange,
       }),
     );
@@ -154,13 +153,13 @@ const ReadingSpace = ({
           PDFRef.current?.importBookmarkJson(bookmarkJson);
           dispatch(
             actions.books.setPages({
-              id: route.params.bookId,
+              id: resultId,
               page: value,
             }),
           );
         });
 
-        if (route.params?.saveNote) {
+        if (route?.params?.saveNote) {
           PDFRef.current?.importAnnotations(`${route.params?.saveNote}`);
         }
 
@@ -182,22 +181,28 @@ const ReadingSpace = ({
   //   PDFRef.current?.toggleReflow();
   // }, [PDFRef]);
 
-  const saveNote = () => {
-    PDFRef.current?.exportAnnotations().then(xfdf => {
-      dispatch(
-        actions.books.setNotes({
-          id: route.params.bookId,
-          saveNote: `${xfdf}`,
-          saveBookmark: '',
-        }),
-      );
+  const saveNote = async () => {
+    const xfdf = await PDFRef.current?.exportAnnotations().then(xfdf => {
+      return xfdf;
     });
+    dispatch(
+      actions.books.addAnnotation({
+        bookId: resultId,
+        note: `${xfdf}`,
+      }),
+      // actions.books.setNotes({
+      //   id: resultId,
+      //   saveNote: `${xfdf}`,
+      //   saveBookmark: '',
+      // }),
+    );
+    await books.postNote(resultId, xfdf);
   };
 
   const saveBookmark = (bookmark: string) => {
     dispatch(
       actions.books.setNotes({
-        id: route.params.bookId,
+        id: resultId,
         saveNote: '',
         saveBookmark: `${bookmark}`,
       }),
@@ -216,6 +221,18 @@ const ReadingSpace = ({
     });
   };
 
+  const bokmarkSave = async (json: string) => {
+    const res = await books.postBookmark(resultId, json);
+    dispatch(
+      actions.books.addBookmark({
+        bookmark: JSON.parse(bookmarkJson),
+        document: bookName,
+        bookmarkJSON: bookmarkJson,
+        bookId: resultId,
+      }),
+    );
+  };
+
   return (
     <>
       <DocumentView
@@ -224,14 +241,7 @@ const ReadingSpace = ({
         initialPageNumber={route.params?.pageNum || null}
         bottomToolbarEnabled={true}
         onBookmarkChanged={({ bookmarkJson }) => {
-          dispatch(
-            actions.books.addBookmark({
-              bookmark: JSON.parse(bookmarkJson),
-              document: bookName,
-              bookmarkJSON: bookmarkJson,
-              bookId: route.params.bookId,
-            }),
-          );
+          bokmarkSave(bookmarkJson);
         }}
         // onMoveShouldSetResponder={() => setIsModalVisible(!isModalVisible)}
         reflowOrientation={Config.ReflowOrientation.Horizontal}
@@ -369,7 +379,6 @@ const ReadingSpace = ({
         }}
         onAnnotationChanged={({ action, annotations }) => {
           saveNote();
-          console.log('156156156156', annotations);
           // console.log('156156156156', annotations.content)
           // console.log('Annotation edit action is', action);
           // annotations.forEach(annotation => {

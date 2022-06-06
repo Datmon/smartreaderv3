@@ -4,7 +4,7 @@ import {
   createAction,
 } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { auth } from 'api';
+import { auth, user } from 'api';
 
 const setAccessToken = createAction<string>('auth/setAccessToken');
 
@@ -25,6 +25,18 @@ const signIn = createAsyncThunk(
   },
 );
 
+const postPhoto = createAsyncThunk(
+  'auth/postPhoto',
+  async ({ photo, token }: { photo: any; token: string }) => {
+    try {
+      const response = await user.postPhoto(photo, token);
+      return response;
+    } catch (err) {
+      return err;
+    }
+  },
+);
+
 const serviceSignUp = createAsyncThunk(
   'auth/service',
   async ({
@@ -38,6 +50,7 @@ const serviceSignUp = createAsyncThunk(
   }) => {
     try {
       const response = await auth.serviceSignUp(email, username);
+
       console.log('response.data', response.data);
       return { ...response.data, photo: photo };
     } catch (err) {
@@ -100,7 +113,8 @@ interface User {
   id: string;
   verificationCode?: string;
   username: string;
-  photo?: string;
+  photo: string;
+  url: string | null;
 }
 
 const savePassword = createAction('auth/save');
@@ -173,6 +187,9 @@ export const reducer = createReducer(
     builder.addCase(savePassword, (state, action) => {
       state.userPassword = action.payload;
     });
+    builder.addCase(postPhoto.fulfilled, (state, action) => {
+      state.user.url = action.payload.url;
+    });
   },
 );
 
@@ -185,6 +202,7 @@ export const actions = {
   userExists,
   resetPassword,
   savePassword,
+  postPhoto,
 };
 
 export const selectors = {
@@ -193,5 +211,5 @@ export const selectors = {
   selectVerificationCode: (state: RootState) =>
     state.auth.user.verificationCode,
   selectUserData: (state: RootState) => state.auth.user,
-  selectUserPhoto: (state: RootState) => state.auth.user.photo,
+  selectUserPhoto: (state: RootState) => state.auth.user.url,
 };

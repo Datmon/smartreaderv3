@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://smartreader.space/api/';
+const BASE_URL = 'https://smart-reader-api.herokuapp.com/api/';
+// const BASE_URL = 'https://smartreader.space/api/';
 
 //const BASE_URL = 'http://130.193.38.44:3000/api/';
 

@@ -83,12 +83,10 @@ const Bookshelf = ({
 
   const sortAndSearchBooks = useMemo(() => {
     if (settedFiltredBooks && settedFiltredBooks.length > 0 && !isLoading) {
-      console.log('settedFiltredBooks', settedFiltredBooks);
-
       return settedFiltredBooks.filter(
         post =>
-          post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-          post.author.toLowerCase().includes(searchValue.toLowerCase()),
+          post?.bookId?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+          post?.author?.toLowerCase().includes(searchValue?.toLowerCase()),
       );
     }
   }, [settedFiltredBooks, searchValue, isLoading]);
@@ -126,9 +124,6 @@ const Bookshelf = ({
     const res = await dispatch(actions.books.getBooks());
     setIsLoading(false);
     setRefreshing(false);
-
-    console.log('filtedBooks', filtedBooks);
-    console.log('allBooks', allBooks);
   };
 
   const onRefresh = useCallback(() => {
@@ -184,15 +179,38 @@ const Bookshelf = ({
       // …
     });
 
-  const handlePressBook = async (bookId: string) => {
-    const downloadedBook = await books.downloadBook(bookId, accessToken!);
-    console.log('downloadedBook', downloadedBook);
+  const handlePressBook = async (bookId: string, book: string) => {
+    await books.downloadBook(bookId, accessToken!);
+    const notesAndBookmark = await books.getAllNotesAndBookmarks(
+      bookId,
+      accessToken!,
+    );
+    const bookmarks = notesAndBookmark.data.data?.bookmarks;
+    const notes = notesAndBookmark.data.data?.notes;
+    if (bookmarks) {
+      dispatch(
+        actions.books.addBookmark({
+          bookmark: JSON.parse(bookmarks.bookmark),
+          document: book,
+          bookmarkJSON: bookmarks.bookmark,
+          bookId: bookmarks.bookId,
+        }),
+      );
+    }
+    if (notes) {
+      dispatch(
+        actions.books.addAnnotation({
+          bookId: notes.bookId,
+          note: `${notes.note}`,
+        }),
+      );
+    }
     dispatch(actions.books.setDownloaded(bookId));
     const saveData = allPages.filter(item => item.bookId === bookId);
     navigation.push('ReadingSpace', {
       bookId,
-      saveNote: saveData ? saveData[0]?.saveNote : '',
-      saveBookmark: saveData ? saveData[0]?.saveBookmark : '',
+      saveNote: notes ? notes.note : '',
+      saveBookmark: bookmarks ? bookmarks.bookmark : '',
     });
   };
 
@@ -233,11 +251,12 @@ const Bookshelf = ({
             !isLoading &&
             sortAndSearchBooks.map((book: IApiBook) => (
               <BookCard
-                key={book.id}
+                key={book.bookId}
                 data={book}
-                onPress={() => handlePressBook(book.id)}
+                onPress={() => handlePressBook(book.bookId, book.book)}
                 pages={
-                  allPages && allPages.find(({ bookId }) => bookId === book.id)
+                  allPages &&
+                  allPages.find(({ bookId }) => bookId === book.bookId)
                 }
               />
             ))}

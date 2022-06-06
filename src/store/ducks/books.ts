@@ -10,9 +10,9 @@ import { RootState } from 'store';
 import { IApiBook, IBook } from 'types/interfaces';
 
 export interface IAnnotation {
-  id: string;
-  pageNumber: number;
-  type: string;
+  bookId: string;
+  // pageNumber: number;
+  note: string;
 }
 
 export interface IBookmark {
@@ -79,12 +79,9 @@ export const reducer = createReducer(
       bookId: string;
       count: number;
       max: number;
+      // saveNote: string;
     }>,
-    annotations: [] as Array<{
-      id: string;
-      pageNumber: number;
-      type: string;
-    }>,
+    annotations: [] as Array<any>,
     bookmarks: [] as Array<any>,
   },
 
@@ -103,7 +100,7 @@ export const reducer = createReducer(
       });
 
     builder.addCase(setDownloaded, (state, action) => {
-      const index = state.allBooksMeta.findIndex(
+      const index = state.allBooksMeta?.findIndex(
         book => book.bookId === action.payload,
       );
       state.allBooksMeta[index].isLoaded = 'loaded';
@@ -122,8 +119,8 @@ export const reducer = createReducer(
       const index = state.pages.findIndex(
         ({ bookId }) => bookId === payload.id,
       );
-      if (payload.saveNote) {
-        state.pages[index].saveNote = payload.saveNote;
+      if (payload?.saveNote) {
+        state.pages[index].saveNote = payload?.saveNote;
       }
       if (payload.saveBookmark) {
         state.pages[index].saveBookmark = payload.saveBookmark;
@@ -150,30 +147,39 @@ export const reducer = createReducer(
     });
 
     builder.addCase(addAnnotation, (state, action) => {
-      const isExistsAnnotate = state.annotations?.includes(action.payload);
-      const newAnnotates = state.annotations;
-      if (!isExistsAnnotate) {
-        newAnnotates.push(action.payload);
+      const index = state.annotations.findIndex(
+        ({ bookId }) => bookId === action.payload.bookId,
+      );
+      if (index === -1) {
+        state.annotations.push(action.payload);
       }
-      state.annotations = newAnnotates;
+      state.annotations[index] = action.payload;
     });
 
     builder.addCase(addBookmark, (state, action) => {
-      let bookmarks = state.bookmarks;
-      if (
-        bookmarks?.some(
-          (item: IBookmark) => item?.document === action.payload.document,
-        )
-      ) {
-        const index = bookmarks.findIndex(
-          (item: IBookmark) => item?.document === action.payload.document,
-        );
-        bookmarks[index] = action.payload;
-      } else {
-        bookmarks.push(action.payload);
+      const index = state.bookmarks.findIndex(
+        ({ bookId }) => bookId === action.payload.bookId,
+      );
+
+      if (index === -1) {
+        state.bookmarks.push(action.payload);
       }
-      state.bookmarks = bookmarks;
+      state.bookmarks[index] = action.payload;
     });
+    //   let bookmarks = state.bookmarks;
+    //   if (
+    //     bookmarks?.some(
+    //       (item: IBookmark) => item?.document === action.payload.document,
+    //     )
+    //   ) {
+    //     const index = bookmarks.findIndex(
+    //       (item: IBookmark) => item?.document === action.payload.document,
+    //     );
+    //     bookmarks[index] = action.payload;
+    //   } else {
+    //     bookmarks.push(action.payload);
+    //   }
+    // });
 
     // builder.addCase(downloadBook, (state, action) => {
     //   const index = state.allBooksMeta.findIndex(
